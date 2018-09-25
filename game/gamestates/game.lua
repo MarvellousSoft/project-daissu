@@ -21,8 +21,9 @@ local die
 --STATE FUNCTIONS--
 
 function state:enter()
-	die = Die.new{"turn","blurn","churn","hurn","surn"}
-	DieView.new(die, 100, 100, Color.orange())
+	die = Die{"turn","blurn","churn","hurn","surn"}
+	local dv = DieView(die, 100, 100, Color.orange())
+	dv:addElement("L1", "die_view")
 end
 
 function state:leave()

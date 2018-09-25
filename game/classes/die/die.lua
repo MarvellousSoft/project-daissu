@@ -18,9 +18,19 @@ end
 
 --CLASS FUNCTIONS--
 
---Returns current face-up side
+--Returns current face-up side action
 function Die:getCurrent()
     return self.sides[self.current_side]
+end
+
+--Returns number of current face-up side
+function Die:getCurrentNum()
+    return self.current_side
+end
+
+--Returns array of actions on each side
+function Die:getSides()
+    return self.sides
 end
 
 --Randomize current up side and returns the result
@@ -29,9 +39,4 @@ function Die:roll()
     return self:getCurrent()
 end
 
---UTILITY FUNCTIONS--
-function funcs.new(sides)
-    return Die(sides)
-end
-
-return funcs
+return Die
