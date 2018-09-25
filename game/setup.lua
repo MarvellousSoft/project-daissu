@@ -1,3 +1,5 @@
+local Font = require "font"
+
 --MODULE FOR SETUP STUFF--
 
 local Camera = require "extra_libs.hump.camera"
@@ -39,6 +41,9 @@ function setup.config()
 
     --CAMERA--
     CAM = Camera(WIN_W/2, WIN_H/2) --Set camera position to center of screen
+
+    --FONTS--
+    Font.new("regular", "assets/fonts/fira-mono-regular.ttf")
 
     --IMAGES--
     IMG = { --Table containing all the images

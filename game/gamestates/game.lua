@@ -1,3 +1,7 @@
+local Color = require "classes.color.color"
+local Die = require "classes.die.die"
+local DieView = require "classes.die.die_view"
+
 --MODULE FOR THE GAMESTATE: GAME--
 local Class = require "extra_libs.hump.class"
 local Util = require "util"
@@ -12,9 +16,13 @@ local switch --If gamestate should change to another one
 
 --LOCAL FUNCTIONS--
 
+local die
+
 --STATE FUNCTIONS--
 
 function state:enter()
+	die = Die.new{"turn","blurn","churn","hurn","surn"}
+	DieView.new(die, 100, 100, Color.orange())
 end
 
 function state:leave()
@@ -43,7 +51,7 @@ end
 function state:keypressed(key)
 
     if key == "r" then
-        switch = "MENU"
+        switch = die:roll()
     else
         Util.defaultKeyPressed(key)
     end
