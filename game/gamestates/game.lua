@@ -21,9 +21,10 @@ local die
 --STATE FUNCTIONS--
 
 function state:enter()
-	die = Die{"turn","blurn","churn","hurn","surn"}
-	local dv = DieView(die, 100, 100, Color.orange())
-	dv:addElement("L1", "die_view")
+	Die{"turn","blurn","churn","hurn","surn"}:setId("my_die")
+	DieView(Util.findId("my_die"), 100, 100, Color.orange()):addElement("L1", "die_view")
+
+    DieView(Die{"turn","turn","churn","hurn","surn"}, 200, 100, Color.red()):addElement("L1", "die_view")
 end
 
 function state:leave()
@@ -47,6 +48,12 @@ function state:draw()
 
     Draw.allTables()
 
+end
+
+function state:keypressed(key, scancode, isrepeat)
+    if key == "r" then
+        Util.findId("my_die"):roll()
+    end
 end
 
 function state:mousemoved(...)
