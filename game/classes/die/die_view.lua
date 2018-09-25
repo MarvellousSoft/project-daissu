@@ -9,7 +9,7 @@ local funcs = {}
 --CLASS DEFINITION--
 
 local DieView = Class{
-    __includes={DRAWABLE}
+    __includes = {DRAWABLE}
 }
 
 function DieView:init(die, x, y, color)
@@ -20,6 +20,7 @@ function DieView:init(die, x, y, color)
     self.w = 50 --Width of die outline
     self.h = 50 --Height of die outline
 
+    --Color for die border
     self.color_border = Color.new(self.color.r*1.2,self.color.g*1.2,self.color.b*1.2)
 
     --Loads up icon for every side
@@ -27,6 +28,8 @@ function DieView:init(die, x, y, color)
     for i,side in ipairs(die:getSides()) do
         self.side_images[i] = Action.actionImage(side)
     end
+
+    self.picked = false --If player is dragging this object
 end
 
 --CLASS FUNCTIONS--
@@ -45,6 +48,32 @@ function DieView:draw()
     Color.set(Color.white())
     local icon = self.side_images[die:getCurrentNum()]
     g.draw(icon, self.pos.x, self.pos.y, nil, self.w/icon:getWidth(),self.h/icon:getHeight())
+end
+
+--Checks if given point(x,y) collides with this view
+function DieView:collidesPoint(x,y)
+    local s = self
+    return x >= s.pos.x and x <= s.pos.x + s.w and
+           y >= s.pos.y and y <= s.pos.y + s.h
+end
+
+function DieView:mousepressed(x, y, button)
+    if self:collidesPoint(x,y) then
+        self.picked = true
+    end
+end
+
+function DieView:mousereleased(x, y, button)
+    if self.picked then
+        self.picked = false
+    end
+end
+
+function DieView:mousemoved(x, y, dx, dy)
+    if self.picked then
+        self.pos.x = self.pos.x + dx
+        self.pos.y = self.pos.y + dy
+    end
 end
 
 --UTILITY FUNCTIONS--

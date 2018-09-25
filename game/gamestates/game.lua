@@ -49,14 +49,31 @@ function state:draw()
 
 end
 
-function state:keypressed(key)
+function state:mousemoved(...)
+	local dies = Util.findSubtype("die_view")
+	if dies then
+		for die_view in pairs(dies) do
+			die_view:mousemoved(...)
+		end
+	end
+end
 
-    if key == "r" then
-        switch = die:roll()
-    else
-        Util.defaultKeyPressed(key)
-    end
+function state:mousepressed(...)
+	local dies = Util.findSubtype("die_view")
+	if dies then
+		for die_view in pairs(dies) do
+			die_view:mousepressed(...)
+		end
+	end
+end
 
+function state:mousereleased(...)
+	local dies = Util.findSubtype("die_view")
+	if dies then
+		for die_view in pairs(dies) do
+			die_view:mousereleased(...)
+		end
+	end
 end
 
 --Return state functions
