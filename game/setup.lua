@@ -1,5 +1,8 @@
 --MODULE FOR SETUP STUFF--
 
+local Camera = require "extra_libs.hump.camera"
+local Timer = require "extra_libs.hump.timer"
+
 local setup = {}
 
 --------------------

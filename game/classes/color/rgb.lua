@@ -1,6 +1,8 @@
 local Hsl = require "classes.color.hsl"
 --MODULE FOR COLOR AND STUFF--
 
+local Class = require "extra_libs.hump.class"
+
 local rgb_funcs = {}
 
 --Color object

@@ -1,4 +1,8 @@
 --MODULE FOR THE GAMESTATE: GAME--
+local Class = require "extra_libs.hump.class"
+local Util = require "util"
+local Draw = require "draw"
+local Drawable = require "classes.primitives.drawable"
 
 local state = {}
 
@@ -11,23 +15,22 @@ local switch --If gamestate should change to another one
 --STATE FUNCTIONS--
 
 function state:enter()
-
 end
 
 function state:leave()
 
-	Util.destroyAll("force")
+    Util.destroyAll("force")
 
 end
 
 
 function state:update(dt)
 
-	if switch == "menu" then
-		--Gamestate.switch(GS.MENU)
-	end
+    if switch == "menu" then
+        --Gamestate.switch(GS.MENU)
+    end
 
-	Util.destroyAll()
+    Util.destroyAll()
 
 end
 
@@ -39,11 +42,11 @@ end
 
 function state:keypressed(key)
 
-	if key == "r" then
-		switch = "MENU"
-	else
-    	Util.defaultKeyPressed(key)
-	end
+    if key == "r" then
+        switch = "MENU"
+    else
+        Util.defaultKeyPressed(key)
+    end
 
 end
 

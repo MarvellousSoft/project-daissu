@@ -32,12 +32,12 @@ function res.init()
     local registry = {}
     local callbacks = {"mousepressed", "mousereleased"}
     for _, f in ipairs(callbacks) do
-		registry[f] = love[f] or __NULL__
-		love[f] = function(x, y, ...)
+        registry[f] = love[f] or __NULL__
+        love[f] = function(x, y, ...)
             x, y = love.mouse.getPosition() -- fixed
-			return registry[f](x, y, ...)
-		end
-	end
+            return registry[f](x, y, ...)
+        end
+    end
     registry["mousemoved"] = love["mousemoved"] or __NULL__
     love["mousemoved"] = function(x, y, dx, dy, ...)
         x, y = love.mouse.getPosition() -- fixed
