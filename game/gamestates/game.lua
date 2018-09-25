@@ -1,6 +1,8 @@
 local Color = require "classes.color.color"
 local Die = require "classes.die.die"
 local DieView = require "classes.die.die_view"
+local Map = require "classes.map.map"
+local MapView = require "classes.map.map"
 
 --MODULE FOR THE GAMESTATE: GAME--
 local Class = require "extra_libs.hump.class"

@@ -1,0 +1,23 @@
+local Class = require "extra_libs.hump.class"
+local MapTile = require "classes.map.map_tile"
+
+local Map = Class {}
+
+function Map:__init(rows, columns)
+    self.rows = rows
+    self.columns = columns
+    self.grid = {}
+    for i = 1, rows do
+        self.grid[i] = {}
+        for j = 1, columns do
+            self.grid[i][j] = MapTile(nil)
+        end
+    end
+end
+
+function Map:get(r, c)
+    return self.grid[r][c]
+end
+
+
+return Map
