@@ -19,8 +19,8 @@ function setup.config()
     --GLOBAL VARIABLES--
     DEBUG = true --DEBUG mode status
 
-    WIN_W = 500 --The original width of your game. Work with this value when using res_manager multiple resolutions support
-    WIN_H = 500 --The original height of your game. Work with this value when using res_manager multiple resolutions support
+    WIN_W = 1366 --The original width of your game. Work with this value when using res_manager multiple resolutions support
+    WIN_H = 768  --The original height of your game. Work with this value when using res_manager multiple resolutions support
 
     --INITIALIZING TABLES--
     --Drawing Tables
