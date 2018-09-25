@@ -8,8 +8,8 @@ local scale, tx, ty
 local function __NULL__() end
 
 function res.init()
-    W = O_WIN_W
-    H = O_WIN_H
+    W = WIN_W
+    H = WIN_H
 
     love.graphics.setDefaultFilter('linear', 'linear')
 

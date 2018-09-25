@@ -33,6 +33,9 @@ end
 
 function state:draw()
 
+	Color.set(Color.white())
+	love.graphics.rectangle("fill", 10, 10, 100, 100)
+
     Draw.allTables()
 
 end

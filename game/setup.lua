@@ -19,8 +19,8 @@ function setup.config()
     --GLOBAL VARIABLES--
     DEBUG = true --DEBUG mode status
 
-    O_WIN_W = 500 --The original width of your game. Work with this value when using res_manager multiple resolutions support
-    O_WIN_H = 500 --The original height of your game. Work with this value when using res_manager multiple resolutions support
+    WIN_W = 500 --The original width of your game. Work with this value when using res_manager multiple resolutions support
+    WIN_H = 500 --The original height of your game. Work with this value when using res_manager multiple resolutions support
 
     --INITIALIZING TABLES--
     --Drawing Tables
@@ -35,7 +35,7 @@ function setup.config()
     ID_TABLE = {} --Table with elements with Ids (for fast lookup)
 
     --CAMERA--
-    CAM = Camera(O_WIN_W/2, O_WIN_H/2) --Set camera position to center of screen
+    CAM = Camera(WIN_W/2, WIN_H/2) --Set camera position to center of screen
 
     --IMAGES--
     IMG = { --Table containing all the images
