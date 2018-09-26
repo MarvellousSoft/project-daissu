@@ -3,7 +3,7 @@ local MapTile = require "classes.map.map_tile"
 
 local Map = Class {}
 
-function Map:__init(rows, columns)
+function Map:init(rows, columns)
     self.rows = rows
     self.columns = columns
     self.grid = {}
@@ -18,6 +18,5 @@ end
 function Map:get(r, c)
     return self.grid[r][c]
 end
-
 
 return Map

@@ -5,7 +5,7 @@ local View = Class {
     __includes = {Element}
 }
 
-function View:__init(obj)
+function View:init(obj)
     self:setObj(obj)
 end
 
