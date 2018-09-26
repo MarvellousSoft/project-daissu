@@ -1,5 +1,8 @@
 local Class = require "extra_libs.hump.class"
 
+--[[
+    A MapTile is a tile, it may keep an object. In the future, it may also store stuff as ground type, etc.
+]]
 local MapTile = Class {}
 
 function MapTile:init(obj)
@@ -8,6 +11,10 @@ end
 
 function MapTile:setObj(obj)
     self.obj = obj
+end
+
+function MapTile:blocked()
+    return self.obj ~= nil
 end
 
 -- drawing starting on a tile of size size starting on x, y

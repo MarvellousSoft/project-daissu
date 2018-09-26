@@ -16,7 +16,7 @@ function Map:init(rows, columns)
 end
 
 function Map:get(r, c)
-    return self.grid[r][c]
+    return self.grid[r] and self.grid[r][c]
 end
 
 return Map

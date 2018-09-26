@@ -1,5 +1,8 @@
 local Class = require "extra_libs.hump.class"
 
+--[[
+    This is a player drawn in the map
+]]
 local Player = Class {}
 
 function Player:drawOnGrid(x, y, size)
