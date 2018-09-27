@@ -1,4 +1,5 @@
 local DRAWABLE = require "classes.primitives.drawable"
+local VIEW = require "classes.primitives.view"
 local Color    = require "classes.color.color"
 local Font     = require "font"
 local Class    = require "extra_libs.hump.class"
@@ -9,13 +10,12 @@ local funcs = {}
 --CLASS DEFINITION--
 
 local DieView = Class{
-    __includes = {DRAWABLE}
+    __includes = {DRAWABLE, VIEW}
 }
 
 function DieView:init(die, x, y, color)
     DRAWABLE.init(self, x, y, color, nil,nil,nil)
-
-    self.die = die --Die this view is drawing
+    VIEW.init(self,die)
 
     self.w = 50 --Width of die outline
     self.h = 50 --Height of die outline
@@ -35,7 +35,7 @@ end
 --CLASS FUNCTIONS--
 
 function DieView:draw()
-    local die = self.die
+    local die = self:getObj()
     local g = love.graphics
     --Draw die bg
     Color.set(self.color)

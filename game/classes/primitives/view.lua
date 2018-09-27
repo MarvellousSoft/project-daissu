@@ -21,4 +21,8 @@ function View:setObj(obj)
     end
 end
 
+function View:getObj()
+    return self.obj
+end
+
 return View
