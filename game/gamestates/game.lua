@@ -23,14 +23,15 @@ local switch --If gamestate should change to another one
 local die
 
 local map
-local controller
+local c1, c2
 
 --STATE FUNCTIONS--
 
 function state:enter()
-    local map_obj = Map(10, 10)
+    local map_obj = Map(8, 8)
     map = MapView(map_obj, Vector(500, 100), 50)
-    controller = Controller(map_obj, 5, 3)
+    c1 = Controller(map_obj, 2, 2)
+    c2 = Controller(map_obj, 6, 6)
     Die{"turn","blurn","churn","hurn","surn"}:setId("my_die")
     DieView(Util.findId("my_die"), 100, 100, Color.orange()):addElement("L1", "die_view")
 
@@ -62,12 +63,17 @@ function state:draw()
 
 end
 
+local map = {w = 'walk', a = 'counter', d = 'clock'}
+local map2 = {up = 'walk', left = 'counter', right = 'clock'}
 function state:keypressed(key, scancode, isrepeat)
     if key == "r" then
         Util.findId("my_die"):roll()
     end
-    if key == 'up' or key == 'down' or key == 'left' or key == 'right' then
-        controller:applyAction(key)
+    if map[key] ~= nil then
+        c1:applyAction(map[key])
+    end
+    if map2[key] ~= nil then
+        c2:applyAction(map2[key])
     end
 end
 

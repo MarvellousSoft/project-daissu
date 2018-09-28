@@ -17,23 +17,27 @@ function Controller:init(map, i, j)
 end
 
 local dir = {
-    up = {-1, 0},
-    down = {1, 0},
-    left = {0, -1},
-    right = {0, 1}
+    [0] = {-1, 0},
+    [1] = {0, 1},
+    [2] = {1, 0},
+    [3] = {0, -1}
 }
 
 -- Apply action on Controller's player
 function Controller:applyAction(action)
-    if dir[action] ~= nil then
-        local tile = self.map:get(Vec.add(self.i, self.j, unpack(dir[action])))
+    if action == 'walk' then
+        local tile = self.map:get(Vec.add(self.i, self.j, unpack(dir[self.player.dir])))
         if not tile or tile:blocked() then
             print("Movement is invalid")
         else
             self.map:get(self.i, self.j):setObj(nil)
             tile:setObj(self.player)
-            self.i, self.j = Vec.add(self.i, self.j, unpack(dir[action]))
+            self.i, self.j = Vec.add(self.i, self.j, unpack(dir[self.player.dir]))
         end
+    elseif action == 'clock' then
+        self.player:rotate(1)
+    elseif action == 'counter' then
+        self.player:rotate(-1)
     else
         error("Unknown action")
     end
