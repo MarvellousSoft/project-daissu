@@ -70,10 +70,10 @@ function state:keypressed(key, scancode, isrepeat)
         Util.findId("my_die"):roll()
     end
     if map[key] ~= nil then
-        c1:applyAction(map[key])
+        c1:showAction(map[key])
     end
     if map2[key] ~= nil then
-        c2:applyAction(map2[key])
+        c2:showAction(map2[key])
     end
 end
 

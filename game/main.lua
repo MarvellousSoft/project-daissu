@@ -1,5 +1,6 @@
 --HUMP STUFF
 local Gamestate = require "extra_libs.hump.gamestate"
+local Timer = require "extra_libs.hump.timer"
 
 --MY MODULES
 local Setup = require "setup"
@@ -28,4 +29,8 @@ function love.load()
 
     Gamestate.switch(GS.GAME) --Jump to the inicial state
 
+end
+
+function love.update(dt)
+    Timer.update(dt)
 end
