@@ -63,7 +63,7 @@ function state:draw()
 
 end
 
-local map = {w = 'walk', a = 'counter', d = 'clock'}
+local map = {w = 'walk', a = 'counter', d = 'clock', space = 'shoot'}
 local map2 = {up = 'walk', left = 'counter', right = 'clock'}
 function state:keypressed(key, scancode, isrepeat)
     if key == "r" then

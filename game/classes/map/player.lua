@@ -8,6 +8,7 @@ local Player = Class {}
 function Player:init()
     -- 0 = up, 1 = right, 2 = down, 3 = left
     self.dir = 0
+    self.health = 5
     self:resetAnimation()
 end
 
@@ -22,6 +23,10 @@ function Player:rotate(dir)
     self.dir = (self.dir + dir + 4) % 4
 end
 
+function Player:applyDamage(dmg)
+    self.health = self.health - dmg
+end
+
 function Player:drawOnGrid(x, y, size)
     x, y = x + self.dx * size, y + self.dy * size
     local dir = self.dir + self.d_dir
@@ -33,6 +38,8 @@ function Player:drawOnGrid(x, y, size)
     love.graphics.rotate(dir * math.pi / 2)
     love.graphics.circle('fill', 0, -size / 4, size * .15)
     love.graphics.pop()
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.printf('' .. self.health, x, y + size / 2, size, 'center')
 
 end
 

@@ -34,6 +34,9 @@ function Controller:showAction(action)
         Timer.tween(1, self.player, {d_dir = 1}, 'in-out-quad')
     elseif action == 'counter' then
         Timer.tween(1, self.player, {d_dir = -1}, 'in-out-quad')
+    elseif action == 'shoot' then
+    else
+        error("Unknown action " .. action)
     end
     Timer.after(1, function()
         self.player:resetAnimation()
@@ -56,8 +59,17 @@ function Controller:applyAction(action)
         self.player:rotate(1)
     elseif action == 'counter' then
         self.player:rotate(-1)
+    elseif action == 'shoot' then
+        local i, j = Vec.add(self.i, self.j, unpack(dir[self.player.dir]))
+        local tile = self.map:get(i, j)
+        while tile do
+            tile:applyDamage(1)
+            if tile:blocked() then break end
+            i, j = Vec.add(i, j, unpack(dir[self.player.dir]))
+            tile = self.map:get(i, j)
+        end
     else
-        error("Unknown action")
+        error("Unknown action " .. action)
     end
 end
 
