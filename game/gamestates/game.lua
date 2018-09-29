@@ -9,9 +9,9 @@ local Vector = require "extra_libs.hump.vector"
 local Util = require "util"
 local Draw = require "draw"
 local Drawable = require "classes.primitives.drawable"
-local Map = require "classes.map.map"
-local MapView = require "classes.map.map_view"
-local Controller = require "classes.map.controller"
+local Match = require "classes.match"
+local TurnSlots = require "classes.turn_slots"
+local TurnSlotsView = require "classes.turn_slots_view"
 
 local state = {}
 
@@ -23,18 +23,20 @@ local switch --If gamestate should change to another one
 
 local die
 
-local map
-local c1, c2
+local match
+
+local turn_slots
 
 --STATE FUNCTIONS--
 
 function state:enter()
-    local map_obj = Map(8, 8)
-    map = MapView(map_obj, Vector(500, 100), 50)
+    match = Match(8, 8, Vector(500, 100), 50)
+    match:addController(2, 2)
+    match:addController(6, 6)
+    match:start()
 
-    c1 = Controller(map_obj, 2, 2)
-    c2 = Controller(map_obj, 6, 6)
-
+    local turn_slots_obj = TurnSlots(5)
+    turn_slots = TurnSlotsView(turn_slots_obj, Vector(100, 660), 500, 100)
 
     --Create some example dice
     Die{"turn","blurn","churn","hurn","surn"}:setId("my_die")
@@ -64,23 +66,20 @@ end
 
 function state:draw()
 
-    map:draw()
+    turn_slots:draw()
+
+    match:draw()
 
     Draw.allTables()
 
 end
 
-local map = {w = 'walk', a = 'counter', d = 'clock', space = 'shoot'}
-local map2 = {up = 'walk', left = 'counter', right = 'clock'}
 function state:keypressed(key, scancode, isrepeat)
     if key == "r" then
         Util.findId("my_die"):roll()
     end
-    if map[key] ~= nil then
-        c1:showAction(map[key])
-    end
-    if map2[key] ~= nil then
-        c2:showAction(map2[key])
+    if key == 't' then
+        match:playTurn({{"clock"}, {"walk"}}, {1, 2})
     end
 end
 

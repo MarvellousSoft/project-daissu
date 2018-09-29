@@ -24,7 +24,7 @@ local dir = {
     [3] = {0, -1}
 }
 
-function Controller:showAction(action)
+function Controller:showAction(action, callback)
     if action == 'walk' then
         local tile = self.map:get(Vec.add(self.i, self.j, unpack(dir[self.player.dir])))
         if tile and not tile:blocked() then
@@ -41,6 +41,7 @@ function Controller:showAction(action)
     Timer.after(1, function()
         self.player:resetAnimation()
         self:applyAction(action)
+        if callback then callback() end
     end)
 end
 

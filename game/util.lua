@@ -6,6 +6,15 @@ local util = {}
 --UTILITIES FUNCTIONS
 ---------------------
 
+-- maps a vector through a function
+function util.map(vec, func)
+    local new = {}
+    for i, value in ipairs(vec) do
+        new[i] = func(value)
+    end
+    return new
+end
+
 --Counts how many entries are on table T
 function util.tableLen(T)
   local count = 0
