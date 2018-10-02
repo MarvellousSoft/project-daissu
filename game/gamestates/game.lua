@@ -34,8 +34,8 @@ function state:enter()
     DieView(Util.findId("my_die"), 100, 100, Color.orange()):register("L2", "die_view")
     DieView(Die{"turn","turn","churn","hurn","surn"}, 200, 100, Color.red()):register("L2", "die_view")
 
-    --Create some example dieslots
-    DieArea(30, 250):register("L1", "die_area")
+    --Create some example dice area
+    DieArea(30, 250):register("L1", "dice_area")
 end
 
 function state:leave()
@@ -95,6 +95,12 @@ function state:mousereleased(...)
     if dies then
         for die_view in pairs(dies) do
             die_view:mousereleased(...)
+        end
+    end
+    local dice_areas = Util.findSubtype("dice_area")
+    if dice_areas then
+        for dice_area in pairs(dice_areas) do
+            dice_area:mousereleased(...)
         end
     end
 end

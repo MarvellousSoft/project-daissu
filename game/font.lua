@@ -65,32 +65,38 @@ but you can provide an optional argument "dont_store" so it won't store the font
 
 Returns the font object given a font name and size.
 ]]--
-function fonts_funcs.set(font_name, size, dont_store)
-    dont_store = dont_store or false
+function fonts_funcs.set(font_name_or_font, size, dont_store)
 
-    local font_db = Fonts_Table[font_name] --Database with font information
+    --If you give a font name and size, do all the needed stuff
+    if type(font_name_or_font) == "string" then
+        dont_store = dont_store or false
+        local font_db = Fonts_Table[font_name_or_font] --Database with font information
 
-    --Leave function if font doesn't exist
-    if not font_db then
-        if DEBUG then print("Tried to set inexistent font!") end
-        return
-    end
-
-    if not font_db.fonts[size] then
-        --If font size didn't exist
-        local font = love.graphics.newFont(font_db.path, size)
-        if dont_store then
-            love.graphics.setFont(font)
-            return font
-        else
-            font_db.fonts[size] = font
-            love.graphics.setFont(font)
-            return font
+        --Leave function if font doesn't exist
+        if not font_db then
+            if DEBUG then print("Tried to set inexistent font!") end
+            return
         end
+
+        if not font_db.fonts[size] then
+            --If font size didn't exist
+            local font = love.graphics.newFont(font_db.path, size)
+            if dont_store then
+                love.graphics.setFont(font)
+                return font
+            else
+                font_db.fonts[size] = font
+                love.graphics.setFont(font)
+                return font
+            end
+        else
+            --If font size already existed
+            love.graphics.setFont(font_db.fonts[size])
+            return font_db.fonts[size]
+        end
+    --If received directly a font, just set it
     else
-        --If font size already existed
-        love.graphics.setFont(font_db.fonts[size])
-        return font_db.fonts[size]
+        love.graphics.setFont(font_name_or_font)
     end
 
 end

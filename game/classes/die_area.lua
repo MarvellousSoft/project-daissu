@@ -2,6 +2,7 @@ local DRAWABLE    = require "classes.primitives.drawable"
 local Class       = require "extra_libs.hump.class"
 local DieSlot     = require "classes.die.die_slot"
 local DieSlotView = require "classes.die.die_slot_view"
+local Button      = require "classes.button"
 local Color       = require "classes.color.color"
 
 local funcs = {}
@@ -31,10 +32,15 @@ function DieArea:init(x, y)
         DieSlotView(DieSlot(), x + w/2 - dw/2, y + h - gap - dh),
     }
 
-    --Put subtype to all slot
+    --Put subtype to all slots
     for _, die_slot in ipairs(self.die_slots) do
         die_slot:setSubtype("die_slot_view")
     end
+
+    --Create button for rolling dies
+    local bw, bh = 100, 80
+    local func = function() print("rolled") end
+    self.roll_button = Button(x+w/2-bw/2, y+h/2-bh/2, bw, bh, "roll", func)
 end
 
 --CLASS FUNCTIONS--
@@ -49,6 +55,12 @@ function DieArea:draw()
         die_slot:draw()
     end
 
+    --Draw Button
+    self.roll_button:draw()
+end
+
+function DieArea:mousereleased(...)
+    self.roll_button:mousereleased(...)
 end
 
 return DieArea
