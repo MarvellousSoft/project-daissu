@@ -1,8 +1,7 @@
-local Color = require "classes.color.color"
-local Die = require "classes.die.die"
+local Color   = require "classes.color.color"
+local Die     = require "classes.die.die"
 local DieView = require "classes.die.die_view"
-local DieSlot = require "classes.die.die_slot"
-local DieSlotView = require "classes.die.die_slot_view"
+local DieArea = require "classes.die_area"
 
 --MODULE FOR THE GAMESTATE: GAME--
 local Class = require "extra_libs.hump.class"
@@ -32,7 +31,7 @@ local c1, c2
 function state:enter()
     local map_obj = Map(8, 8)
     map = MapView(map_obj, Vector(500, 100), 50)
-    
+
     c1 = Controller(map_obj, 2, 2)
     c2 = Controller(map_obj, 6, 6)
 
@@ -43,8 +42,7 @@ function state:enter()
     DieView(Die{"turn","turn","churn","hurn","surn"}, 200, 100, Color.red()):addElement("L2", "die_view")
 
     --Create some example dieslots
-    DieSlotView(DieSlot(), 100, 400):addElement("L1", "die_slot_view")
-    DieSlotView(DieSlot(), 100, 500):addElement("L1", "die_slot_view")
+    DieArea(30, 250):addElement("L1", "die_area")
 end
 
 function state:leave()

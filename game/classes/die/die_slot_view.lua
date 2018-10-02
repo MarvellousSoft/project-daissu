@@ -46,4 +46,14 @@ function DieSlotView:draw()
     g.rectangle("line", self.pos.x, self.pos.y, self.w, self.h, 5, 5)
 end
 
+--UTILITY FUNCTIONS--
+
+--Return width and height of this slot
+function DieSlotView.getSize()
+    local d = DieSlotView()
+    local w, h = d.w, d.h
+    d = nil
+    return w, h
+end
+
 return DieSlotView
