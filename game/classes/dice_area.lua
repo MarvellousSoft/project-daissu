@@ -30,7 +30,7 @@ function DiceArea:init(dice_n, pos, w, h)
     end
 
     --Create button for rolling dies
-    local bw, bh = 100, 80
+    local bw, bh = w / 4, h / 5
     local func = function()
         for _, die_slot_view in ipairs(self.die_slots) do
             local die = die_slot_view.obj.die

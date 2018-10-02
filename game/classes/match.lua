@@ -7,6 +7,7 @@ local Controller = require "classes.map.controller"
 local DieHelper = require "classes.die.helper"
 local TurnSlots = require "classes.turn_slots"
 local TurnSlotsView = require "classes.turn_slots_view"
+local DiceArea = require "classes.dice_area"
 
 local Match = Class {}
 
@@ -18,6 +19,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     self.map_view = MapView(map, pos + Vector((w - cell_size * columns) / 2, 120), cell_size)
     self.controllers = {}
     self.turn_slots = {}
+    self.dice_areas = {}
+
     -- Assuming two players for now
     assert(#players_positions == 2)
     self.controllers[1] = Controller(map, unpack(players_positions[1]))
@@ -27,10 +30,18 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     d_h = d_h + 6
     self.turn_slots[1] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, pos.y + h - d_h - 25), (w - 20) / 2, d_h + 20)
     self.turn_slots[2] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, pos.y + h - d_h - 25), (w - 20) / 2, d_h + 20)
+
+    local dice_area_w = (w - cell_size * columns) / 2 - 10
+    local dice_area_h = h - 130 - (d_h + 20)
+    self.dice_areas[1] = DiceArea(8, Vector(5, 125), dice_area_w, dice_area_h)
+    self.dice_areas[2] = DiceArea(6, Vector(w - dice_area_w - 5, 125), dice_area_w, dice_area_h)
 end
 
 function Match:draw()
     self.map_view:draw()
+    for i, dice_area in ipairs(self.dice_areas) do
+        dice_area:draw()
+    end
     for i, turn_slots in ipairs(self.turn_slots) do
         turn_slots:draw()
     end
@@ -73,6 +84,12 @@ function Match:playTurn(player_actions, order)
     playTurnRec(self, player_actions, order, 1, 1, size, function()
         self.state = 'waiting for turn'
     end)
+end
+
+function Match:mousepressed(...)
+    for i, dice_area in ipairs(self.dice_areas) do
+        dice_area:mousepressed(...)
+    end
 end
 
 return Match
