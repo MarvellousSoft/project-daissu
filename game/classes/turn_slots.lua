@@ -7,7 +7,7 @@ local TurnSlots = Class {}
 function TurnSlots:init(n)
     self.slots = {}
     for i = 1, n do
-        self.slots[i] = DieSlot()
+        self.slots[i] = DieSlot("turn")
     end
 end
 

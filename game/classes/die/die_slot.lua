@@ -9,9 +9,10 @@ local DieSlot = Class{
     __includes={ELEMENT}
 }
 
-function DieSlot:init()
+function DieSlot:init(type)
     ELEMENT.init(self)
     self.die = nil --Which die is on this slot. nil if none.
+    self.type = type --What type of slot this is
 end
 
 --CLASS FUNCTIONS--

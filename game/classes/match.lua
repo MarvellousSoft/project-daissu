@@ -125,6 +125,31 @@ function Match:playTurn()
     self:playTurnFromActions(actions, order)
 end
 
+--Get first available slot from a player's turn slots, if any
+function Match:getAvailableTurnSlot(player)
+    local turn_slot_view = self.turn_slots[player]
+    for i, slot in ipairs(turn_slot_view:getObj().slots) do
+        if not slot:getDie() then
+            return slot
+        end
+    end
+
+    return nil
+end
+
+--Get first available slot from a player's dice area, if any
+function Match:getAvailableDiceAreaSlot(player)
+    local dice_area = self.dice_areas[player]
+    for i, slot_view in ipairs(dice_area.die_slots) do
+        local slot = slot_view:getObj()
+        if not slot:getDie() then
+            return slot
+        end
+    end
+
+    return nil
+end
+
 function Match:mousepressed(...)
     for i, dice_area in ipairs(self.dice_areas) do
         dice_area:mousepressed(...)

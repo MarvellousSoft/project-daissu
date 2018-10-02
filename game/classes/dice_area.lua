@@ -25,7 +25,7 @@ function DiceArea:init(dice_n, pos, w, h)
     self.die_slots = {}
     for i = 1, dice_n do
         local v = Vector.fromPolar((i - 1) * 2 * math.pi / dice_n, math.min(w, h) / 2 - math.min(dw, dh) / 2 - 5)
-        self.die_slots[i] = DieSlotView(DieSlot(), mid + v - Vector(dw / 2, dh / 2))
+        self.die_slots[i] = DieSlotView(DieSlot("dice_area"), mid + v - Vector(dw / 2, dh / 2))
         self.die_slots[i]:setSubtype("die_slot_view")
     end
 

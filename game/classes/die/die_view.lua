@@ -108,8 +108,29 @@ function DieView:mousepressed(x, y, button)
         self.previous_pos.x = self.pos.x
         self.previous_pos.y = self.pos.y
     elseif button == 2 and collided then
-        local player = self:getObj().getPlayer()
+        local player = self:getObj():getPlayer()
         local match = Util.findId("match")
+        --This die was in a slot
+        if self:getObj().slot then
+            local slot
+            --From turn slot go to dice area slot
+            if self:getObj().slot.type == "turn" then
+                slot = match:getAvailableDiceAreaSlot(player)
+            --From dice area slot go to turn slot
+            elseif self:getObj().slot.type == "dice_area" then
+                slot = match:getAvailableTurnSlot(player)
+            end
+            if slot then
+                self:getObj().slot:removeDie()
+                slot:putDie(self:getObj())
+            end
+        --This die was was not in a slot -> go to first available dice area slot
+        else
+            local slot = match:getAvailableDiceAreaSlot(player)
+            if slot then
+                slot:putDie(self:getObj())
+            end
+        end
     end
 
 end
