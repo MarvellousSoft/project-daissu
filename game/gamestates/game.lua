@@ -38,11 +38,11 @@ function state:enter()
 
     --Create some example dice
     Die{"turn","blurn","churn","hurn","surn"}:setId("my_die")
-    DieView(Util.findId("my_die"), 100, 100, Color.orange()):addElement("L2", "die_view")
-    DieView(Die{"turn","turn","churn","hurn","surn"}, 200, 100, Color.red()):addElement("L2", "die_view")
+    DieView(Util.findId("my_die"), 100, 100, Color.orange()):register("L2", "die_view")
+    DieView(Die{"turn","turn","churn","hurn","surn"}, 200, 100, Color.red()):register("L2", "die_view")
 
     --Create some example dieslots
-    DieArea(30, 250):addElement("L1", "die_area")
+    DieArea(30, 250):register("L1", "die_area")
 end
 
 function state:leave()

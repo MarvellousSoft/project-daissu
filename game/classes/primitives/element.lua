@@ -82,7 +82,7 @@ local Element = Class {
         return label
     end,
 
-    addElement = function(self, draw_table_label, subtp, id) --Add element to a drawable table with label "draw_table_label", and if desired, adds a subtype and/or id
+    register = function(self, draw_table_label, subtp, id) --Add element to a drawable table with label "draw_table_label", and if desired, adds a subtype and/or id
         if draw_table_label then self:setDrawTable(draw_table_label) end
         if subtp then self:setSubtype(subtp) end
         if id then self:setId(id) end
