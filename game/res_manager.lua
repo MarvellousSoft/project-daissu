@@ -5,11 +5,14 @@ local H
 
 local scale, tx, ty
 
+local canvas
+
 local function __NULL__() end
 
 function res.init()
     W = WIN_W
     H = WIN_H
+    canvas = love.graphics.newCanvas(W, H)
 
     love.graphics.setDefaultFilter('linear', 'linear')
 
@@ -94,13 +97,18 @@ function res.adjustWindow(w, h)
     end
 end
 
+
 function res.preDraw()
-    love.graphics.push()
-    love.graphics.translate(tx, ty)
-    love.graphics.scale(scale, scale)
+    love.graphics.setCanvas(canvas)
+    love.graphics.clear()
 end
 
 function res.postDraw()
+    love.graphics.setCanvas()
+    love.graphics.push()
+    love.graphics.translate(tx, ty)
+    love.graphics.scale(scale, scale)
+    love.graphics.draw(canvas)
     love.graphics.pop()
     love.graphics.setColor(25, 25, 0)
     if tx > 0 then
