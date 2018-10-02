@@ -62,4 +62,16 @@ function DiceArea:mousepressed(...)
     self.roll_button:mousepressed(...)
 end
 
+--Return all dices that are in a die slot in this area
+function DiceArea:getDice()
+    local t = {}
+    for _, die_slot_view in ipairs(self.die_slots) do
+        if die_slot_view:getObj():getDie() then
+            table.insert(t, die_slot_view:getObj():getDie())
+        end
+    end
+
+    return t
+end
+
 return DiceArea

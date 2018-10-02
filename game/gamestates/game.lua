@@ -21,13 +21,13 @@ local switch --If gamestate should change to another one
 
 local die
 
-local match
+local _match
 
 --STATE FUNCTIONS--
 
 function state:enter()
-    match = Match(8, 8, Vector(0, 0), 60, WIN_W, WIN_H, {{2, 2}, {6, 6}})
-    match:start()
+    _match = Match(8, 8, Vector(0, 0), 60, WIN_W, WIN_H, {{2, 2}, {6, 6}})
+    _match:start()
 
     --Create some example dice
     DieView(Die{"shoot","shoot","shoot","walk","walk","walk"}, 50, 30, Color.red()):register("L2", "die_view")
@@ -64,7 +64,7 @@ end
 
 function state:draw()
 
-    match:draw()
+    _match:draw()
 
     Draw.allTables()
 
@@ -75,7 +75,13 @@ function state:keypressed(key, scancode, isrepeat)
         Util.findId("my_die"):roll()
     end
     if key == 't' then
-        match:playTurn({{"clock"}, {"walk"}}, {1, 2})
+        _match:playTurn({{"clock"}, {"walk"}}, {1, 2})
+    end
+    if key == '1' then
+        _match:toggleHide(1)
+    end
+    if key == '2' then
+        _match:toggleHide(2)
     end
 end
 
@@ -95,7 +101,7 @@ function state:mousepressed(...)
             die_view:mousepressed(...)
         end
     end
-    match:mousepressed(...)
+    _match:mousepressed(...)
 end
 
 function state:mousereleased(...)

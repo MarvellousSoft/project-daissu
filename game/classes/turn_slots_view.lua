@@ -31,4 +31,15 @@ function TurnSlotsView:draw()
     end
 end
 
+--Return all dice in its slots
+function TurnSlotsView:getDice()
+    local t = {}
+    for i, slot in ipairs(self:getObj().slots) do
+        if slot:getDie() then
+            table.insert(t,slot:getDie())
+        end
+    end
+    return t
+end
+
 return TurnSlotsView

@@ -35,15 +35,23 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     local dice_area_h = h - 130 - (d_h + 20)
     self.dice_areas[1] = DiceArea(8, Vector(5, 125), dice_area_w, dice_area_h)
     self.dice_areas[2] = DiceArea(6, Vector(w - dice_area_w - 5, 125), dice_area_w, dice_area_h)
+
+    self.hide_player = {}
+    self.hide_player[1] = false
+    self.hide_player[2] = false
 end
 
 function Match:draw()
     self.map_view:draw()
     for i, dice_area in ipairs(self.dice_areas) do
-        dice_area:draw()
+        if not self.hide_player[i] then
+            dice_area:draw()
+        end
     end
     for i, turn_slots in ipairs(self.turn_slots) do
-        turn_slots:draw()
+        if not self.hide_player[i] then
+            turn_slots:draw()
+        end
     end
 end
 
@@ -84,6 +92,18 @@ function Match:playTurn(player_actions, order)
     playTurnRec(self, player_actions, order, 1, 1, size, function()
         self.state = 'waiting for turn'
     end)
+end
+
+function Match:toggleHide(player)
+    self.hide_player[player] = not self.hide_player[player]
+    local dice_area = self.dice_areas[player]
+    for i, die in ipairs(dice_area:getDice()) do
+        die.view.invisible = not die.view.invisible
+    end
+    local turn_slot_view = self.turn_slots[player]
+    for i, die in ipairs(turn_slot_view:getDice()) do
+        die.view.invisible = not die.view.invisible
+    end
 end
 
 function Match:mousepressed(...)
