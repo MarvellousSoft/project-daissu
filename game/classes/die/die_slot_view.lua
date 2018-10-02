@@ -9,18 +9,18 @@ local funcs = {}
 --CLASS DEFINITION--
 
 local DieSlotView = Class{
-    __includes={DRAWABLE, VIEW}
+    __includes={DRAWABLE, VIEW},
+    margin = 3
 }
 
-function DieSlotView:init(die_slot, x, y)
-    DRAWABLE.init(self, x, y)
+function DieSlotView:init(die_slot, pos)
+    DRAWABLE.init(self, pos.x, pos.y)
     VIEW.init(self, die_slot)
 
     --Graphic variable
     local w, h = DieHelper.getDieDimensions()
-    self.margin = 3 --How much larger the slot is from a regular die
-    self.w = w + 2*self.margin
-    self.h = h + 2*self.margin
+    self.w = w + 2 * DieSlotView.margin
+    self.h = h + 2 * DieSlotView.margin
     self.line_width = 5
 
     self.free_color = Color.white()
@@ -50,9 +50,9 @@ end
 
 --Return width and height of this slot
 function DieSlotView.getSize()
-    local d = DieSlotView()
-    local w, h = d.w, d.h
-    d = nil
+    local w, h = DieHelper.getDieDimensions()
+    w = w + 2 * DieSlotView.margin
+    h = h + 2 * DieSlotView.margin
     return w, h
 end
 

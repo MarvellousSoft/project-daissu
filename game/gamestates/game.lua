@@ -34,8 +34,8 @@ function state:enter()
     DieView(Util.findId("my_die"), 100, 100, Color.orange()):register("L2", "die_view")
     DieView(Die{"turn","turn","churn","hurn","surn"}, 200, 100, Color.red()):register("L2", "die_view")
 
-    --Create some example dice area
-    DiceArea(30, 250):register("L1", "dice_area")
+    --Create some example dieslots
+    DiceArea(8, Vector(30, 250), 400, 400):register("L1", "dice_area")
 end
 
 function state:leave()
