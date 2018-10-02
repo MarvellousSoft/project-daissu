@@ -17,6 +17,12 @@ function MapTile:blocked()
     return self.obj ~= nil
 end
 
+function MapTile:applyDamage(dmg)
+    if self.obj ~= nil and self.obj.applyDamage then
+        self.obj:applyDamage(dmg)
+    end
+end
+
 -- drawing starting on a tile of size size starting on x, y
 function MapTile:drawOnGrid(x, y, size)
     if self.obj ~= nil then
