@@ -1,7 +1,10 @@
 --UTILITY FUNCTIONS FOR ACTION
 
 local icons = {
-    turn = love.graphics.newImage("assets/images/icons/wide-arrow-dunk.png"),
+    clock  = love.graphics.newImage("assets/images/icons/clock.png"),
+    counter = love.graphics.newImage("assets/images/icons/counter.png"),
+    walk = love.graphics.newImage("assets/images/icons/walk.png"),
+    shoot = love.graphics.newImage("assets/images/icons/shoot.png"),
     no_icon = love.graphics.newImage("assets/images/icons/no-icon.png")
 }
 

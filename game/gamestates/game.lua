@@ -30,13 +30,18 @@ function state:enter()
     match:start()
 
     --Create some example dice
-    Die{"turn","blurn","churn","hurn","surn"}:setId("my_die")
-    DieView(Util.findId("my_die"), 50, 30, Color.orange()):register("L2", "die_view")
-    DieView(Die{"turn","turn","churn","hurn","surn"}, 100, 30, Color.red()):register("L2", "die_view")
-    DieView(Die{"turn","turn","churn","hurn","surn"}, 200, 30, Color.red()):register("L2", "die_view")
-    DieView(Die{"turn","turn","churn","hurn","surn"}, 300, 30, Color.red()):register("L2", "die_view")
-    DieView(Die{"turn","turn","churn","hurn","surn"}, 400, 30, Color.red()):register("L2", "die_view")
-    DieView(Die{"turn","turn","churn","hurn","surn"}, 500, 30, Color.red()):register("L2", "die_view")
+    DieView(Die{"shoot","shoot","shoot","walk","walk","walk"}, 50, 30, Color.red()):register("L2", "die_view")
+    DieView(Die{"shoot","shoot","shoot","walk","walk","walk"}, 120, 30, Color.red()):register("L2", "die_view")
+    DieView(Die{"counter","counter","counter","clock","clock","clock"}, 190, 30, Color.blue()):register("L2", "die_view")
+    DieView(Die{"counter","counter","counter","clock","clock","clock"}, 260, 30, Color.blue()):register("L2", "die_view")
+    DieView(Die{"walk","counter","clock","shoot","shoot", "walk"}, 330, 30, Color.green()):register("L2", "die_view")
+
+    --Create some example dice
+    DieView(Die{"shoot","shoot","shoot","walk","walk","walk"}, 950, 30, Color.red()):register("L2", "die_view")
+    DieView(Die{"shoot","shoot","shoot","walk","walk","walk"}, 1020, 30, Color.red()):register("L2", "die_view")
+    DieView(Die{"counter","counter","counter","clock","clock","clock"}, 1090, 30, Color.blue()):register("L2", "die_view")
+    DieView(Die{"counter","counter","counter","clock","clock","clock"}, 1160, 30, Color.blue()):register("L2", "die_view")
+    DieView(Die{"walk","counter","clock","shoot","shoot", "walk"}, 1230, 30, Color.green()):register("L2", "die_view")
 end
 
 function state:leave()
