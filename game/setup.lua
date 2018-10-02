@@ -20,7 +20,6 @@ function setup.config()
     --TIMERS--
     MAIN_TIMER = Timer.new()  --General Timer
 
-
     --GLOBAL VARIABLES--
     DEBUG = true --DEBUG mode status
 

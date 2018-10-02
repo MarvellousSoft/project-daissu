@@ -22,6 +22,8 @@ function DieView:init(die, x, y, color)
 
     self.w, self.h = DieHelper.getDieDimensions()
 
+    self.sx, self.sy = 1, 1
+
     --Color for die border
     self.color_border = Color.new(self.color.r*1.2,self.color.g*1.2,self.color.b*1.2)
 
@@ -33,6 +35,8 @@ function DieView:init(die, x, y, color)
 
     self.previous_pos = Vector(x,y)
     self.picked = false --If player is dragging this object
+
+    self.rolling = false --If die is rolling
 end
 
 --CLASS FUNCTIONS--
@@ -50,8 +54,20 @@ function DieView:draw()
 
     --Draw die text
     Color.set(Color.white())
-    local icon = self.side_images[die:getCurrentNum()]
+    local icon
+    if self.rolling then
+        icon = self.side_images[love.math.random(die:getSides())]
+    else
+        icon = self.side_images[die:getCurrentNum()]
+    end
     g.draw(icon, self.pos.x, self.pos.y, nil, self.w/icon:getWidth(),self.h/icon:getHeight())
+end
+
+function DieView:rollAnimation()
+    if self.rolling then return end
+    self.rolling = true
+    --self:addTimer("roll up", MAIN_TIMER, "tween", .5, self, {sx = 2, sy = 2}, "in-quad")
+
 end
 
 --Mouse functions
