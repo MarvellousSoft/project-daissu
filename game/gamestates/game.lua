@@ -31,8 +31,12 @@ function state:enter()
 
     --Create some example dice
     Die{"turn","blurn","churn","hurn","surn"}:setId("my_die")
-    DieView(Util.findId("my_die"), 100, 100, Color.orange()):register("L2", "die_view")
-    DieView(Die{"turn","turn","churn","hurn","surn"}, 200, 100, Color.red()):register("L2", "die_view")
+    DieView(Util.findId("my_die"), 50, 30, Color.orange()):register("L2", "die_view")
+    DieView(Die{"turn","turn","churn","hurn","surn"}, 100, 30, Color.red()):register("L2", "die_view")
+    DieView(Die{"turn","turn","churn","hurn","surn"}, 200, 30, Color.red()):register("L2", "die_view")
+    DieView(Die{"turn","turn","churn","hurn","surn"}, 300, 30, Color.red()):register("L2", "die_view")
+    DieView(Die{"turn","turn","churn","hurn","surn"}, 400, 30, Color.red()):register("L2", "die_view")
+    DieView(Die{"turn","turn","churn","hurn","surn"}, 500, 30, Color.red()):register("L2", "die_view")
 end
 
 function state:leave()

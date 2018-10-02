@@ -39,6 +39,7 @@ function DieView:init(die, x, y, color)
     self.rolling = false --If die is rolling
     self.rolling_face = 1 --What face to show while rolling
     self.rolling_face_change_speed = .1 --Speed to change face while rolling
+    self.change_side = false
 end
 
 --CLASS FUNCTIONS--
@@ -61,8 +62,10 @@ function DieView:draw()
     local icon
     if self.rolling then
         icon = self.side_images[math.floor(self.rolling_face)]
-        self.rolling_face = self.rolling_face + self.rolling_face_change_speed
-        self.rolling_face = (self.rolling_face - 1)%die:getNumSides() + 1
+        if self.change_side then
+            self.rolling_face = self.rolling_face + self.rolling_face_change_speed
+            self.rolling_face = (self.rolling_face - 1)%die:getNumSides() + 1
+        end
     else
         icon = self.side_images[die:getCurrentNum()]
     end
@@ -73,13 +76,21 @@ end
 function DieView:rollAnimation()
     if self.rolling then return end
     self.rolling = true
+    self.change_side = false
     self.rolling_face = self:getObj():getCurrentNum()
     local duration = love.math.random()*.3 + .4 --Range between [.4,.7]
-    self:addTimer(nil, MAIN_TIMER, "tween", duration, self, {sx = 1.5, sy = 1.5}, "in-quad",
+    self:addTimer(nil, MAIN_TIMER, "tween", duration, self, {sx = 1.9, sy = 1.9}, "in-quad",
         function()
+            --Make it go back
             self:addTimer(nil, MAIN_TIMER, "tween", duration-.1, self, {sx = 1, sy = 1}, "in-bounce",
                 function()
                     self.rolling = false
+                end
+            )
+            --Start changing side approximatly at first bounce
+            self:addTimer(nil, MAIN_TIMER, "after", .25*(duration-.1),
+                function()
+                    self.change_side = true
                 end
             )
         end
