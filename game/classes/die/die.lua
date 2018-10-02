@@ -14,6 +14,7 @@ function Die:init(sides)
     self.num_sides = #sides --Number of sides this die has
     self.sides = sides --Array of strings contaning what every side has
     self.current_side = 1
+    self.slot = nil
 end
 
 --CLASS FUNCTIONS--
