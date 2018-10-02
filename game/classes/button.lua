@@ -60,7 +60,6 @@ end
 function Button:mousepressed(x, y, button)
     if self:collidesPoint(x,y) then
         self.func()
-
     end
 end
 
