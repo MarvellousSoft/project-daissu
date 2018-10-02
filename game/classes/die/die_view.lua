@@ -37,6 +37,8 @@ function DieView:init(die, x, y, color)
     self.picked = false --If player is dragging this object
 
     self.rolling = false --If die is rolling
+    self.rolling_face = 1 --What face to show while rolling
+    self.rolling_face_change_speed = .1 --Speed to change face while rolling
 end
 
 --CLASS FUNCTIONS--
@@ -47,26 +49,41 @@ function DieView:draw()
     local g = love.graphics
     --Draw die bg
     Color.set(self.color)
-    g.rectangle("fill", self.pos.x, self.pos.y, self.w, self.h, 5, 5)
+    g.rectangle("fill", self.pos.x  - self.w*(self.sx-1)/2, self.pos.y  - self.h*(self.sy-1)/2,
+                        self.w * self.sx, self.h * self.sy, 5, 5)
     g.setLineWidth(4)
     Color.set(self.color_border)
-    g.rectangle("line", self.pos.x, self.pos.y, self.w, self.h, 5, 5)
+    g.rectangle("line", self.pos.x  - self.w*(self.sx-1)/2, self.pos.y  - self.h*(self.sy-1)/2,
+                        self.w * self.sx, self.h * self.sy, 5, 5)
 
     --Draw die text
     Color.set(Color.white())
     local icon
     if self.rolling then
-        icon = self.side_images[love.math.random(die:getSides())]
+        icon = self.side_images[math.floor(self.rolling_face)]
+        self.rolling_face = self.rolling_face + self.rolling_face_change_speed
+        self.rolling_face = (self.rolling_face - 1)%die:getNumSides() + 1
     else
         icon = self.side_images[die:getCurrentNum()]
     end
-    g.draw(icon, self.pos.x, self.pos.y, nil, self.w/icon:getWidth(),self.h/icon:getHeight())
+    g.draw(icon, self.pos.x - self.w*(self.sx-1)/2, self.pos.y - self.h*(self.sy-1)/2, nil,
+                 self.w/icon:getWidth()*self.sx, self.h/icon:getHeight()*self.sy)
 end
 
 function DieView:rollAnimation()
     if self.rolling then return end
     self.rolling = true
-    --self:addTimer("roll up", MAIN_TIMER, "tween", .5, self, {sx = 2, sy = 2}, "in-quad")
+    self.rolling_face = self:getObj():getCurrentNum()
+    local duration = love.math.random()*.3 + .4 --Range between [.4,.7]
+    self:addTimer(nil, MAIN_TIMER, "tween", duration, self, {sx = 1.5, sy = 1.5}, "in-quad",
+        function()
+            self:addTimer(nil, MAIN_TIMER, "tween", duration-.1, self, {sx = 1, sy = 1}, "in-bounce",
+                function()
+                    self.rolling = false
+                end
+            )
+        end
+    )
 
 end
 

@@ -47,7 +47,7 @@ function state:update(dt)
     if switch == "menu" then
         --Gamestate.switch(GS.MENU)
     end
-    MAIN_TIMER:update()
+    MAIN_TIMER:update(dt)
 
     Util.destroyAll()
 

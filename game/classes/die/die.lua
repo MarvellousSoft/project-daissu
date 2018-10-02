@@ -34,10 +34,15 @@ function Die:getSides()
     return self.sides
 end
 
+--Returns number of sides
+function Die:getNumSides()
+    return self.num_sides
+end
+
 --Randomize current up side and returns the result
 function Die:roll()
     self.current_side = love.math.random(1,self.num_sides)
-    --self.view:rollAnimation()
+    self.view:rollAnimation()
     return self:getCurrent()
 end
 
