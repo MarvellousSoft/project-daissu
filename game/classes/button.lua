@@ -23,7 +23,7 @@ function Button:init(x, y, w, h, text, func)
     self.text = text
 
     --Get correct font size based on button size
-    i = 30
+    i = 40
     repeat
         self.font = Font.get("regular", i)
     until self.font:getWidth(self.text) <= w + 2*self.w_gap and
@@ -57,7 +57,7 @@ function Button:draw()
     lg.print(self.text, self.pos.x + self.w/2 - tw/2, self.pos.y + self.h/2 - th/2)
 end
 
-function Button:mousereleased(x, y, button)
+function Button:mousepressed(x, y, button)
     if self:collidesPoint(x,y) then
         self.func()
 

@@ -88,6 +88,12 @@ function state:mousepressed(...)
             die_view:mousepressed(...)
         end
     end
+    local dice_areas = Util.findSubtype("dice_area")
+    if dice_areas then
+        for dice_area in pairs(dice_areas) do
+            dice_area:mousepressed(...)
+        end
+    end
 end
 
 function state:mousereleased(...)
@@ -95,12 +101,6 @@ function state:mousereleased(...)
     if dies then
         for die_view in pairs(dies) do
             die_view:mousereleased(...)
-        end
-    end
-    local dice_areas = Util.findSubtype("dice_area")
-    if dice_areas then
-        for dice_area in pairs(dice_areas) do
-            dice_area:mousereleased(...)
         end
     end
 end

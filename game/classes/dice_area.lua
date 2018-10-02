@@ -39,7 +39,14 @@ function DiceArea:init(x, y)
 
     --Create button for rolling dies
     local bw, bh = 100, 80
-    local func = function() print("rolled") end
+    local func = function()
+        for _, die_slot_view in ipairs(self.die_slots) do
+            local die = die_slot_view.obj.die
+            if die then
+                die:roll()
+            end
+        end
+    end
     self.roll_button = Button(x+w/2-bw/2, y+h/2-bh/2, bw, bh, "roll", func)
 end
 
@@ -59,8 +66,8 @@ function DiceArea:draw()
     self.roll_button:draw()
 end
 
-function DiceArea:mousereleased(...)
-    self.roll_button:mousereleased(...)
+function DiceArea:mousepressed(...)
+    self.roll_button:mousepressed(...)
 end
 
 return DiceArea
