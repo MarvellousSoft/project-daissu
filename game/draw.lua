@@ -13,9 +13,11 @@ function draw.allTables()
 
     CAM:attach() --Start tracking camera
 
-    DrawTable(DRAW_TABLE.L1)
+    DrawTable(DRAW_TABLE.L1) --(die slots, die arenas)
 
-    DrawTable(DRAW_TABLE.L2)
+    DrawTable(DRAW_TABLE.L2) --(dice)
+
+    DrawTable(DRAW_TABLE.L2upper) --Above L2 (selected die)
 
     CAM:detach() --Stop tracking camera
 

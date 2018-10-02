@@ -64,8 +64,26 @@ local Element = Class {
         end
     end,
 
-    addElement = function(self, draw_table_label, subtp, id) --Add element to a drawable table with label "draw_table_label", and if desired, adds a subtype and/or id
+    setDrawTable = function(self, draw_table_label)
+        --Check for previous draw table and remove it
+        for idx, draw_table in pairs(DRAW_TABLE) do
+            if draw_table[self] then draw_table[self] = nil end
+        end
         DRAW_TABLE[draw_table_label][self] = true
+    end,
+
+    getDrawTable = function(self)
+        local label
+        for idx, draw_table in pairs(DRAW_TABLE) do
+            if draw_table[self] then
+                label = idx
+            end
+        end
+        return label
+    end,
+
+    addElement = function(self, draw_table_label, subtp, id) --Add element to a drawable table with label "draw_table_label", and if desired, adds a subtype and/or id
+        if draw_table_label then self:setDrawTable(draw_table_label) end
         if subtp then self:setSubtype(subtp) end
         if id then self:setId(id) end
     end,

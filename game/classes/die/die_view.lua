@@ -39,6 +39,7 @@ end
 
 function DieView:draw()
     local die = self:getObj()
+
     local g = love.graphics
     --Draw die bg
     Color.set(self.color)
@@ -58,6 +59,7 @@ end
 function DieView:mousepressed(x, y, button)
     if self:collidesPoint(x,y) then
         self.picked = true
+        self:setDrawTable("L2upper") --Make it draw above other dice
         self.previous_pos.x = self.pos.x
         self.previous_pos.y = self.pos.y
     end
@@ -65,6 +67,7 @@ end
 
 function DieView:mousereleased(x, y, button)
     if self.picked then
+        self:setDrawTable("L2") --Return it to normal draw layer
         local slots = Util.findSubtype("die_slot_view")
         local should_return = true
         if slots then
