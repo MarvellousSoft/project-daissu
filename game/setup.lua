@@ -30,6 +30,7 @@ function setup.config()
     --Drawing Tables
     DRAW_TABLE = {
         BG       = {}, --Background (bottom layer, first to draw)
+        L0       = {}, --Layer 0
         L1       = {}, --Layer 1
         L2       = {}, --Layer 2
         L2upper  = {}, --Above layer 2

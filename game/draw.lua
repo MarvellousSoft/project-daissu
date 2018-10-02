@@ -13,6 +13,8 @@ function draw.allTables()
 
     CAM:attach() --Start tracking camera
 
+    DrawTable(DRAW_TABLE.L0) --(match)
+
     DrawTable(DRAW_TABLE.L1) --(die slots, die arenas)
 
     DrawTable(DRAW_TABLE.L2) --(dice)

@@ -21,27 +21,26 @@ local switch --If gamestate should change to another one
 
 local die
 
-local _match
 
 --STATE FUNCTIONS--
 
 function state:enter()
-    _match = Match(8, 8, Vector(0, 0), 60, WIN_W, WIN_H, {{2, 2}, {6, 6}})
-    _match:start()
+    local match = Match(8, 8, Vector(0, 0), 60, WIN_W, WIN_H, {{2, 2}, {6, 6}})
+    match:start()
 
     --Create some example dice
-    DieView(Die{"shoot","shoot","shoot","walk","walk","walk"}, 50, 30, Color.red()):register("L2", "die_view")
-    DieView(Die{"shoot","shoot","shoot","walk","walk","walk"}, 120, 30, Color.red()):register("L2", "die_view")
-    DieView(Die{"counter","counter","counter","clock","clock","clock"}, 190, 30, Color.blue()):register("L2", "die_view")
-    DieView(Die{"counter","counter","counter","clock","clock","clock"}, 260, 30, Color.blue()):register("L2", "die_view")
-    DieView(Die{"walk","counter","clock","shoot","shoot", "walk"}, 330, 30, Color.green()):register("L2", "die_view")
+    DieView(Die({"shoot","shoot","shoot","walk","walk","walk"}, 1), 50, 30, Color.red()):register("L2", "die_view")
+    DieView(Die({"shoot","shoot","shoot","walk","walk","walk"}, 1), 120, 30, Color.red()):register("L2", "die_view")
+    DieView(Die({"counter","counter","counter","clock","clock","clock"}, 1), 190, 30, Color.blue()):register("L2", "die_view")
+    DieView(Die({"counter","counter","counter","clock","clock","clock"}, 1), 260, 30, Color.blue()):register("L2", "die_view")
+    DieView(Die({"walk","counter","clock","shoot","shoot", "walk"}, 1), 330, 30, Color.green()):register("L2", "die_view")
 
     --Create some example dice
-    DieView(Die{"shoot","shoot","shoot","walk","walk","walk"}, 950, 30, Color.red()):register("L2", "die_view")
-    DieView(Die{"shoot","shoot","shoot","walk","walk","walk"}, 1020, 30, Color.red()):register("L2", "die_view")
-    DieView(Die{"counter","counter","counter","clock","clock","clock"}, 1090, 30, Color.blue()):register("L2", "die_view")
-    DieView(Die{"counter","counter","counter","clock","clock","clock"}, 1160, 30, Color.blue()):register("L2", "die_view")
-    DieView(Die{"walk","counter","clock","shoot","shoot", "walk"}, 1230, 30, Color.green()):register("L2", "die_view")
+    DieView(Die({"shoot","shoot","shoot","walk","walk","walk"}, 2), 950, 30, Color.red(), 2):register("L2", "die_view")
+    DieView(Die({"shoot","shoot","shoot","walk","walk","walk"}, 2), 1020, 30, Color.red(), 2):register("L2", "die_view")
+    DieView(Die({"counter","counter","counter","clock","clock","clock"}, 2), 1090, 30, Color.blue(), 2):register("L2", "die_view")
+    DieView(Die({"counter","counter","counter","clock","clock","clock"}, 2), 1160, 30, Color.blue(), 2):register("L2", "die_view")
+    DieView(Die({"walk","counter","clock","shoot","shoot", "walk"}, 2), 1230, 30, Color.green(), 2):register("L2", "die_view")
 end
 
 function state:leave()
@@ -64,24 +63,24 @@ end
 
 function state:draw()
 
-    _match:draw()
-
     Draw.allTables()
 
 end
 
 function state:keypressed(key, scancode, isrepeat)
+    local match = Util.findId("match")
+
     if key == "r" then
         Util.findId("my_die"):roll()
     end
     if key == 't' then
-        _match:playTurn()
+        match:playTurn()
     end
     if key == '1' then
-        _match:toggleHide(1)
+        match:toggleHide(1)
     end
     if key == '2' then
-        _match:toggleHide(2)
+        match:toggleHide(2)
     end
 end
 
@@ -101,7 +100,8 @@ function state:mousepressed(...)
             die_view:mousepressed(...)
         end
     end
-    _match:mousepressed(...)
+    local match = Util.findId("match")
+    match:mousepressed(...)
 end
 
 function state:mousereleased(...)

@@ -1,3 +1,4 @@
+local ELEMENT = require "classes.primitives.element"
 local Class = require "extra_libs.hump.class"
 local Vector = require "extra_libs.hump.vector"
 local Util = require "util"
@@ -9,9 +10,12 @@ local TurnSlots = require "classes.turn_slots"
 local TurnSlotsView = require "classes.turn_slots_view"
 local DiceArea = require "classes.dice_area"
 
-local Match = Class {}
+local Match = Class {
+    __includes = {ELEMENT}
+}
 
 function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
+    ELEMENT.init(self)
     self.state = 'not started'
     self.pos = pos
     self.w, self.h = w, h
@@ -39,6 +43,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     self.hide_player = {}
     self.hide_player[1] = false
     self.hide_player[2] = false
+
+    self:register("L0", nil, "match")
 end
 
 function Match:draw()

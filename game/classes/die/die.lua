@@ -9,11 +9,12 @@ local Die = Class{
     __includes={ELEMENT}
 }
 
-function Die:init(sides)
+function Die:init(sides, player_num)
     ELEMENT.init(self)
     self.num_sides = #sides --Number of sides this die has
     self.sides = sides --Array of strings contaning what every side has
     self.current_side = 1
+    self.player_num = player_num --What player this die belong to
     self.slot = nil
 end
 
@@ -44,6 +45,10 @@ function Die:roll()
     self.current_side = love.math.random(1,self.num_sides)
     self.view:rollAnimation()
     return self:getCurrent()
+end
+
+function Die:getPlayer()
+    return self.player_num
 end
 
 return Die

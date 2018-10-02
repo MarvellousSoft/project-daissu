@@ -101,12 +101,17 @@ end
 --Mouse functions
 
 function DieView:mousepressed(x, y, button)
-    if self:collidesPoint(x,y) then
+    local collided = self:collidesPoint(x,y)
+    if button == 1 and collided then
         self.picked = true
         self:setDrawTable("L2upper") --Make it draw above other dice
         self.previous_pos.x = self.pos.x
         self.previous_pos.y = self.pos.y
+    elseif button == 2 and collided then
+        local player = self:getObj().getPlayer()
+        local match = Util.findId("match")
     end
+
 end
 
 function DieView:mousereleased(x, y, button)
