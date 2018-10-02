@@ -11,7 +11,7 @@ local DieSlot = Class{
 
 function DieSlot:init()
     ELEMENT.init(self)
-    self.die = false --Which die is on this slot. False if none.
+    self.die = nil --Which die is on this slot. nil if none.
 end
 
 --CLASS FUNCTIONS--
@@ -20,7 +20,7 @@ end
 function DieSlot:putDie(die)
     if self.die then self:removeDie() end
     self.die = die
-    assert(not die.slot)
+    assert(die.slot == nil)
     self.die.slot = self
     local die_view = self.die.view
     die_view.pos.x = self.view.pos.x + self.view.margin

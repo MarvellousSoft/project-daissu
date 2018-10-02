@@ -84,7 +84,7 @@ end
 
 -- player_actions is a list of lists, the i-th with the actions of the i-th player
 -- order is a list with the order of the players
-function Match:playTurn(player_actions, order)
+function Match:playTurnFromActions(player_actions, order)
     assert(#player_actions == #self.controllers)
     assert(self.state == 'waiting for turn')
     self.state = 'playing turn'
@@ -104,6 +104,19 @@ function Match:toggleHide(player)
     for i, die in ipairs(turn_slot_view:getDice()) do
         die.view.invisible = not die.view.invisible
     end
+end
+
+function Match:playTurn()
+    local actions = {}
+    local order = {}
+    for i, turn_slots in ipairs(self.turn_slots) do
+        actions[i] = {}
+        for j, die_slot in ipairs(turn_slots:getObj().slots) do
+            actions[i][j] = die_slot.die and die_slot.die:getCurrent()
+        end
+        order[i] = i
+    end
+    self:playTurnFromActions(actions, order)
 end
 
 function Match:mousepressed(...)
