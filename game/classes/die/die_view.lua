@@ -59,16 +59,7 @@ function DieView:draw()
 
     --Draw die text
     Color.set(Color.white())
-    local icon
-    if self.rolling then
-        icon = self.side_images[math.floor(self.rolling_face)]
-        if self.change_side then
-            self.rolling_face = self.rolling_face + self.rolling_face_change_speed
-            self.rolling_face = (self.rolling_face - 1)%die:getNumSides() + 1
-        end
-    else
-        icon = self.side_images[die:getCurrentNum()]
-    end
+    local icon = self.side_images[self.rolling and self.rolling_face or die:getCurrentNum()]
     g.draw(icon, self.pos.x - self.w*(self.sx-1)/2, self.pos.y - self.h*(self.sy-1)/2, nil,
                  self.w/icon:getWidth()*self.sx, self.h/icon:getHeight()*self.sy)
 end
@@ -76,10 +67,29 @@ end
 function DieView:rollAnimation()
     if self.rolling then return end
     self.rolling = true
-    self.change_side = false
-    self.rolling_face = self:getObj():getCurrentNum()
-    local duration = love.math.random()*.3 + .4 --Range between [.4,.7]
-    self:addTimer(nil, MAIN_TIMER, "tween", duration, self, {sx = 1.9, sy = 1.9}, "in-quad",
+    local imgs = {}
+    for i, img in ipairs(self.side_images) do imgs[img] = i end
+
+    -- Only different images
+    local diff_imgs = {}
+    local face_i = 1
+    for img, i in pairs(imgs) do
+        table.insert(diff_imgs, i)
+        if self.side_images[i] == self.side_images[self.obj:getCurrentNum()] then
+            face_i = #diff_imgs
+        end
+    end
+
+    self.rolling_face = diff_imgs[face_i]
+    local function change_side()
+        local i = love.math.random(#diff_imgs - 1)
+        if i >= face_i then i = i + 1 end
+        face_i = i
+        self.rolling_face = diff_imgs[i]
+    end
+
+    local duration = love.math.random() * .2 + .6 --Range between [.6,.8]
+    self:addTimer(nil, MAIN_TIMER, "tween", duration, self, {sx = 1.9, sy = 1.9}, "out-quad",
         function()
             --Make it go back
             self:addTimer(nil, MAIN_TIMER, "tween", duration-.1, self, {sx = 1, sy = 1}, "in-bounce",
@@ -87,12 +97,16 @@ function DieView:rollAnimation()
                     self.rolling = false
                 end
             )
-            --Start changing side approximatly at first bounce
-            self:addTimer(nil, MAIN_TIMER, "after", .25*(duration-.1),
-                function()
-                    self.change_side = true
+            MAIN_TIMER:script(function(wait)
+                wait(.36 * (duration - .1))
+                local cur = .36 * (duration - .1)
+                while cur <= (duration - .1) do
+                    change_side()
+                    local d = love.math.random() * .04 + .1
+                    wait(d)
+                    cur = cur + d
                 end
-            )
+            end)
         end
     )
 

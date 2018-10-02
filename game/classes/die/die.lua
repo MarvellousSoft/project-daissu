@@ -42,8 +42,8 @@ end
 
 --Randomize current up side and returns the result
 function Die:roll()
-    self.current_side = love.math.random(1,self.num_sides)
     self.view:rollAnimation()
+    self.current_side = love.math.random(1, self.num_sides)
     return self:getCurrent()
 end
 
