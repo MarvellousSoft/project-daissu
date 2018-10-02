@@ -10,8 +10,6 @@ local Util = require "util"
 local Draw = require "draw"
 local Drawable = require "classes.primitives.drawable"
 local Match = require "classes.match"
-local TurnSlots = require "classes.turn_slots"
-local TurnSlotsView = require "classes.turn_slots_view"
 
 local state = {}
 
@@ -25,18 +23,11 @@ local die
 
 local match
 
-local turn_slots
-
 --STATE FUNCTIONS--
 
 function state:enter()
-    match = Match(8, 8, Vector(500, 100), 50)
-    match:addController(2, 2)
-    match:addController(6, 6)
+    match = Match(8, 8, Vector(0, 0), 60, WIN_W, WIN_H, {{2, 2}, {6, 6}})
     match:start()
-
-    local turn_slots_obj = TurnSlots(5)
-    turn_slots = TurnSlotsView(turn_slots_obj, Vector(100, 660), 500, 100)
 
     --Create some example dice
     Die{"turn","blurn","churn","hurn","surn"}:setId("my_die")
@@ -65,8 +56,6 @@ function state:update(dt)
 end
 
 function state:draw()
-
-    turn_slots:draw()
 
     match:draw()
 

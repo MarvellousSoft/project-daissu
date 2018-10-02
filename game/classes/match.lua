@@ -4,26 +4,36 @@ local Util = require "util"
 local Map = require "classes.map.map"
 local MapView = require "classes.map.map_view"
 local Controller = require "classes.map.controller"
+local DieHelper = require "classes.die.helper"
+local TurnSlots = require "classes.turn_slots"
+local TurnSlotsView = require "classes.turn_slots_view"
 
 local Match = Class {}
 
-function Match:init(rows, columns, pos, cell_size)
+function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     self.state = 'not started'
     self.pos = pos
+    self.w, self.h = w, h
     local map = Map(rows, columns)
-    self.map_view = MapView(map, pos + Vector(0, 20), cell_size)
+    self.map_view = MapView(map, pos + Vector((w - cell_size * columns) / 2, 120), cell_size)
     self.controllers = {}
-end
-
-function Match:addController(i, j)
-    assert(self.state == 'not started')
-    table.insert(self.controllers, Controller(self.map_view.obj, i, j))
+    self.turn_slots = {}
+    -- Assuming two players for now
+    assert(#players_positions == 2)
+    self.controllers[1] = Controller(map, unpack(players_positions[1]))
+    self.controllers[2] = Controller(map, unpack(players_positions[2]))
+    local d_w, d_h = DieHelper.getDieDimensions()
+    -- Taking margins into account
+    d_h = d_h + 6
+    self.turn_slots[1] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, pos.y + h - d_h - 25), (w - 20) / 2, d_h + 20)
+    self.turn_slots[2] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, pos.y + h - d_h - 25), (w - 20) / 2, d_h + 20)
 end
 
 function Match:draw()
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.print("Status: " .. self.state, self.pos.x, self.pos.y)
     self.map_view:draw()
+    for i, turn_slots in ipairs(self.turn_slots) do
+        turn_slots:draw()
+    end
 end
 
 function Match:start()
