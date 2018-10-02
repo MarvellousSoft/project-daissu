@@ -9,11 +9,11 @@ local funcs = {}
 
 --CLASS DEFINITION--
 
-local DieArea = Class{
+local DiceArea = Class{
     __includes={DRAWABLE}
 }
 
-function DieArea:init(x, y)
+function DiceArea:init(x, y)
     DRAWABLE.init(self, x, y, Color.purple())
     local w, h = 400, 400
     self.w = w
@@ -45,7 +45,7 @@ end
 
 --CLASS FUNCTIONS--
 
-function DieArea:draw()
+function DiceArea:draw()
     --Draw bg
     Color.set(self.color)
     love.graphics.rectangle("fill", self.pos.x, self.pos.y, self.w, self.h)
@@ -59,8 +59,8 @@ function DieArea:draw()
     self.roll_button:draw()
 end
 
-function DieArea:mousereleased(...)
+function DiceArea:mousereleased(...)
     self.roll_button:mousereleased(...)
 end
 
-return DieArea
+return DiceArea

@@ -1,7 +1,7 @@
 local Color   = require "classes.color.color"
 local Die     = require "classes.die.die"
 local DieView = require "classes.die.die_view"
-local DieArea = require "classes.die_area"
+local DiceArea = require "classes.dice_area"
 
 --MODULE FOR THE GAMESTATE: GAME--
 local Class = require "extra_libs.hump.class"
@@ -35,7 +35,7 @@ function state:enter()
     DieView(Die{"turn","turn","churn","hurn","surn"}, 200, 100, Color.red()):register("L2", "die_view")
 
     --Create some example dice area
-    DieArea(30, 250):register("L1", "dice_area")
+    DiceArea(30, 250):register("L1", "dice_area")
 end
 
 function state:leave()
