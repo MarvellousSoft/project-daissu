@@ -75,7 +75,7 @@ function state:keypressed(key, scancode, isrepeat)
         Util.findId("my_die"):roll()
     end
     if key == 't' then
-        match:playTurn({{"clock"}, {"walk"}}, {1, 2})
+        match:playTurn()
     end
 end
 
