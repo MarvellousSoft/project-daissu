@@ -1,4 +1,5 @@
 local Class = require "extra_libs.hump.class"
+local Font  = require "font"
 
 --[[
     This is a player drawn in the map
@@ -39,6 +40,7 @@ function Player:drawOnGrid(x, y, size)
     love.graphics.circle('fill', 0, -size / 4, size * .15)
     love.graphics.pop()
     love.graphics.setColor(0, 0, 0)
+    Font.set("regular", 20)
     love.graphics.printf('' .. self.health, x, y + size / 2, size, 'center')
 
 end
