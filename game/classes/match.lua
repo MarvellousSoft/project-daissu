@@ -6,8 +6,8 @@ local Map = require "classes.map.map"
 local MapView = require "classes.map.map_view"
 local Controller = require "classes.map.controller"
 local DieHelper = require "classes.die.helper"
-local TurnSlots = require "classes.turn_slots"
-local TurnSlotsView = require "classes.turn_slots_view"
+local TurnSlots = require "classes.turn_slots.turn_slots"
+local TurnSlotsView = require "classes.turn_slots.turn_slots_view"
 local DiceArea = require "classes.dice_area"
 
 local Match = Class {
