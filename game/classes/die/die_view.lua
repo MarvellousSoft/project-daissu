@@ -40,6 +40,13 @@ function DieView:init(die, x, y, color)
     self.rolling_face = 1 --What face to show while rolling
     self.rolling_face_change_speed = .1 --Speed to change face while rolling
     self.change_side = false
+
+    self.moving = false --If this die is currently moving
+    self.move_speed = 1000 --How fast this die move when tweening position
+end
+
+function DieView:update(dt)
+
 end
 
 --CLASS FUNCTIONS--
@@ -115,13 +122,14 @@ end
 --Mouse functions
 
 function DieView:mousepressed(x, y, button)
+    if self.moving then return end
     local collided = self:collidesPoint(x,y)
     if button == 1 and collided then
         self.picked = true
         self:setDrawTable("L2upper") --Make it draw above other dice
         self.previous_pos.x = self.pos.x
         self.previous_pos.y = self.pos.y
-    elseif button == 2 and collided then
+    elseif button == 2 and collided and not self.picked then
         local player = self:getObj():getPlayer()
         local match = Util.findId("match")
         --This die was in a slot
@@ -150,7 +158,8 @@ function DieView:mousepressed(x, y, button)
 end
 
 function DieView:mousereleased(x, y, button)
-    if self.picked then
+    if self.moving then return end
+    if self.picked and button == 1 then
         self:setDrawTable("L2") --Return it to normal draw layer
         local slots = Util.findSubtype("die_slot_view")
         local should_return = true
@@ -172,9 +181,20 @@ function DieView:mousereleased(x, y, button)
                         if my_slot then
                             my_slot:putDie(prev_die)
                         else
-                            --Else just put the die on self die previous position
-                            prev_view.pos.x = self.previous_pos.x
-                            prev_view.pos.y = self.previous_pos.y
+                            --Else just put the die on self die previous position, using tween
+                            --Create animation that moves die to this slot
+                            prev_view.is_moving = true
+                            local tpos = Vector(0,0)
+                            tpos.x = self.previous_pos.x
+                            tpos.y = self.previous_pos.y
+                            local d = prev_view.pos:dist(tpos)/prev_view.move_speed
+                            prev_view:removeTimer("moving")
+                            prev_view:addTimer("moving", MAIN_TIMER, "tween", d, prev_view.pos,
+                                             {x = tpos.x, y = tpos.y}, 'out-quad',
+                                             function ()
+                                                 prev_view.is_moving = false
+                                             end
+                            )
                         end
                     end
 
@@ -186,15 +206,26 @@ function DieView:mousereleased(x, y, button)
             end
         end
         if should_return then
-            --Return to previous position
-            self.pos.x = self.previous_pos.x
-            self.pos.y = self.previous_pos.y
+            --Return to previous position, using tween
+            self.is_moving = true
+            local tpos = Vector(0,0)
+            tpos.x = self.previous_pos.x
+            tpos.y = self.previous_pos.y
+            local d = self.pos:dist(tpos)/self.move_speed
+            self:removeTimer("moving")
+            self:addTimer("moving", MAIN_TIMER, "tween", d, self.pos,
+                             {x = tpos.x, y = tpos.y}, 'out-quad',
+                             function ()
+                                 self.is_moving = false
+                             end
+            )
         end
         self.picked = false
     end
 end
 
 function DieView:mousemoved(x, y, dx, dy)
+    if self.moving then return end
     if self.picked then
         self.pos.x = self.pos.x + dx
         self.pos.y = self.pos.y + dy
