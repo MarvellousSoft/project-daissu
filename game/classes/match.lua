@@ -20,7 +20,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     self.pos = pos
     self.w, self.h = w, h
     local map = Map(rows, columns)
-    self.map_view = MapView(map, pos + Vector((w - cell_size * columns) / 2, 120), cell_size)
+    self.map_view = MapView(map, pos + Vector((w - cell_size * columns) / 2,
+                           (h - cell_size * rows) / 2), cell_size)
     self.controllers = {}
     self.turn_slots = {}
     self.dice_areas = {}
@@ -32,13 +33,17 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     local d_w, d_h = DieHelper.getDieDimensions()
     -- Taking margins into account
     d_h = d_h + 6
-    self.turn_slots[1] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, pos.y + h - d_h - 25), (w - 20) / 2, d_h + 20)
-    self.turn_slots[2] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, pos.y + h - d_h - 25), (w - 20) / 2, d_h + 20)
+    local t_slots_y = pos.y + h - d_h - 25
+    self.turn_slots[1] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, t_slots_y), (w - 20) / 2, d_h + 20)
+    self.turn_slots[2] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, t_slots_y), (w - 20) / 2, d_h + 20)
 
-    local dice_area_w = (w - cell_size * columns) / 2 - 10
-    local dice_area_h = h - 130 - (d_h + 20)
-    self.dice_areas[1] = DiceArea(8, Vector(5, 125), dice_area_w, dice_area_h)
-    self.dice_areas[2] = DiceArea(6, Vector(w - dice_area_w - 5, 125), dice_area_w, dice_area_h)
+    local dice_area_w_gap = 35
+    local dice_area_h_gap = 35
+    local dice_area_h = h - 260 - (d_h + 20)
+    local dice_area_w = (w - cell_size * columns) / 2 - 2*dice_area_w_gap
+    local dice_area_y = t_slots_y - dice_area_h_gap - dice_area_h
+    self.dice_areas[1] = DiceArea(8, Vector(dice_area_w_gap, 220), dice_area_w, dice_area_h)
+    self.dice_areas[2] = DiceArea(6, Vector(w - dice_area_w - dice_area_w_gap, 220), dice_area_w, dice_area_h)
 
     self.hide_player = {}
     self.hide_player[1] = false

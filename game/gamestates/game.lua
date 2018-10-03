@@ -25,7 +25,7 @@ local die
 --STATE FUNCTIONS--
 
 function state:enter()
-    local match = Match(8, 8, Vector(0, 0), 60, WIN_W, WIN_H, {{2, 2}, {6, 6}})
+    local match = Match(6, 6, Vector(0, 0), 60, WIN_W, WIN_H, {{2, 2}, {6, 6}})
     match:start()
 
     --Create some example dice
@@ -58,7 +58,7 @@ function state:update(dt)
 
 
     Util.updateTimers(dt)
-    
+
     Util.updateDrawTable(dt)
 
     Util.destroyAll()
