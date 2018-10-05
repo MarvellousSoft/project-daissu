@@ -9,6 +9,7 @@ local DieHelper = require "classes.die.helper"
 local TurnSlots = require "classes.turn_slots.turn_slots"
 local TurnSlotsView = require "classes.turn_slots.turn_slots_view"
 local DiceArea = require "classes.dice_area"
+local Actions = require "classes.actions"
 
 local Match = Class {
     __includes = {ELEMENT}
@@ -85,7 +86,7 @@ local function playTurnRec(self, player_actions, order, player_i, action_i, size
     local action = player_actions[p_i][action_i]
     print('Action ' .. action_i .. ' for Player ' .. p_i .. ' = ' .. (action or 'null'))
     if action ~= nil then
-        self.controllers[p_i]:showAction(action, function()
+        Actions.showAction(action, self.controllers[p_i], function()
             playTurnRec(self, player_actions, order, player_i + 1, action_i, size, callback)
         end)
     else
