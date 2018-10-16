@@ -5,8 +5,6 @@ local Element = require "classes.primitives.element"
 local Font = require "font"
 local Timer = require "extra_libs.hump.timer"
 
-local ShootForward = {}
-
 local FadingText = Class {
     __includes = {Element}
 }
@@ -32,6 +30,8 @@ local dir = {
     [3] = {0, -1}
 }
 
+local ShootForward = {}
+
 function ShootForward.showAction(controller, callback)
     local c = controller
     local i, j = Vec.add(c.i, c.j, unpack(dir[c.player.dir]))
@@ -56,6 +56,10 @@ function ShootForward.applyAction(controller)
         i, j = Vec.add(i, j, unpack(dir[c.player.dir]))
         tile = c.map:get(i, j)
     end
+end
+
+function ShootForward.needInput()
+    return false
 end
 
 return ShootForward

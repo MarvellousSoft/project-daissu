@@ -9,7 +9,7 @@ local Vector = require "extra_libs.hump.vector"
 local Util = require "util"
 local Draw = require "draw"
 local Drawable = require "classes.primitives.drawable"
-local Match = require "classes.match"
+local Match = require "classes.match.match"
 
 local state = {}
 
