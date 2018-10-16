@@ -3,7 +3,7 @@ local Vector    = require "extra_libs.hump.vector"
 local DRAWABLE  = require "classes.primitives.drawable"
 local VIEW      = require "classes.primitives.view"
 local Color     = require "classes.color.color"
-local Action    = require "classes.action"
+local Actions   = require "classes.actions"
 local DieHelper = require "classes.die.helper"
 local Font      = require "font"
 local Util      = require "util"
@@ -30,7 +30,7 @@ function DieView:init(die, x, y, color)
     --Loads up icon for every side
     self.side_images = {}
     for i,side in ipairs(die:getSides()) do
-        self.side_images[i] = Action.actionImage(side)
+        self.side_images[i] = Actions.actionImage(side)
     end
 
     self.previous_pos = Vector(x,y)
