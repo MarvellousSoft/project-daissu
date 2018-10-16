@@ -7,7 +7,7 @@ function f.getDieDimensions()
 end
 
 function f.getDieSlotMargin()
-    return 11
+    return 8
 end
 
 

@@ -52,11 +52,13 @@ function setup.config()
     IMG = { --Table containing all the images
         --UI
         dice_area = new(path.."UI/dice_area.png"),
+        turn_slots_orange = new(path.."UI/turn_slots_orange.png"),
+        turn_slots_purple = new(path.."UI/turn_slots_purple.png"),
         die_slot_free = new(path.."UI/die_slot_free.png"),
         die_slot_over = new(path.."UI/die_slot_over.png"),
         die_slot_occupied = new(path.."UI/die_slot_occupied.png"),
         --CHARACTERS
-         player_green  = new(path.."characters/player1.png"),
+         player_orange  = new(path.."characters/player1.png"),
          player_purple = new(path.."characters/player2.png"),
     }
 
