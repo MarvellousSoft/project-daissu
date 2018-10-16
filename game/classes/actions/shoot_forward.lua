@@ -4,6 +4,7 @@ local Vec = require "extra_libs.hump.vector-light"
 local Element = require "classes.primitives.element"
 local Font = require "font"
 local Timer = require "extra_libs.hump.timer"
+local Util = require "util"
 
 local FadingText = Class {
     __includes = {Element}
@@ -32,34 +33,49 @@ local dir = {
 
 local ShootForward = {}
 
-function ShootForward.showAction(controller, callback)
+function ShootForward.showAction(controller, callback, di, dj)
     local c = controller
-    local i, j = Vec.add(c.i, c.j, unpack(dir[c.player.dir]))
+    local i, j = c.i + di, c.j + dj
     local tile = c.map:get(i, j)
     local map_view = c.map.view
     while tile do
         if tile:blocked() then break end
         FadingText(map_view.pos + Vector(j - 1, i - 1) * map_view.cell_size, "-1", 1)
-        i, j = Vec.add(i, j, unpack(dir[c.player.dir]))
+        i, j = i + di, j + dj
         tile = c.map:get(i, j)
     end
-    if callback then Timer.after(1, callback) end
+    if callback then
+        Timer.after(1, function()
+            ShootForward.applyAction(c, di, dj)
+            c.player:resetAnimation()
+            if callback then callback() end
+        end)
+    end
 end
 
-function ShootForward.applyAction(controller)
+function ShootForward.applyAction(controller, di, dj)
     local c = controller
-    local i, j = Vec.add(c.i, c.j, unpack(dir[c.player.dir]))
+    local i, j = c.i + di, c.j + dj
     local tile = c.map:get(i, j)
     while tile do
         tile:applyDamage(1)
         if tile:blocked() then break end
-        i, j = Vec.add(i, j, unpack(dir[c.player.dir]))
+        i, j = i + di, j + dj
         tile = c.map:get(i, j)
     end
 end
 
-function ShootForward.needInput()
-    return false
+function ShootForward.getInputHandler(controller, callback)
+    local c = controller
+    return {
+        accept = function(i, j)
+            return not Vec.eq(i, j, c.i, c.j) and (i == c.i or j == c.j)
+        end,
+        finish = function(i, j)
+            local di, dj = Util.sign(i - c.i), Util.sign(j - c.j)
+            ShootForward.showAction(c, callback, di, dj)
+        end
+    }
 end
 
 return ShootForward

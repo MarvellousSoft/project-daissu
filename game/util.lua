@@ -19,6 +19,16 @@ function util.manhattanDistance(i, j, i2, j2)
     return math.abs(i - i2) + math.abs(j - j2)
 end
 
+function util.sign(x)
+    if x > 0 then
+        return 1
+    elseif x < 0 then
+        return -1
+    else
+        return 0
+    end
+end
+
 --Counts how many entries are on table T
 function util.tableLen(T)
   local count = 0
