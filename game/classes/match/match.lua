@@ -54,6 +54,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     self.hide_player[1] = false
     self.hide_player[2] = false
 
+    self.action_input_handler = nil
+
     self:register("L0", nil, "match")
 end
 
@@ -90,7 +92,7 @@ local function playTurnRec(self, player_actions, order, player_i, action_i, size
     local action = player_actions[p_i][action_i]
     print('Action ' .. action_i .. ' for Player ' .. p_i .. ' = ' .. action)
     if action ~= 'none' then
-        Actions.showAction(action, self.controllers[p_i], function()
+        Actions.executeAction(self, action, self.controllers[p_i], function()
             playTurnRec(self, player_actions, order, player_i + 1, action_i, size, callback)
         end)
     else
@@ -160,9 +162,9 @@ function Match:getAvailableDiceAreaSlot(player)
     return nil
 end
 
-function Match:mousepressed(...)
+function Match:mousepressed(x, y, ...)
     for i, dice_area in ipairs(self.dice_areas) do
-        dice_area:mousepressed(...)
+        dice_area:mousepressed(x, y, ...)
     end
 end
 

@@ -22,6 +22,7 @@ function Actions.actionImage(action)
 end
 
 local helpers = {
+    walk = require "classes.actions.walk",
     shoot = require "classes.actions.shoot_forward"
 }
 
@@ -32,6 +33,14 @@ local dir = {
     [3] = {0, -1}
 }
 
+function Actions.executeAction(match, action, controller, callback)
+    if helpers[action] and helpers[action].needInput() then
+        error "not supported"
+    else
+        Actions.showAction(action, controller, callback)
+    end
+end
+
 function Actions.showAction(action, controller, callback)
     local c = controller
     local apply = function()
@@ -39,14 +48,7 @@ function Actions.showAction(action, controller, callback)
         Actions.applyAction(action, c)
         if callback then callback() end
     end
-    if action == 'walk' then
-        local tile = c.map:get(Vec.add(c.i, c.j, unpack(dir[c.player.dir])))
-        if tile and not tile:blocked() then
-            Timer.tween(1, c.player, {dx = dir[c.player.dir][2], dy = dir[c.player.dir][1]}, 'in-out-quad', apply)
-        else
-            apply()
-        end
-    elseif action == 'clock' then
+    if action == 'clock' then
         Timer.tween(1, c.player, {d_dir = 1}, 'in-out-quad', apply)
     elseif action == 'counter' then
         Timer.tween(1, c.player, {d_dir = -1}, 'in-out-quad', apply)
@@ -59,16 +61,7 @@ end
 
 function Actions.applyAction(action, controller)
     local c = controller
-    if action == 'walk' then
-        local tile = c.map:get(Vec.add(c.i, c.j, unpack(dir[c.player.dir])))
-        if not tile or tile:blocked() then
-            print("Movement is invalid")
-        else
-            c.map:get(c.i, c.j):setObj(nil)
-            tile:setObj(c.player)
-            c.i, c.j = Vec.add(c.i, c.j, unpack(dir[c.player.dir]))
-        end
-    elseif action == 'clock' then
+    if action == 'clock' then
         c.player:rotate(1)
     elseif action == 'counter' then
         c.player:rotate(-1)
