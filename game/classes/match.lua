@@ -88,8 +88,8 @@ local function playTurnRec(self, player_actions, order, player_i, action_i, size
     if p_i == nil then return playTurnRec(self, player_actions, order, 1, action_i + 1, size, callback) end
 
     local action = player_actions[p_i][action_i]
-    print('Action ' .. action_i .. ' for Player ' .. p_i .. ' = ' .. (action or 'null'))
-    if action ~= nil then
+    print('Action ' .. action_i .. ' for Player ' .. p_i .. ' = ' .. action)
+    if action ~= 'none' then
         Actions.showAction(action, self.controllers[p_i], function()
             playTurnRec(self, player_actions, order, player_i + 1, action_i, size, callback)
         end)
@@ -128,7 +128,7 @@ function Match:playTurn()
     for i, turn_slots in ipairs(self.turn_slots) do
         actions[i] = {}
         for j, die_slot in ipairs(turn_slots:getObj().slots) do
-            actions[i][j] = die_slot.die and die_slot.die:getCurrent()
+            actions[i][j] = die_slot.die and die_slot.die:getCurrent() or 'none'
         end
         order[i] = i
     end
