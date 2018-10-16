@@ -25,7 +25,7 @@ function DieView:init(die, x, y, color)
     self.sx, self.sy = 1, 1
 
     --Color for die border
-    self.color_border = Color.new(self.color.r*1.2,self.color.g*1.2,self.color.b*1.2)
+    self.color_border = Color.new(self.color.r*.2,self.color.g*.2,self.color.b*.2)
 
     --Loads up icon for every side
     self.side_images = {}

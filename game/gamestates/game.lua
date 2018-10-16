@@ -33,14 +33,14 @@ function state:enter()
     DieView(Die({"shoot","shoot","shoot","walk","walk","walk"}, 1), 120, 30, Color.red()):register("L2", "die_view")
     DieView(Die({"counter","counter","counter","clock","clock","clock"}, 1), 190, 30, Color.blue()):register("L2", "die_view")
     DieView(Die({"counter","counter","counter","clock","clock","clock"}, 1), 260, 30, Color.blue()):register("L2", "die_view")
-    DieView(Die({"walk","counter","clock","shoot","shoot", "walk"}, 1), 330, 30, Color.green()):register("L2", "die_view")
+    DieView(Die({"walk","counter","clock","shoot","shoot", "walk"}, 1), 330, 30, Color.new(86, 239, 182)):register("L2", "die_view")
 
     --Create some example dice
     DieView(Die({"shoot","shoot","shoot","walk","walk","walk"}, 2), 950, 30, Color.red(), 2):register("L2", "die_view")
     DieView(Die({"shoot","shoot","shoot","walk","walk","walk"}, 2), 1020, 30, Color.red(), 2):register("L2", "die_view")
     DieView(Die({"counter","counter","counter","clock","clock","clock"}, 2), 1090, 30, Color.blue(), 2):register("L2", "die_view")
     DieView(Die({"counter","counter","counter","clock","clock","clock"}, 2), 1160, 30, Color.blue(), 2):register("L2", "die_view")
-    DieView(Die({"walk","counter","clock","shoot","shoot", "walk"}, 2), 1230, 30, Color.green(), 2):register("L2", "die_view")
+    DieView(Die({"walk","counter","clock","shoot","shoot", "walk"}, 2), 1230, 30, Color.new(86, 239, 182), 2):register("L2", "die_view")
 end
 
 function state:leave()
