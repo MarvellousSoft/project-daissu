@@ -10,7 +10,7 @@ local funcs = {}
 
 local DieSlotView = Class{
     __includes={DRAWABLE, VIEW},
-    margin = 3
+    margin = 10
 }
 
 function DieSlotView:init(die_slot, pos)
@@ -23,9 +23,10 @@ function DieSlotView:init(die_slot, pos)
     self.h = h + 2 * DieSlotView.margin
     self.line_width = 5
 
-    self.free_color = Color.white()
-    self.has_dice_over_color = Color.blue() --If player is dragging a dice over this object
-    self.occupied_color = Color.green()
+    self.free_image = IMG.die_slot_free
+    self.has_dice_over_image = IMG.die_slot_over --If player is dragging a dice over this object
+    self.occupied_image = IMG.die_slot_occupied
+
 end
 
 --CLASS FUNCTIONS--
@@ -33,17 +34,19 @@ function DieSlotView:draw()
     local dieslot = self:getObj()
     local g = love.graphics
 
-    --Get proper color
+    --Get proper image
+    local image
     if dieslot.die then
-        color = self.occupied_color
+        image = self.occupied_image
     else
-        color = self.free_color
+        image = self.free_image
     end
-    Color.set(color)
 
     --Draw die slot
-    g.setLineWidth(self.line_width)
-    g.rectangle("line", self.pos.x, self.pos.y, self.w, self.h, 5, 5)
+    Color.set(Color.white())
+    local sw = self.w/image:getWidth()
+    local sh = self.h/image:getHeight()
+    g.draw(image, self.pos.x, self.pos.y, nil, sw, sh)
 end
 
 --UTILITY FUNCTIONS--
