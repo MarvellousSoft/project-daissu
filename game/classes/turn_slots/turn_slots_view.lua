@@ -8,7 +8,7 @@ local TurnSlotsView = Class {
     __includes = {View}
 }
 
-function TurnSlotsView:init(obj, pos, w, h)
+function TurnSlotsView:init(obj, pos, w, h, color)
     View.init(self, obj)
     local slots_n = #obj.slots
     local d_w, d_h = DieHelper.getDieDimensions()
@@ -23,11 +23,19 @@ function TurnSlotsView:init(obj, pos, w, h)
     end
     self.pos = pos
     self.w, self.h = w, h
+    self.image = IMG["turn_slots_"..color]
+    self.iw = self.w/self.image:getWidth()
+    self.ih = self.h/self.image:getHeight()
+
 end
 
 function TurnSlotsView:draw()
-    love.graphics.setColor(200, 20, 20)
-    love.graphics.rectangle('fill', self.pos.x, self.pos.y, self.w, self.h)
+    --Draw turn slots background
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.draw(self.image, self.pos.x, self.pos.y, nil,
+                       self.iw, self.ih)
+
+    --Draw each slot
     for i, slot in ipairs(self:getObj().slots) do
         slot.view:draw()
     end

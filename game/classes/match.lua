@@ -29,7 +29,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
 
     -- Assuming two players for now
     assert(#players_positions == 2)
-    self.controllers[1] = Controller(map, "green", unpack(players_positions[1]))
+    self.controllers[1] = Controller(map, "orange", unpack(players_positions[1]))
     self.controllers[2] = Controller(map, "purple",unpack(players_positions[2]))
     local d_w, d_h = DieHelper.getDieDimensions()
     -- Taking margins into account
@@ -37,8 +37,10 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     local t_slots_y = pos.y + h - d_h - 40
     local t_slot_w = (w - 20) / 2
     local t_slot_h = d_h + 30
-    self.turn_slots[1] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, t_slots_y), t_slot_w, t_slot_h)
-    self.turn_slots[2] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, t_slots_y), t_slot_w, t_slot_h)
+    self.turn_slots[1] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, t_slots_y),
+                                       t_slot_w, t_slot_h, "orange")
+    self.turn_slots[2] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, t_slots_y),
+                                       t_slot_w, t_slot_h, "purple")
 
     local dice_area_w_gap = 35
     local dice_area_h_gap = 35
