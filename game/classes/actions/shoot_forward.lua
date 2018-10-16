@@ -69,7 +69,7 @@ function ShootForward.getInputHandler(controller, callback)
     local c = controller
     return {
         accept = function(i, j)
-            return not Vec.eq(i, j, c.i, c.j) and (i == c.i or j == c.j)
+            return (i ~= c.i or j ~= c.j) and (i == c.i or j == c.j)
         end,
         finish = function(i, j)
             local di, dj = Util.sign(i - c.i), Util.sign(j - c.j)

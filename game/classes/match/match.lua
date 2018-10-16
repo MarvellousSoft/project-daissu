@@ -60,7 +60,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
 end
 
 function Match:draw()
-    self.map_view:draw()
+    self.map_view:draw(self)
     for i, dice_area in ipairs(self.dice_areas) do
         if not self.hide_player[i] then
             dice_area:draw()

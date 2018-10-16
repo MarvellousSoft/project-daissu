@@ -26,7 +26,7 @@ function MapView:init(obj, pos, cell_size)
     self.cell_size = cell_size
 end
 
-function MapView:draw()
+function MapView:draw(match)
     local m, g = self:getObj(), love.graphics
     local x, y, size = self.pos.x, self.pos.y, self.cell_size
     local rows, columns = m.rows, m.columns
@@ -59,10 +59,9 @@ function MapView:draw()
     g.line(x, y, x, y + m.rows * size)
     g.line(x + m.columns * size, y, x + m.columns * size, y + m.rows * size)
 
-    --Draw objects on grid
     for i = 1, rows do
         for j = 1, columns do
-            m.grid[i][j]:drawOnGrid(x + (j - 1) * size, y + (i - 1) * size, size)
+            m.grid[i][j]:drawOnGrid(match, i, j, x + (j - 1) * size, y + (i - 1) * size, size)
         end
     end
 end
