@@ -47,7 +47,10 @@ function setup.config()
     Font.new("regular", "assets/fonts/fira-mono-regular.ttf")
 
     --IMAGES--
+    local new = love.graphics.newImage
+    local path = "assets/images/"
     IMG = { --Table containing all the images
+        dice_area = new(path.."UI/dice_area.png")
     }
 
     --AUDIO--
