@@ -34,8 +34,8 @@ local dir = {
 }
 
 function Actions.executeAction(match, action, controller, callback)
-    if helpers[action] and helpers[action].needInput() then
-        error "not supported"
+    if helpers[action] and helpers[action].getInputHandler then
+        match.action_input_handler = helpers[action].getInputHandler(controller, callback)
     else
         Actions.showAction(action, controller, callback)
     end
