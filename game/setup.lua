@@ -60,6 +60,7 @@ function setup.config()
         die_slot_free = new(path.."UI/die_slot_free.png"),
         die_slot_over = new(path.."UI/die_slot_over.png"),
         die_slot_occupied = new(path.."UI/die_slot_occupied.png"),
+        button = new(path.."UI/button.png"),
         --CHARACTERS
          player_orange  = new(path.."characters/player1.png"),
          player_purple = new(path.."characters/player2.png"),

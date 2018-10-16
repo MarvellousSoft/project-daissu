@@ -21,19 +21,21 @@ function Button:init(x, y, w, h, text, func)
     self.w_gap = 5
     self.h_gap = 2
     self.text = text
+    self.image = IMG.button
+    self.iw = w/self.image:getWidth()
+    self.ih = w/self.image:getHeight()
 
     --Get correct font size based on button size
     i = 40
     repeat
         self.font = Font.get("regular", i)
-    until self.font:getWidth(self.text) <= w + 2*self.w_gap and
-          self.font:getHeight(self.text) <= h + 2*self.h_gap
+    until self.font:getWidth(self.text) <= w - 2*self.w_gap and
+          self.font:getHeight(self.text) <= h - 2*self.h_gap
 
     self.func = func
 
-    self.bg_color = Color.white()
-    self.bg_outline_color = Color.black()
     self.text_color = Color.black()
+    self.text_y_offset = 5
 
 end
 
@@ -43,10 +45,8 @@ function Button:draw()
     local lg = love.graphics
 
     --Draw bg
-    Color.set(self.bg_color)
-    lg.rectangle("fill", self.pos.x, self.pos.y, self.w, self.h)
-    Color.set(self.bg_outline_color)
-    lg.rectangle("line", self.pos.x, self.pos.y, self.w, self.h)
+    Color.set(Color.white())
+    lg.draw(self.image, self.pos.x, self.pos.y, nil, self.iw, self.ih)
 
     --Draw text aligned to center of button
     Color.set(self.text_color)
@@ -54,7 +54,9 @@ function Button:draw()
     local tw = font:getWidth(self.text)
     local th = font:getHeight(self.text)
     Font.set(font)
-    lg.print(self.text, self.pos.x + self.w/2 - tw/2, self.pos.y + self.h/2 - th/2)
+    lg.print(self.text,
+             self.pos.x + self.w/2 - tw/2,
+             self.pos.y + self.h/2 - th/2 + self.text_y_offset)
 end
 
 function Button:mousepressed(x, y, button)
