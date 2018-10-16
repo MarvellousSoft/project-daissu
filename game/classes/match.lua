@@ -34,9 +34,11 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     local d_w, d_h = DieHelper.getDieDimensions()
     -- Taking margins into account
     d_h = d_h + 6
-    local t_slots_y = pos.y + h - d_h - 25
-    self.turn_slots[1] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, t_slots_y), (w - 20) / 2, d_h + 20)
-    self.turn_slots[2] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, t_slots_y), (w - 20) / 2, d_h + 20)
+    local t_slots_y = pos.y + h - d_h - 40
+    local t_slot_w = (w - 20) / 2
+    local t_slot_h = d_h + 30
+    self.turn_slots[1] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, t_slots_y), t_slot_w, t_slot_h)
+    self.turn_slots[2] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, t_slots_y), t_slot_w, t_slot_h)
 
     local dice_area_w_gap = 35
     local dice_area_h_gap = 35

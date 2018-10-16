@@ -10,7 +10,7 @@ local funcs = {}
 
 local DieSlotView = Class{
     __includes={DRAWABLE, VIEW},
-    margin = 10
+    margin = DieHelper.getDieSlotMargin()
 }
 
 function DieSlotView:init(die_slot, pos)
