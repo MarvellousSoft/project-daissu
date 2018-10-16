@@ -30,4 +30,14 @@ function MapView:draw()
     end
 end
 
+function MapView:getTileOnPosition(pos)
+    local i = math.floor((pos.y - self.pos.y) / self.cell_size) + 1
+    local j = math.floor((pos.x - self.pos.x) / self.cell_size) + 1
+    if i < 1 or i > self:getObj().rows or j < 1 or j > self:getObj().columns then
+        return nil, nil
+    else
+        return i, j
+    end
+end
+
 return MapView
