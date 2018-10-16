@@ -6,11 +6,14 @@ local Font  = require "font"
 ]]
 local Player = Class {}
 
-function Player:init()
+function Player:init(color)
     -- 0 = up, 1 = right, 2 = down, 3 = left
     self.dir = 0
     self.health = 5
     self:resetAnimation()
+    self.image = IMG["player_"..color]
+
+    self.font = Font.get("regular", 25)
 end
 
 function Player:resetAnimation()
@@ -29,19 +32,24 @@ function Player:applyDamage(dmg)
 end
 
 function Player:drawOnGrid(x, y, size)
+    --Centralize player image
+    local ix = x + size/2 - self.image:getWidth()/2
+    local iy = y + size/2 - self.image:getHeight()/2
+    --Apply movement
+    ix, iy = ix + self.dx * size, iy + self.dy * size
     x, y = x + self.dx * size, y + self.dy * size
-    local dir = self.dir + self.d_dir
+
+    --Draw player image
     love.graphics.setColor(255, 255, 255)
-    love.graphics.circle('fill', x + size / 2, y + size / 2, size * .4)
-    love.graphics.setColor(0, 255, 0)
-    love.graphics.push()
-    love.graphics.translate(x + size / 2, y + size / 2)
-    love.graphics.rotate(dir * math.pi / 2)
-    love.graphics.circle('fill', 0, -size / 4, size * .15)
-    love.graphics.pop()
-    love.graphics.setColor(0, 0, 0)
-    Font.set("regular", 20)
-    love.graphics.printf('' .. self.health, x, y + size / 2, size, 'center')
+    love.graphics.draw(self.image, ix, iy)
+
+    --Draw health
+    local text = '' .. self.health
+    local fw = self.font:getWidth(text)
+    local fh = self.font:getHeight(text)
+    Font.set(self.font)
+    love.graphics.setColor(255, 0, 0)
+    love.graphics.print(text, x + size/2 - fw/2, y + size/2 - fh/2)
 
 end
 
