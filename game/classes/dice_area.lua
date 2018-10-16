@@ -20,7 +20,6 @@ function DiceArea:init(dice_n, pos, w, h)
     self.h = h
 
     local dw, dh = DieSlotView.getSize()
-
     local mid = pos + Vector(w / 2, h / 2)
     self.die_slots = {}
     for i = 1, dice_n do
@@ -28,6 +27,10 @@ function DiceArea:init(dice_n, pos, w, h)
         self.die_slots[i] = DieSlotView(DieSlot("dice_area"), mid + v - Vector(dw / 2, dh / 2))
         self.die_slots[i]:setSubtype("die_slot_view")
     end
+
+    self.image = IMG.dice_area
+    self.img_sx = self.w/self.image:getWidth()
+    self.img_sy = self.h/self.image:getHeight()
 
     --Create button for rolling dies
     local bw, bh = w / 4, h / 5
@@ -46,8 +49,9 @@ end
 
 function DiceArea:draw()
     --Draw bg
-    Color.set(self.color)
-    love.graphics.rectangle("fill", self.pos.x, self.pos.y, self.w, self.h)
+    Color.set(Color.white())
+    love.graphics.draw(self.image, self.pos.x, self.pos.y, nil,
+                       self.img_sx, self.img_sy)
 
     --Draw slot
     for _, die_slot in ipairs(self.die_slots) do
