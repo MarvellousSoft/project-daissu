@@ -50,6 +50,9 @@ function setup.config()
     local new = love.graphics.newImage
     local path = "assets/images/"
     IMG = { --Table containing all the images
+        --TILES
+        maptile_regular = new(path.."tiles/maptile1.png"),
+        maptile_broken = new(path.."tiles/maptile2.png"),
         --UI
         dice_area = new(path.."UI/dice_area.png"),
         turn_slots_orange = new(path.."UI/turn_slots_orange.png"),
