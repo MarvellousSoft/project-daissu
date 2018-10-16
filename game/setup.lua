@@ -50,7 +50,11 @@ function setup.config()
     local new = love.graphics.newImage
     local path = "assets/images/"
     IMG = { --Table containing all the images
-        dice_area = new(path.."UI/dice_area.png")
+        --UI
+        dice_area = new(path.."UI/dice_area.png"),
+        --CHARACTERS
+         player_green  = new(path.."characters/player1.png"),
+         player_purple = new(path.."characters/player2.png"),
     }
 
     --AUDIO--

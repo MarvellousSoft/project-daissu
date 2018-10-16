@@ -8,10 +8,10 @@ local Player = require "classes.map.player"
 local Controller = Class {}
 
 -- Start controller with a player on map on position pos
-function Controller:init(map, i, j)
+function Controller:init(map, color, i, j)
     self.map = map
     self.i, self.j = i, j
-    self.player = Player()
+    self.player = Player(color)
     map:get(i, j):setObj(self.player)
 end
 

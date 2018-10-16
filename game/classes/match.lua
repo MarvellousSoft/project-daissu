@@ -29,8 +29,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
 
     -- Assuming two players for now
     assert(#players_positions == 2)
-    self.controllers[1] = Controller(map, unpack(players_positions[1]))
-    self.controllers[2] = Controller(map, unpack(players_positions[2]))
+    self.controllers[1] = Controller(map, "green", unpack(players_positions[1]))
+    self.controllers[2] = Controller(map, "purple",unpack(players_positions[2]))
     local d_w, d_h = DieHelper.getDieDimensions()
     -- Taking margins into account
     d_h = d_h + 6
