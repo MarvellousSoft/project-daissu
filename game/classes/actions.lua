@@ -26,47 +26,11 @@ local helpers = {
     shoot = require "classes.actions.shoot_forward"
 }
 
-local dir = {
-    [0] = {-1, 0},
-    [1] = {0, 1},
-    [2] = {1, 0},
-    [3] = {0, -1}
-}
-
 function Actions.executeAction(match, action, controller, callback)
     if helpers[action] and helpers[action].getInputHandler then
         match.action_input_handler = helpers[action].getInputHandler(controller, callback)
-    else
-        Actions.showAction(action, controller, callback)
-    end
-end
-
-function Actions.showAction(action, controller, callback)
-    local c = controller
-    local apply = function()
-        c.player:resetAnimation()
-        Actions.applyAction(action, c)
-        if callback then callback() end
-    end
-    if action == 'clock' then
-        Timer.tween(1, c.player, {d_dir = 1}, 'in-out-quad', apply)
-    elseif action == 'counter' then
-        Timer.tween(1, c.player, {d_dir = -1}, 'in-out-quad', apply)
     elseif helpers[action] then
-        helpers[action].showAction(c, apply)
-    else
-        error("Unknown action " .. action)
-    end
-end
-
-function Actions.applyAction(action, controller)
-    local c = controller
-    if action == 'clock' then
-        c.player:rotate(1)
-    elseif action == 'counter' then
-        c.player:rotate(-1)
-    elseif helpers[action] then
-        helpers[action].applyAction(c)
+        helpers[action].showAction(controller, callback)
     else
         error("Unknown action " .. action)
     end

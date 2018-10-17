@@ -7,8 +7,6 @@ local Font  = require "font"
 local Player = Class {}
 
 function Player:init(color)
-    -- 0 = up, 1 = right, 2 = down, 3 = left
-    self.dir = 0
     self.health = 5
     self:resetAnimation()
     self.image = IMG["player_"..color]
@@ -19,12 +17,6 @@ end
 function Player:resetAnimation()
     -- Used to show movement of the player
     self.dx, self.dy = 0, 0
-    -- Used to show player rotating
-    self.d_dir = 0
-end
-
-function Player:rotate(dir)
-    self.dir = (self.dir + dir + 4) % 4
 end
 
 function Player:applyDamage(dmg)
