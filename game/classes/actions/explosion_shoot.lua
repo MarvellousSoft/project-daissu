@@ -53,7 +53,7 @@ function ExplosionShot.applyAction(controller, di, dj)
     end)
 end
 
-function ShootForward.getInputHandler(controller, callback)
+function ExplosionShot.getInputHandler(controller, callback)
     local c = controller
     return ActionInputHandler {
         accept = function(self, i, j)

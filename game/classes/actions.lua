@@ -25,6 +25,7 @@ local helpers = {
     walk = require "classes.actions.walk",
     shoot = require "classes.actions.shoot_forward",
     roundhouse = require "classes.actions.roundhouse",
+    explosion_shoot = require "classes.actions.explosion_shoot",
     ['strong punch'] = require "classes.actions.strong_punch",
     ['run and hit'] = require "classes.actions.run_and_hit",
 }
