@@ -11,7 +11,32 @@ end
 
 function GridHelper.isDirection(di, dj)
     di, dj = abs(di), abs(dj)
-    return (di ~= 0 or dj ~= 0) and (di == 0 or dj == 0)
+    return (di == 0 or dj == 0) and (di == 1 or dj == 1)
+end
+
+function GridHelper.isInside(i, j, map)
+    return map:get(i,j) ~= nil
+end
+
+--Get first blocked position going in a direction.
+--IMPORTANT: if it hits map bounderies, it will return the last valid position
+function GridHelper.firstBlockedPos(i, j, di, dj, map)
+    assert(GridHelper.isInside(i, j, map))
+    assert(GridHelper.isDirection(di, dj))
+    i, j = i + di, j + dj
+    local tile
+    while true do
+        tile = map:get(i, j)
+        if not tile or tile:blocked() then
+            break
+        end
+        i, j = i + di, j + dj
+    end
+    --Go back one tile if it hits the wall
+    if tile == nil then
+        i, j = i - di, j - dj
+    end
+    return tile, i, j
 end
 
 function GridHelper.directionFromTiles(i, j, ni, nj)

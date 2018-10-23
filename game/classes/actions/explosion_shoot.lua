@@ -11,25 +11,17 @@ local ExplosionShot = {}
 function ExplosionShot.showAction(controller, callback, di, dj)
     local c = controller
     local map_view = c.map.view
-    GridHelper.applyCallbackOnDirection(c.i, c.j, di, dj, c.map, function(tile, i, j)
-        if tile == nil or tile:blocked() then
-            print(i,j,"block")
-            for di = -1, 1, 1 do
-                for dj = -1, 1, 1 do
-                    tile = c.map:get(i+di,j+dj)
-                    print(c.i+di,c.j+dj)
-                    if tile then
-                        local damage = (di == 0 and dj == 0) and 2 or 1
-                        FadingText(map_view.pos + Vector(j + dj - 1, i + di - 1) * map_view.cell_size,
-                                   "-"..damage, 1)
-                    end
-                end
+    local _, ti, tj = GridHelper.firstBlockedPos(c.i, c.j, di, dj, c.map)
+    for di = -1, 1, 1 do
+        for dj = -1, 1, 1 do
+            tile = c.map:get(ti+di,tj+dj)
+            if tile then
+                local damage = (di == 0 and dj == 0) and 2 or 1
+                FadingText(map_view.pos + Vector(tj + dj - 1, ti + di - 1) * map_view.cell_size,
+                           "-"..damage, 1)
             end
-            return false
         end
-        print(i,j,"notblock")
-        return true
-    end)
+    end
     Timer.after(1, function()
         ExplosionShot.applyAction(c, di, dj)
         c.player:resetAnimation()
@@ -39,21 +31,16 @@ end
 
 function ExplosionShot.applyAction(controller, di, dj)
     local c = controller
-    GridHelper.applyCallbackOnDirection(c.i, c.j, di, dj, c.map, function(tile, i, j)
-        if tile == nil or tile:blocked() then
-            for di = -1, 1, 1 do
-                for dj = -1, 1, 1 do
-                    tile = c.map:get(i+di,j+dj)
-                    if tile then
-                        local damage = (di == 0 and dj == 0) and 2 or 1
-                        tile:applyDamage(damage)
-                    end
-                end
+    local _, ti, tj = GridHelper.firstBlockedPos(c.i, c.j, di, dj, c.map)
+    for di = -1, 1, 1 do
+        for dj = -1, 1, 1 do
+            tile = c.map:get(ti+di,tj+dj)
+            if tile then
+                local damage = (di == 0 and dj == 0) and 2 or 1
+                tile:applyDamage(damage)
             end
-            return false
         end
-        return true
-    end)
+    end
 end
 
 function ExplosionShot.getInputHandler(controller, callback)
