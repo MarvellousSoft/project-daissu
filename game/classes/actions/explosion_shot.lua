@@ -1,3 +1,4 @@
+local Color = require "classes.color.color"
 local Vector = require "extra_libs.hump.vector"
 local Vec = require "extra_libs.hump.vector-light"
 local Timer = require "extra_libs.hump.timer"
@@ -52,7 +53,14 @@ function ExplosionShot.getInputHandler(controller, callback)
         finish = function(self, i, j)
             ExplosionShot.showAction(c, callback, i - c.i, j - c.j)
         end,
-        hover_color = nil
+        hover_color = function(self, mi, mj, i, j)
+            local _, ti, tj = GridHelper.firstBlockedPos(c.i, c.j, mi - c.i, mj - c.j, c.map)
+            if i == ti and j == tj then
+                return Color.red()
+            elseif GridHelper.maximumAxisDistance(i, j, ti, tj) == 1 then
+                return Color.orange()
+            end
+        end
     }
 end
 

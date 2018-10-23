@@ -59,6 +59,10 @@ function GridHelper.manhattanDistance(i, j, ni, nj)
     return abs(ni - i) + abs(nj - j)
 end
 
+function GridHelper.maximumAxisDistance(i, j, ni, nj)
+    return math.max(abs(ni - i),abs(nj - j))
+end
+
 function GridHelper.movePlayer(controller, i, j)
     local c = controller
     local map = c.map
