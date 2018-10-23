@@ -28,7 +28,7 @@ local die
 function state:enter()
     Background():register("BG", nil, "background")
 
-    local match = Match(6, 6, Vector(0, 0), 60, WIN_W, WIN_H, {{2, 2}, {6, 6}})
+    local match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, {{2, 2}, {4, 4}})
     match:start()
 
     --Create some example dice
