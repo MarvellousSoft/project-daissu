@@ -54,6 +54,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     self.hide_player[1] = false
     self.hide_player[2] = false
 
+    self.active_slot = false --Which slot is being played at the moment
+
     self.action_input_handler = nil
 
     self:register("L0", nil, "match")
@@ -71,6 +73,11 @@ function Match:draw()
             turn_slots:draw()
         end
     end
+    if self.active_slot then
+        local player_i, action_i = self:getCurrentActiveSlot()
+        self.turn_slots[player_i]:drawCurrentAction(action_i)
+    end
+
 end
 
 function Match:start()
@@ -78,16 +85,19 @@ function Match:start()
     self.state = 'waiting for turn'
 end
 
--- This recursively playes each action in a turn
+-- This recursively plays each action in a turn
 local function playTurnRec(self, player_actions, order, player_i, action_i, size, callback)
     local p_i = order[player_i]
     -- All actions have been played
     if action_i > size then
         callback()
+        self.active_slot = false
         return
     end
     -- All actions of this index have been played
     if p_i == nil then return playTurnRec(self, player_actions, order, 1, action_i + 1, size, callback) end
+
+    self.active_slot = {p_i, action_i}
 
     local action = player_actions[p_i][action_i]
     print('Action ' .. action_i .. ' for Player ' .. p_i .. ' = ' .. action)
@@ -160,6 +170,15 @@ function Match:getAvailableDiceAreaSlot(player)
     end
 
     return nil
+end
+
+--Return which slot has an active action being processed, if any
+function Match:getCurrentActiveSlot()
+    if self.active_slot then
+        return unpack(self.active_slot)
+    else
+        return false
+    end
 end
 
 function Match:mousepressed(x, y, but, ...)

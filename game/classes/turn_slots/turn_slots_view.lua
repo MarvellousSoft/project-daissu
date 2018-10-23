@@ -21,6 +21,7 @@ function TurnSlotsView:init(obj, pos, w, h, color)
         local view = DieSlotView(slot, Vector(10 + pos.x + (i - 1) * (w - 20 - d_w) / (slots_n - 1), pos.y + (h - d_h)/2))
         view:setSubtype("die_slot_view")
     end
+
     self.pos = pos
     self.w, self.h = w, h
     self.image = IMG["turn_slots_"..color]
@@ -39,6 +40,18 @@ function TurnSlotsView:draw()
     for i, slot in ipairs(self:getObj().slots) do
         slot.view:draw()
     end
+end
+
+--Given an index, draw an arrow above given slot
+function TurnSlotsView:drawCurrentAction(index)
+    local s_v = self:getObj().slots[index].view
+    local image = IMG.current_slot
+    local scale = 3
+    local x = s_v.pos.x + s_v.w/2 - image:getWidth()*scale/2
+    local gap = 5
+    local y = s_v.pos.y - gap - image:getHeight()*scale
+    love.graphics.setColor(255,0,0)
+    love.graphics.draw(image, x, y, nil, scale)
 end
 
 --Return all dice in its slots
