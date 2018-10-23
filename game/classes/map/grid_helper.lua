@@ -33,4 +33,16 @@ function GridHelper.manhattanDistance(i, j, ni, nj)
     return abs(ni - i) + abs(nj - j)
 end
 
+function GridHelper.movePlayer(controller, i, j)
+    local c = controller
+    local map = c.map
+    local tile = map:get(c.i, c.j)
+    assert(tile and tile.obj ~= nil)
+    tile:setObj(nil)
+    local new_tile = map:get(i, j)
+    assert(new_tile and not new_tile:blocked())
+    new_tile:setObj(c.player)
+    c.i, c.j = i, j
+end
+
 return GridHelper

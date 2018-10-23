@@ -22,15 +22,7 @@ function Walk.showAction(controller, callback, i, j)
 end
 
 function Walk.applyAction(controller, i, j)
-    local c = controller
-    local tile = c.map:get(i, j)
-    if not tile or tile:blocked() then
-        print("Movement is invalid")
-    else
-        c.map:get(c.i, c.j):setObj(nil)
-        tile:setObj(c.player)
-        c.i, c.j = i, j
-    end
+    GridHelper.movePlayer(controller, i, j)
 end
 
 function Walk.getInputHandler(controller, callback)

@@ -7,7 +7,7 @@ local icons = {
     counter = love.graphics.newImage("assets/images/icons/counter.png"),
     walk = love.graphics.newImage("assets/images/icons/walk.png"),
     shoot = love.graphics.newImage("assets/images/icons/shoot.png"),
-    no_icon = love.graphics.newImage("assets/images/icons/no-icon.png")
+    no_icon = love.graphics.newImage("assets/images/icons/no-icon.png"),
 }
 
 local Actions = {}
@@ -23,7 +23,9 @@ end
 
 local helpers = {
     walk = require "classes.actions.walk",
-    shoot = require "classes.actions.shoot_forward"
+    shoot = require "classes.actions.shoot_forward",
+    ['strong punch'] = require "classes.actions.strong_punch",
+    ['run and hit'] = require "classes.actions.run_and_hit",
 }
 
 function Actions.executeAction(match, action, controller, callback)
