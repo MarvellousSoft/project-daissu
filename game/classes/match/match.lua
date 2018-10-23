@@ -187,8 +187,8 @@ function Match:mousepressed(x, y, but, ...)
     end
     if but ~= 1 then return end
     local i, j = self.map_view:getTileOnPosition(Vector(x, y))
-    if i and self.action_input_handler and self.action_input_handler.accept(i, j) then
-        self.action_input_handler.finish(i, j)
+    if i and self.action_input_handler and self.action_input_handler:accept(i, j) then
+        self.action_input_handler:finish(i, j)
         self.action_input_handler = nil
     end
 end

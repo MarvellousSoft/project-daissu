@@ -3,6 +3,7 @@ local Util = require "util"
 local GridHelper = {}
 
 local abs = math.abs
+local sign = Util.sign
 
 function GridHelper.onSameRowOrColumn(i, j, ni, nj)
     return (i ~= ni or j ~= nj) and (i == ni or j == nj)
@@ -14,7 +15,7 @@ function GridHelper.isDirection(di, dj)
 end
 
 function GridHelper.directionFromTiles(i, j, ni, nj)
-    return Util.sign(ni - i), Util.sign(nj - j)
+    return sign(ni - i), sign(nj - j)
 end
 
 -- Applies callback on tiles in the given direction. If the callback returns false it stops.

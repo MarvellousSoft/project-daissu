@@ -1,9 +1,11 @@
+local Color = require "classes.color.color"
 local Vector = require "extra_libs.hump.vector"
 local Vec = require "extra_libs.hump.vector-light"
 local Timer = require "extra_libs.hump.timer"
 local Util = require "util"
 local GridHelper = require "classes.map.grid_helper"
 local FadingText = require "classes.fading_text"
+local ActionInputHandler = require "classes.actions.action_input_handler"
 
 local ShootForward = {}
 
@@ -32,12 +34,17 @@ end
 
 function ShootForward.getInputHandler(controller, callback)
     local c = controller
-    return {
-        accept = function(i, j)
-            return GridHelper.onSameRowOrColumn(i, j, c.i, c.j)
+    return ActionInputHandler {
+        accept = function(self, i, j)
+            return GridHelper.manhattanDistance(c.i, c.j, i, j) == 1
         end,
-        finish = function(i, j)
-            ShootForward.showAction(c, callback, GridHelper.directionFromTiles(c.i, c.j, i, j))
+        finish = function(self, i, j)
+            ShootForward.showAction(c, callback, i - c.i, j - c.j)
+        end,
+        hover_color = function(self, mi, mj, i, j)
+            if Vec.eq(mi - c.i, mj - c.j, GridHelper.directionFromTiles(c.i, c.j, i, j)) then
+                return Color.red()
+            end
         end
     }
 end
