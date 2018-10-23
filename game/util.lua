@@ -15,10 +15,6 @@ function util.map(vec, func)
     return new
 end
 
-function util.manhattanDistance(i, j, i2, j2)
-    return math.abs(i - i2) + math.abs(j - j2)
-end
-
 function util.sign(x)
     if x > 0 then
         return 1

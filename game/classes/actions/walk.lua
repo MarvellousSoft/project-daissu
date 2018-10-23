@@ -2,13 +2,7 @@ local Class = require "extra_libs.hump.class"
 local Timer = require "extra_libs.hump.timer"
 local Vec = require "extra_libs.hump.vector-light"
 local Util = require "util"
-
-local dir = {
-    [0] = {-1, 0},
-    [1] = {0, 1},
-    [2] = {1, 0},
-    [3] = {0, -1}
-}
+local GridHelper = require "classes.map.grid_helper"
 
 local Walk = {}
 
@@ -43,7 +37,7 @@ function Walk.getInputHandler(controller, callback)
     local c = controller
     return {
         accept = function(i, j)
-            return Util.manhattanDistance(i, j, c.i, c.j) == 1
+            return GridHelper.manhattanDistance(i, j, c.i, c.j) == 1
         end,
         finish = function(i, j)
             Walk.showAction(c, callback, i, j)
