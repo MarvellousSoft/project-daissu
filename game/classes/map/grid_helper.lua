@@ -23,8 +23,8 @@ function GridHelper.applyCallbackOnDirection(i, j, di, dj, map, callback)
     assert(GridHelper.isDirection(di, dj))
     i, j = i + di, j + dj
     local tile = map:get(i, j)
-    while tile do
-        if not callback(tile, i, j) then return end
+    while true do
+        if not callback(tile, i, j) or tile == nil then return end
         i, j = i + di, j + dj
         tile = map:get(i, j)
     end

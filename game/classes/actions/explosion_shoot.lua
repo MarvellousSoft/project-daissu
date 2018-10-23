@@ -12,19 +12,22 @@ function ExplosionShot.showAction(controller, callback, di, dj)
     local c = controller
     local map_view = c.map.view
     GridHelper.applyCallbackOnDirection(c.i, c.j, di, dj, c.map, function(tile, i, j)
-        if tile:blocked() then
+        if tile == nil or tile:blocked() then
+            print(i,j,"block")
             for di = -1, 1, 1 do
                 for dj = -1, 1, 1 do
-                    tile = c.map:get(c.i+di,c.j+dj)
+                    tile = c.map:get(i+di,j+dj)
+                    print(c.i+di,c.j+dj)
                     if tile then
                         local damage = (di == 0 and dj == 0) and 2 or 1
-                        FadingText(map_view.pos + Vector(c.j + dj - 1, c.i + di - 1) * map_view.cell_size,
+                        FadingText(map_view.pos + Vector(j + dj - 1, i + di - 1) * map_view.cell_size,
                                    "-"..damage, 1)
                     end
                 end
             end
             return false
         end
+        print(i,j,"notblock")
         return true
     end)
     Timer.after(1, function()
@@ -37,10 +40,10 @@ end
 function ExplosionShot.applyAction(controller, di, dj)
     local c = controller
     GridHelper.applyCallbackOnDirection(c.i, c.j, di, dj, c.map, function(tile, i, j)
-        if tile:blocked() then
+        if tile == nil or tile:blocked() then
             for di = -1, 1, 1 do
                 for dj = -1, 1, 1 do
-                    tile = c.map:get(c.i+di,c.j+dj)
+                    tile = c.map:get(i+di,j+dj)
                     if tile then
                         local damage = (di == 0 and dj == 0) and 2 or 1
                         tile:applyDamage(damage)
