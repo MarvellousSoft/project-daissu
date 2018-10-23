@@ -63,8 +63,11 @@ function setup.config()
         current_slot = new(path.."UI/current_slot_arrow.png"),
         button = new(path.."UI/button.png"),
         --CHARACTERS
-         player_orange  = new(path.."characters/player1.png"),
-         player_purple = new(path.."characters/player2.png"),
+        player_orange  = new(path.."characters/player1.png"),
+        player_purple = new(path.."characters/player2.png"),
+        --OTHER IMAGES
+        background = new(path.."background.png")
+
     }
 
     --AUDIO--

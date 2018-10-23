@@ -9,6 +9,7 @@ local Vector = require "extra_libs.hump.vector"
 local Util = require "util"
 local Draw = require "draw"
 local Drawable = require "classes.primitives.drawable"
+local Background = require "classes.background"
 local Match = require "classes.match.match"
 
 local state = {}
@@ -25,6 +26,8 @@ local die
 --STATE FUNCTIONS--
 
 function state:enter()
+    Background():register("BG", nil, "background")
+
     local match = Match(6, 6, Vector(0, 0), 60, WIN_W, WIN_H, {{2, 2}, {6, 6}})
     match:start()
 

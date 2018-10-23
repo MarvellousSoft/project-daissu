@@ -52,7 +52,7 @@ function MapView:draw(match)
         g.line(x + j * size, y, x + j * size, y + m.rows * size)
     end
     --Draw border lines
-    love.graphics.setColor(255,255,255,210)
+    love.graphics.setColor(0,0,0,210)
     love.graphics.setLineWidth(3)
     g.line(x, y, x + m.columns * size, y)
     g.line(x, y + m.rows * size, x + m.columns * size, y + m.columns * size)

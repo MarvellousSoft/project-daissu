@@ -48,6 +48,12 @@ end
 --CLASS FUNCTIONS--
 
 function DiceArea:draw()
+    --Draw bg shadow
+    Color.set(Color.black())
+    local off = 8
+    love.graphics.draw(self.image, self.pos.x+off, self.pos.y+off, nil,
+                       self.img_sx, self.img_sy)
+
     --Draw bg
     Color.set(Color.white())
     love.graphics.draw(self.image, self.pos.x, self.pos.y, nil,

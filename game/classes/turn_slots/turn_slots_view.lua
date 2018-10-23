@@ -32,6 +32,10 @@ end
 
 function TurnSlotsView:draw()
     --Draw turn slots background
+    love.graphics.setColor(0, 0, 0)
+    local off = 8
+    love.graphics.draw(self.image, self.pos.x+off, self.pos.y+off, nil,
+                       self.iw, self.ih)
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(self.image, self.pos.x, self.pos.y, nil,
                        self.iw, self.ih)
