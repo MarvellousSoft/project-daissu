@@ -48,8 +48,9 @@ function TurnSlotsView:drawCurrentAction(index)
     local image = IMG.current_slot
     local scale = 3
     local x = s_v.pos.x + s_v.w/2 - image:getWidth()*scale/2
-    local gap = 5
-    local y = s_v.pos.y - gap - image:getHeight()*scale
+    local gap, magnitude, max_offset = 10, 8, 5
+    local offset = math.sin(magnitude*os.clock())*max_offset
+    local y = s_v.pos.y - gap - image:getHeight()*scale - offset
     love.graphics.setColor(255,0,0)
     love.graphics.draw(image, x, y, nil, scale)
 end
