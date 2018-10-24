@@ -74,4 +74,27 @@ function GridHelper.moveObject(map, i, j, ni, nj)
     new_tile:setObj(obj)
 end
 
+-- Pushes object currently at (i, j) in direction (di, dj) for distance tiles
+-- Returns whether object was pushed without obstructions
+function GridHelper.pushObject(map, i, j, di, dj, distance)
+    assert(GridHelper.isDirection(di, dj))
+    assert(map:get(i, j).obj)
+    for d = 1, distance do
+        local ni, nj = i + di, j + dj
+        local tile = map:get(ni, nj)
+        if tile and not tile:blocked() then
+            GridHelper.moveObject(map, i, j, ni, nj)
+            i, j = ni, nj
+        else
+            if tile then
+                -- only apply damage if not going out of grid
+                tile:applyDamage(1)
+                map:get(i, j):applyDamage(1)
+            end
+            return false
+        end
+    end
+    return true
+end
+
 return GridHelper

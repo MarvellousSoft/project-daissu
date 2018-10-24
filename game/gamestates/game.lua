@@ -33,7 +33,7 @@ function state:enter()
     match:start()
 
     --Create some example dice
-    DieView(Die({"explosion_shot","strong punch","strong punch","walk","walk","walk"}, 1), 50, 30, Color.red()):register("L2", "die_view")
+    DieView(Die({"shove","strong punch","strong punch","walk","walk","walk"}, 1), 50, 30, Color.red()):register("L2", "die_view")
     DieView(Die({"run and hit","run and hit","run and hit","walk","walk","walk"}, 1), 120, 30, Color.red()):register("L2", "die_view")
     DieView(Die({"counter","counter","counter","clock","clock","clock"}, 1), 190, 30, Color.blue()):register("L2", "die_view")
     DieView(Die({"counter","counter","counter","clock","clock","clock"}, 1), 260, 30, Color.blue()):register("L2", "die_view")

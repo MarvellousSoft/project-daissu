@@ -28,6 +28,7 @@ local helpers = {
     explosion_shot = require "classes.actions.explosion_shot",
     ['strong punch'] = require "classes.actions.strong_punch",
     ['run and hit'] = require "classes.actions.run_and_hit",
+    shove = require "classes.actions.shove",
 }
 
 function Actions.executeAction(match, action, controller, callback)
