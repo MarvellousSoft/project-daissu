@@ -10,12 +10,12 @@ local ActionInputHandler = require "classes.actions.action_input_handler"
 local ExplosionShot = {}
 
 function ExplosionShot.showAction(controller, callback, di, dj)
-    local c = controller
-    local map_view = c.map.view
-    local _, ti, tj = GridHelper.firstBlockedPos(c.i, c.j, di, dj, c.map)
+    local pi, pj = controller:getPosition()
+    local map_view = controller.map.view
+    local _, ti, tj = GridHelper.firstBlockedPos(controller.map, pi, pj, di, dj)
     for di = -1, 1, 1 do
         for dj = -1, 1, 1 do
-            tile = c.map:get(ti+di,tj+dj)
+            tile = controller.map:get(ti + di, tj + dj)
             if tile then
                 local damage = (di == 0 and dj == 0) and 2 or 1
                 FadingText(map_view.pos + Vector(tj + dj - 1, ti + di - 1) * map_view.cell_size,
@@ -24,18 +24,18 @@ function ExplosionShot.showAction(controller, callback, di, dj)
         end
     end
     Timer.after(1, function()
-        ExplosionShot.applyAction(c, di, dj)
-        c.player:resetAnimation()
+        ExplosionShot.applyAction(controller, di, dj)
+        controller.player:resetAnimation()
         if callback then callback() end
     end)
 end
 
 function ExplosionShot.applyAction(controller, di, dj)
-    local c = controller
-    local _, ti, tj = GridHelper.firstBlockedPos(c.i, c.j, di, dj, c.map)
+    local pi, pj = controller:getPosition()
+    local _, ti, tj = GridHelper.firstBlockedPos(controller.map, pi, pj, di, dj)
     for di = -1, 1, 1 do
         for dj = -1, 1, 1 do
-            tile = c.map:get(ti+di,tj+dj)
+            tile = controller.map:get(ti + di, tj + dj)
             if tile then
                 local damage = (di == 0 and dj == 0) and 2 or 1
                 tile:applyDamage(damage)
@@ -45,16 +45,16 @@ function ExplosionShot.applyAction(controller, di, dj)
 end
 
 function ExplosionShot.getInputHandler(controller, callback)
-    local c = controller
+    local pi, pj = controller:getPosition()
     return ActionInputHandler {
         accept = function(self, i, j)
-            return GridHelper.manhattanDistance(c.i, c.j, i, j) == 1
+            return GridHelper.manhattanDistance(pi, pj, i, j) == 1
         end,
         finish = function(self, i, j)
-            ExplosionShot.showAction(c, callback, i - c.i, j - c.j)
+            ExplosionShot.showAction(controller, callback, i - pi, j - pj)
         end,
         hover_color = function(self, mi, mj, i, j)
-            local _, ti, tj = GridHelper.firstBlockedPos(c.i, c.j, mi - c.i, mj - c.j, c.map)
+            local _, ti, tj = GridHelper.firstBlockedPos(controller.map, pi, pj, mi - pi, mj - pj)
             if i == ti and j == tj then
                 return Color.red()
             elseif GridHelper.maximumAxisDistance(i, j, ti, tj) == 1 then

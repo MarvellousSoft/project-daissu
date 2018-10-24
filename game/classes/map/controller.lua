@@ -10,9 +10,12 @@ local Controller = Class {}
 -- Start controller with a player on map on position pos
 function Controller:init(map, color, i, j)
     self.map = map
-    self.i, self.j = i, j
     self.player = Player(color)
     map:get(i, j):setObj(self.player)
+end
+
+function Controller:getPosition()
+    return self.player.tile.i, self.player.tile.j
 end
 
 return Controller

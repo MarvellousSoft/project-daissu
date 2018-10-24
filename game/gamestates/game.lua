@@ -11,6 +11,7 @@ local Draw = require "draw"
 local Drawable = require "classes.primitives.drawable"
 local Background = require "classes.background"
 local Match = require "classes.match.match"
+local Actions = require "classes.actions"
 
 local state = {}
 
@@ -88,6 +89,11 @@ function state:keypressed(key, scancode, isrepeat)
     end
     if key == '2' then
         match:toggleHide(2)
+    end
+    if key == 'a' then
+        local action = io.read()
+        local match = Util.findId('match')
+        Actions.executeAction(match, action, match.controllers[1], function() print('done custom action') end)
     end
 end
 

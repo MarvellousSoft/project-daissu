@@ -10,7 +10,7 @@ function Map:init(rows, columns)
     for i = 1, rows do
         self.grid[i] = {}
         for j = 1, columns do
-            self.grid[i][j] = MapTile(nil)
+            self.grid[i][j] = MapTile(nil, i, j)
         end
     end
 end

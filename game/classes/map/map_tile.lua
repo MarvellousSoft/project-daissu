@@ -8,12 +8,21 @@ local Color = require "classes.color.color"
 ]]
 local MapTile = Class {}
 
-function MapTile:init(obj)
+function MapTile:init(obj, i, j)
+    self.i, self.j = i, j
     self:setObj(obj)
 end
 
 function MapTile:setObj(obj)
+    assert(self.obj == nil or obj == nil)
+    if self.obj ~= nil then
+        self.obj.tile = nil
+    end
     self.obj = obj
+    if obj ~= nil then
+        assert(obj.tile == nil)
+        obj.tile = self
+    end
 end
 
 function MapTile:blocked()
@@ -26,8 +35,13 @@ function MapTile:applyDamage(dmg)
     end
 end
 
+function MapTile:getCloseTile(map, di, dj)
+    return map:get(self.i + di, self.j + dj)
+end
+
 -- drawing starting on a tile of size size starting on x, y
-function MapTile:drawOnGrid(match, i, j, x, y, size)
+function MapTile:drawOnGrid(match, x, y, size)
+    local i, j = self.i, self.j
     if match.action_input_handler then
         local mi, mj = match.map_view:getTileOnPosition(Vector(love.mouse.getPosition()))
         love.graphics.setColor(20, 200, 50, 80)

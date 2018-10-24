@@ -21,10 +21,10 @@ function StrongPunch.showAction(controller, callback, i, j)
 end
 
 function StrongPunch.getInputHandler(controller, callback)
-    local c = controller
+    local pi, pj = controller:getPosition()
     return ActionInputHandler {
         accept = function(self, i, j)
-            return GridHelper.manhattanDistance(c.i, c.j, i, j) == 1
+            return GridHelper.manhattanDistance(pi, pj, i, j) == 1
         end,
         finish = function(self, i, j)
             return StrongPunch.showAction(controller, callback, i, j)

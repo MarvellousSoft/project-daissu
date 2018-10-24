@@ -20,7 +20,7 @@ end
 
 --Get first blocked position going in a direction.
 --IMPORTANT: if it hits map bounderies, it will return the last valid position
-function GridHelper.firstBlockedPos(i, j, di, dj, map)
+function GridHelper.firstBlockedPos(map, i, j, di, dj)
     assert(GridHelper.isInside(i, j, map))
     assert(GridHelper.isDirection(di, dj))
     i, j = i + di, j + dj
@@ -60,19 +60,18 @@ function GridHelper.manhattanDistance(i, j, ni, nj)
 end
 
 function GridHelper.maximumAxisDistance(i, j, ni, nj)
-    return math.max(abs(ni - i),abs(nj - j))
+    return math.max(abs(ni - i), abs(nj - j))
 end
 
-function GridHelper.movePlayer(controller, i, j)
-    local c = controller
-    local map = c.map
-    local tile = map:get(c.i, c.j)
+-- Moves object currently at (i, j) to (ni, nj) in map
+function GridHelper.moveObject(map, i, j, ni, nj)
+    local tile = map:get(i, j)
     assert(tile and tile.obj ~= nil)
+    local obj = tile.obj
     tile:setObj(nil)
-    local new_tile = map:get(i, j)
+    local new_tile = map:get(ni, nj)
     assert(new_tile and not new_tile:blocked())
-    new_tile:setObj(c.player)
-    c.i, c.j = i, j
+    new_tile:setObj(obj)
 end
 
 return GridHelper

@@ -61,7 +61,7 @@ function MapView:draw(match)
 
     for i = 1, rows do
         for j = 1, columns do
-            m.grid[i][j]:drawOnGrid(match, i, j, x + (j - 1) * size, y + (i - 1) * size, size)
+            m.grid[i][j]:drawOnGrid(match, x + (j - 1) * size, y + (i - 1) * size, size)
         end
     end
 end
