@@ -5,8 +5,14 @@ local Timer = require "extra_libs.hump.timer"
 local icons = {
     clock  = love.graphics.newImage("assets/images/icons/clock.png"),
     counter = love.graphics.newImage("assets/images/icons/counter.png"),
-    walk = love.graphics.newImage("assets/images/icons/walk.png"),
+    walk = love.graphics.newImage("assets/images/icons/sprint.png"),
+    ['long walk'] = love.graphics.newImage("assets/images/icons/run.png"),
     shoot = love.graphics.newImage("assets/images/icons/shoot.png"),
+    roundhouse = love.graphics.newImage("assets/images/icons/high-kick.png"),
+    ['explosion shot'] = love.graphics.newImage("assets/images/icons/spiky-explosion.png"),
+    ['strong punch'] = love.graphics.newImage("assets/images/icons/punch-blast.png"),
+    ['run and hit'] = love.graphics.newImage("assets/images/icons/running-ninja.png"),
+    hookshot = love.graphics.newImage("assets/images/icons/meat-hook.png"),
     no_icon = love.graphics.newImage("assets/images/icons/no-icon.png"),
 }
 
@@ -25,7 +31,7 @@ local helpers = {
     walk = require "classes.actions.walk",
     shoot = require "classes.actions.shoot_forward",
     roundhouse = require "classes.actions.roundhouse",
-    explosion_shot = require "classes.actions.explosion_shot",
+    ['explosion shot'] = require "classes.actions.explosion_shot",
     ['strong punch'] = require "classes.actions.strong_punch",
     ['run and hit'] = require "classes.actions.run_and_hit",
 }
