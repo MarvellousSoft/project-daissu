@@ -5,6 +5,7 @@ local Timer = require "extra_libs.hump.timer"
 local Util = require "util"
 local GridHelper = require "classes.map.grid_helper"
 local ActionInputHandler = require "classes.actions.action_input_handler"
+local FadingText = require "classes.fading_text"
 
 local Hookshot = {}
 
@@ -24,6 +25,10 @@ end
 
 function Hookshot.showAction(controller, callback, di, dj)
     local obj, ni, nj = whatIsPulledWhere(controller, di, dj)
+    if obj ~= controller.player then
+        local map_view = controller.map.view
+        FadingText(map_view.pos + Vector(nj - 1, ni - 1) * map_view.cell_size, "-1", 1)
+    end
     Timer.tween(0.5, obj, {dx = nj - obj.tile.j, dy = ni - obj.tile.i}, 'in-out-quad', function()
         Hookshot.applyAction(controller, di, dj)
         obj:resetAnimation()
@@ -34,6 +39,9 @@ end
 function Hookshot.applyAction(controller, di, dj)
     local obj, ni, nj = whatIsPulledWhere(controller, di, dj)
     GridHelper.moveObject(controller.map, obj.tile.i, obj.tile.j, ni, nj)
+    if obj ~= controller.player then
+        obj.tile:applyDamage(1)
+    end
 end
 
 function Hookshot.getInputHandler(controller, callback)

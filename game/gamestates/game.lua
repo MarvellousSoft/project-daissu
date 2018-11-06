@@ -34,18 +34,16 @@ function state:enter()
     match:start()
 
     --Create some example dice
-    DieView(Die({"explosion shot","strong punch","strong punch","walk","walk","walk"}, 1), 50, 30, Color.red()):register("L2", "die_view")
-    DieView(Die({"run and hit","run and hit","run and hit","walk","walk","walk"}, 1), 120, 30, Color.red()):register("L2", "die_view")
-    DieView(Die({"counter","counter","counter","clock","clock","clock"}, 1), 190, 30, Color.blue()):register("L2", "die_view")
-    DieView(Die({"counter","counter","counter","clock","clock","clock"}, 1), 260, 30, Color.blue()):register("L2", "die_view")
-    DieView(Die({"walk","counter","clock","shoot","shoot", "walk"}, 1), 330, 30, Color.new(86, 239, 182)):register("L2", "die_view")
+    DieView(Die({"long walk", "long walk", "long walk", "walk"}, 1), 50, 30, Color.green()):register("L2", "die_view")
+    DieView(Die({"long walk", "long walk", "long walk", "walk"}, 1), 120, 30, Color.green()):register("L2", "die_view")
+    DieView(Die({"shoot","shoot","explosion shot"}, 1), 190, 30, Color.red()):register("L2", "die_view")
+    DieView(Die({"shove", "shove", "walk", "long walk"}, 1), 260, 30, Color.yellow()):register("L2", "die_view")
 
     --Create some example dice
-    DieView(Die({"shoot","shoot","shoot","walk","walk","walk"}, 2), 950, 30, Color.red(), 2):register("L2", "die_view")
-    DieView(Die({"shoot","shoot","shoot","walk","walk","walk"}, 2), 1020, 30, Color.red(), 2):register("L2", "die_view")
-    DieView(Die({"counter","counter","counter","clock","clock","clock"}, 2), 1090, 30, Color.blue(), 2):register("L2", "die_view")
-    DieView(Die({"counter","counter","counter","clock","clock","clock"}, 2), 1160, 30, Color.blue(), 2):register("L2", "die_view")
-    DieView(Die({"walk","counter","clock","shoot","shoot", "walk"}, 2), 1230, 30, Color.new(86, 239, 182), 2):register("L2", "die_view")
+    DieView(Die({"walk", "run and hit", "long walk"}, 2), 950, 30, Color.green(), 2):register("L2", "die_view")
+    DieView(Die({"walk", "run and hit", "long walk"}, 2), 1020, 30, Color.green(), 2):register("L2", "die_view")
+    DieView(Die({"strong punch", "strong punch", "run and hit"}, 2), 1090, 30, Color.red(), 2):register("L2", "die_view")
+    DieView(Die({"roundhouse", "hookshot"}, 2), 1160, 30, Color.yellow(), 2):register("L2", "die_view")
 end
 
 function state:leave()

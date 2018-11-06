@@ -13,6 +13,7 @@ local icons = {
     ['strong punch'] = love.graphics.newImage("assets/images/icons/punch-blast.png"),
     ['run and hit'] = love.graphics.newImage("assets/images/icons/running-ninja.png"),
     hookshot = love.graphics.newImage("assets/images/icons/meat-hook.png"),
+    shove = love.graphics.newImage("assets/images/icons/push.png"),
     no_icon = love.graphics.newImage("assets/images/icons/no-icon.png"),
 }
 
