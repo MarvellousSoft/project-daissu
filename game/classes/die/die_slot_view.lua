@@ -39,7 +39,8 @@ function DieSlotView:draw()
     local dice = Util.findSubtype("die_view")
     local has_dice_over = false
     for die_view in pairs(dice) do
-        if self.pos.x <= die_view.pos.x + die_view.w and
+        if die_view:getObj() ~= dieslot:getDie() and
+           self.pos.x <= die_view.pos.x + die_view.w and
            self.pos.x + self.w >= die_view.pos.x and
            self.pos.y <= die_view.pos.y + die_view.h and
            self.pos.y + self.h >= die_view.pos.y then
