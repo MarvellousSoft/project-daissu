@@ -134,7 +134,7 @@ function Match:toggleHide(player)
     end
 end
 
-function Match:playTurn()
+function Match:playTurn(invert)
     local actions = {}
     local order = {}
     for i, turn_slots in ipairs(self.turn_slots) do
@@ -142,7 +142,11 @@ function Match:playTurn()
         for j, die_slot in ipairs(turn_slots:getObj().slots) do
             actions[i][j] = die_slot.die and die_slot.die:getCurrent() or 'none'
         end
-        order[i] = i
+        if invert then
+            order[i] = #self.turn_slots - i + 1
+        else
+            order[i] = i
+        end
     end
     self:playTurnFromActions(actions, order)
 end
