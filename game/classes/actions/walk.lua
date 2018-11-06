@@ -32,7 +32,7 @@ local function WalkCreator(distance)
         local pi, pj = controller:getPosition()
         return ActionInputHandler {
             accept = function(self, i, j)
-                return GridHelper.manhattanDistance(i, j, pi, pj) <= distance
+                return not Vec.eq(i, j, pi, pj) and GridHelper.manhattanDistance(i, j, pi, pj) <= distance
             end,
             finish = function(self, i, j)
                 Walk.showAction(controller, callback, i, j)
