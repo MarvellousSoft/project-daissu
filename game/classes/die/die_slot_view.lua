@@ -40,6 +40,7 @@ function DieSlotView:draw()
     local has_dice_over = false
     for die_view in pairs(dice) do
         if die_view:getObj() ~= dieslot:getDie() and
+           not die_view.is_moving and
            self.pos.x <= die_view.pos.x + die_view.w and
            self.pos.x + self.w >= die_view.pos.x and
            self.pos.y <= die_view.pos.y + die_view.h and
