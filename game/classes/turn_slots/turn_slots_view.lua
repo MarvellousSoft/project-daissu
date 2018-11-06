@@ -15,7 +15,7 @@ function TurnSlotsView:init(obj, pos, w, h, color)
 
     -- Accounting for margin in DieSlots
     d_w = d_w + 2*DieHelper.getDieSlotMargin()
-    d_h = d_h + 2*DieHelper.getDieSlotMargin()
+    d_h = d_h + 2*DieHelper.getDieSlotMargin() + DieHelper.getDieUnderside()
 
     for i, slot in ipairs(obj.slots) do
         local view = DieSlotView(slot, Vector(10 + pos.x + (i - 1) * (w - 20 - d_w) / (slots_n - 1), pos.y + (h - d_h)/2))
