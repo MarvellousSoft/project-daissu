@@ -57,6 +57,8 @@ function setup.config()
         dice_area = new(path.."UI/dice_area.png"),
         turn_slots_orange = new(path.."UI/turn_slots_orange.png"),
         turn_slots_purple = new(path.."UI/turn_slots_purple.png"),
+        starting_player_purple = new(path.."UI/starting_player_purple.png"),
+        starting_player_orange = new(path.."UI/starting_player_orange.png"),
         die_slot_free = new(path.."UI/die_slot_free.png"),
         die_slot_over = new(path.."UI/die_slot_over.png"),
         die_slot_occupied = new(path.."UI/die_slot_occupied.png"),

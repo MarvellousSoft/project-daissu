@@ -54,7 +54,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     self.hide_player[1] = false
     self.hide_player[2] = false
 
-    self.number_of_turns = 0
+    self.number_of_turns = 1
 
     self.active_slot = false --Which slot is being played at the moment
 
@@ -75,13 +75,12 @@ function Match:draw()
     end
 
     --Draw turn slots
+    local start_p = self:startingPlayer()
     for i, turn_slots in ipairs(self.turn_slots) do
         if not self.hide_player[i] then
-            turn_slots:draw()
+            turn_slots:draw((self.state ~= 'playing turn' and start_p == i), i == 1 and 'right' or 'left')
         end
     end
-
-    --Draw starting player indicator
 
     --Draw which is the current action
     if self.active_slot then
@@ -103,6 +102,7 @@ local function playTurnRec(self, player_actions, order, player_i, action_i, size
     if action_i > size then
         callback()
         self.active_slot = false
+        self.number_of_turns = self.number_of_turns + 1
         return
     end
     -- All actions of this index have been played
@@ -146,7 +146,6 @@ function Match:toggleHide(player)
 end
 
 function Match:playTurn()
-    self.number_of_turns = self.number_of_turns + 1
     local invert = self:startingPlayer() == 2
     local actions = {}
     local order = {}

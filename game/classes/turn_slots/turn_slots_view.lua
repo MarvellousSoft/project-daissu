@@ -24,13 +24,18 @@ function TurnSlotsView:init(obj, pos, w, h, color)
 
     self.pos = pos
     self.w, self.h = w, h
+
+    --Bg image
     self.image = IMG["turn_slots_"..color]
     self.iw = self.w/self.image:getWidth()
     self.ih = self.h/self.image:getHeight()
 
+    --Starting player image
+    self.starting_player_image = IMG["starting_player_"..color]
+
 end
 
-function TurnSlotsView:draw()
+function TurnSlotsView:draw(draw_starting_player, position)
     --Draw turn slots background
     love.graphics.setColor(0, 0, 0)
     local off = 8
@@ -43,6 +48,24 @@ function TurnSlotsView:draw()
     --Draw each slot
     for i, slot in ipairs(self:getObj().slots) do
         slot.view:draw()
+    end
+
+    --Draw starting player icon, if needed
+    if draw_starting_player then
+        love.graphics.setColor(255, 255, 255)
+        local image = self.starting_player_image
+        local x, sx
+        local gap_x, gap_y = 10, 15
+        if position == 'left' then
+            x = self.pos.x + gap_x
+            sx = 1
+        elseif position == 'right' then
+            x = self.pos.x + self.w - gap_x
+            sx = -1
+        else
+            error("Not a valid position: "..position)
+        end
+        love.graphics.draw(image, x, self.pos.y - image:getHeight() - gap_y, nil, sx, 1)
     end
 end
 
