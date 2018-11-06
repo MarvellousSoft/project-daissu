@@ -64,11 +64,18 @@ function DieView:draw()
     g.rectangle("line", self.pos.x  - self.w*(self.sx-1)/2, self.pos.y  - self.h*(self.sy-1)/2,
                         self.w * self.sx, self.h * self.sy, 5, 5)
 
-    --Draw die text
-    Color.set(Color.white())
+    --Draw die icon
     local icon = self.side_images[self.rolling and self.rolling_face or die:getCurrentNum()]
-    g.draw(icon, self.pos.x - self.w*(self.sx-1)/2, self.pos.y - self.h*(self.sy-1)/2, nil,
-                 self.w/icon:getWidth()*self.sx, self.h/icon:getHeight()*self.sy)
+    icon:setFilter("linear")
+    local x, y = self.pos.x - self.w*(self.sx-1)/2, self.pos.y - self.h*(self.sy-1)/2
+    local margin = 0
+    local sx = (self.w-2*margin)/icon:getWidth()*self.sx
+    local sy = (self.h-2*margin)/icon:getHeight()*self.sy
+    local off = 2
+    Color.set(Color.black())
+    g.draw(icon, x + margin + off, y + margin + off, nil, sx, sy)
+    Color.set(Color.white())
+    g.draw(icon, x + margin, y + margin, nil, sx, sy)
 end
 
 function DieView:rollAnimation()
