@@ -28,7 +28,6 @@ local die
 --STATE FUNCTIONS--
 
 function state:enter()
-    _number_turns = 0
     Background():register("BG", nil, "background")
 
     local match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, {{2, 2}, {4, 4}})
@@ -84,8 +83,7 @@ function state:keypressed(key, scancode, isrepeat)
         Util.findId("my_die"):roll()
     end
     if key == 't' then
-        _number_turns = _number_turns + 1
-        match:playTurn(_number_turns%2 == 0)
+        match:playTurn()
     end
     if key == '1' then
         match:toggleHide(1)

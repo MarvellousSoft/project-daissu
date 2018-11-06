@@ -54,6 +54,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     self.hide_player[1] = false
     self.hide_player[2] = false
 
+    self.number_of_turns = 0
+
     self.active_slot = false --Which slot is being played at the moment
 
     self.action_input_handler = nil
@@ -62,17 +64,26 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
 end
 
 function Match:draw()
+    --Draw grid
     self.map_view:draw(self)
+
+    --Draw dice area
     for i, dice_area in ipairs(self.dice_areas) do
         if not self.hide_player[i] then
             dice_area:draw()
         end
     end
+
+    --Draw turn slots
     for i, turn_slots in ipairs(self.turn_slots) do
         if not self.hide_player[i] then
             turn_slots:draw()
         end
     end
+
+    --Draw starting player indicator
+
+    --Draw which is the current action
     if self.active_slot then
         local player_i, action_i = self:getCurrentActiveSlot()
         self.turn_slots[player_i]:drawCurrentAction(action_i)
@@ -134,7 +145,9 @@ function Match:toggleHide(player)
     end
 end
 
-function Match:playTurn(invert)
+function Match:playTurn()
+    self.number_of_turns = self.number_of_turns + 1
+    local invert = self:startingPlayer() == 2
     local actions = {}
     local order = {}
     for i, turn_slots in ipairs(self.turn_slots) do
@@ -182,6 +195,14 @@ function Match:getCurrentActiveSlot()
         return unpack(self.active_slot)
     else
         return false
+    end
+end
+
+function Match:startingPlayer()
+    if self.number_of_turns%2 == 1 then
+        return 1
+    else
+        return 2
     end
 end
 
