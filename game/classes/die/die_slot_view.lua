@@ -21,7 +21,7 @@ function DieSlotView:init(die_slot, pos)
     --Graphic variable
     local w, h = DieHelper.getDieDimensions()
     self.w = w + 2 * DieSlotView.margin
-    self.h = h + 2 * DieSlotView.margin
+    self.h = h + 2 * DieSlotView.margin + DieHelper.getDieUnderside()
     self.line_width = 5
 
     --Images

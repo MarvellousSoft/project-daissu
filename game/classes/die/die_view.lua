@@ -25,6 +25,7 @@ function DieView:init(die, x, y, color)
     self.sx, self.sy = 1, 1
 
     --Color for die border
+    self.color_darker = Color.new(self.color.r*.8,self.color.g*.8,self.color.b*.8)
     self.color_border = Color.new(self.color.r*.2,self.color.g*.2,self.color.b*.2)
 
     --Loads up icon for every side
@@ -56,13 +57,17 @@ function DieView:draw()
 
     local g = love.graphics
     --Draw die bg
-    Color.set(self.color)
-    g.rectangle("fill", self.pos.x  - self.w*(self.sx-1)/2, self.pos.y  - self.h*(self.sy-1)/2,
-                        self.w * self.sx, self.h * self.sy, 5, 5)
-    g.setLineWidth(4)
+    local x, y = self.pos.x  - self.w*(self.sx-1)/2, self.pos.y  - self.h*(self.sy-1)/2
+    local w, h = self.w * self.sx, self.h * self.sy
+    g.setLineWidth(3)
+    Color.set(self.color_darker)
+    g.rectangle("fill", x, y + h/6, w, h, 5, 5)
     Color.set(self.color_border)
-    g.rectangle("line", self.pos.x  - self.w*(self.sx-1)/2, self.pos.y  - self.h*(self.sy-1)/2,
-                        self.w * self.sx, self.h * self.sy, 5, 5)
+    g.rectangle("line", x, y + h/6, w, h, 5, 5)
+    Color.set(self.color)
+    g.rectangle("fill", x, y, w, h, 5, 5)
+    Color.set(self.color_border)
+    g.rectangle("line", x, y, w, h, 5, 5)
 
     --Draw die icon
     local icon = self.side_images[self.rolling and self.rolling_face or die:getCurrentNum()]
