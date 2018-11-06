@@ -36,6 +36,7 @@ local helpers = {
     ['run and hit'] = require "classes.actions.run_and_hit",
     shove = require "classes.actions.shove",
     ['long walk'] = (require "classes.actions.walk")(2),
+    hookshot = require "classes.actions.hookshot",
 }
 
 function Actions.executeAction(match, action, controller, callback)

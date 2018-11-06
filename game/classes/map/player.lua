@@ -12,6 +12,7 @@ function Player:init(color)
     self.image = IMG["player_"..color]
 
     self.font = Font.get("regular", 25)
+    self.type = 'Player'
 end
 
 function Player:resetAnimation()
