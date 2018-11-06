@@ -3,6 +3,7 @@ local VIEW      = require "classes.primitives.view"
 local Class     = require "extra_libs.hump.class"
 local Color     = require "classes.color.color"
 local DieHelper = require "classes.die.helper"
+local Util      = require "util"
 
 local funcs = {}
 
@@ -23,20 +24,34 @@ function DieSlotView:init(die_slot, pos)
     self.h = h + 2 * DieSlotView.margin
     self.line_width = 5
 
+    --Images
     self.free_image = IMG.die_slot_free
     self.has_dice_over_image = IMG.die_slot_over --If player is dragging a dice over this object
     self.occupied_image = IMG.die_slot_occupied
-
 end
 
 --CLASS FUNCTIONS--
+
 function DieSlotView:draw()
     local dieslot = self:getObj()
     local g = love.graphics
 
+    local dice = Util.findSubtype("die_view")
+    local has_dice_over = false
+    for die_view in pairs(dice) do
+        if self.pos.x <= die_view.pos.x + die_view.w and
+           self.pos.x + self.w >= die_view.pos.x and
+           self.pos.y <= die_view.pos.y + die_view.h and
+           self.pos.y + self.h >= die_view.pos.y then
+               has_dice_over = true
+        end
+    end
+
     --Get proper image
     local image
-    if dieslot.die then
+    if has_dice_over then
+        image = self.has_dice_over_image
+    elseif dieslot.die then
         image = self.occupied_image
     else
         image = self.free_image
