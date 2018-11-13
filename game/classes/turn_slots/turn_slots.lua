@@ -11,4 +11,8 @@ function TurnSlots:init(n)
     end
 end
 
+function TurnSlots:getSlot(i)
+    return self.slots[i] 
+end
+
 return TurnSlots
