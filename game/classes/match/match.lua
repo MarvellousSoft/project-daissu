@@ -10,6 +10,9 @@ local TurnSlots = require "classes.turn_slots.turn_slots"
 local TurnSlotsView = require "classes.turn_slots.turn_slots_view"
 local DiceArea = require "classes.dice_area"
 local Actions = require "classes.actions"
+local Die = require "classes.die.die"
+local DieView = require "classes.die.die_view"
+local Color = require "classes.color.color"
 
 local Client = require "classes.net.client"
 
@@ -129,7 +132,7 @@ function Match:playTurnFromActions(player_actions, order)
     assert(#player_actions == #self.controllers)
     assert(self.state == 'waiting for turn')
     self.state = 'playing turn'
-    Match:createOpponentDice(player_actions)
+    self:createOpponentDice(player_actions)
     local size = math.max(unpack(Util.map(player_actions, function(list) return #list end)))
     playTurnRec(self, player_actions, order, 1, 1, size, function()
         self.state = 'waiting for turn'
@@ -228,9 +231,10 @@ function Match:createOpponentDice(player_actions)
         if self.controllers[i].source == 'remote' then
             for j, action in ipairs(actions) do
                 if action ~= "none" then
-                    local diev = DieView(Die({action}, 1), 50, 30, Color.green()):register("L2", "die_view")
+                    local diev = DieView(Die({action}, 1), 50, 30, Color.green())
+                    diev:register("L2", "die_view")
                     local die = diev:getObj()
-                    local slot = self.turn_slots[i]:getObj():getSlot()
+                    local slot = self.turn_slots[i]:getObj():getSlot(j)
                     slot:putDie(die)
                 end
             end
