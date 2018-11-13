@@ -54,6 +54,11 @@ function util.clearTimerTable(T, TIMER)
 
 end
 
+function util.pointInRect(_x, _y, x, y, w, h)
+    if not y then x, y, w, h = x.pos.x, x.pos.y, x.w, x.h end
+    return not (_x < x or _x > x + w or _y < y or _y > y + h)
+end
+
 --Return a random element from a given table.
 --You can give an optional table argument 'tp', so it only returns elements that share a type with the table strings
 --Obs: if you provide a tp table, and there isn't any suitable element available, the program will be trapped here forever (FIX THIS SOMETIME)

@@ -9,6 +9,7 @@ local ResManager = require "res_manager"
 --GAMESTATES
 local GS = {
     GAME     = require "gamestates.game",     --Game Gamestate
+    CONN_MENU = require "gamestates.connection_menu"
 }
 
 -- Networking
@@ -31,7 +32,8 @@ function love.load()
     ]]
     ResManager.init()
 
-    Gamestate.switch(GS.GAME, tonumber(arg[2])) --Jump to the inicial state
+    Gamestate.switch(GS.CONN_MENU)
+    --Gamestate.switch(GS.GAME, tonumber(arg[2])) --Jump to the inicial state
 
 end
 
