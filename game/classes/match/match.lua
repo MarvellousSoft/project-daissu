@@ -136,6 +136,7 @@ function Match:playTurnFromActions(player_actions, order)
     local size = math.max(unpack(Util.map(player_actions, function(list) return #list end)))
     playTurnRec(self, player_actions, order, 1, 1, size, function()
         self.state = 'waiting for turn'
+        self:removeOpponentDice()
     end)
 end
 
@@ -231,11 +232,28 @@ function Match:createOpponentDice(player_actions)
         if self.controllers[i].source == 'remote' then
             for j, action in ipairs(actions) do
                 if action ~= "none" then
-                    local diev = DieView(Die({action}, 1), 50, 30, Color.green())
+                    local slot = self.turn_slots[i]:getObj():getSlot(j)
+                    local slotv = slot.view
+                    local diev = DieView(Die({action}, 1), slotv.pos.x, slotv.pos.y, Color.new(100,100,100))
                     diev:register("L2", "die_view")
                     local die = diev:getObj()
-                    local slot = self.turn_slots[i]:getObj():getSlot(j)
                     slot:putDie(die)
+                end
+            end
+        end
+    end
+end
+
+function Match:removeOpponentDice()
+    for i, controller in ipairs(self.controllers) do
+        if controller.source == "remote" then
+            turn_slot = self.turn_slots[i]:getObj()
+            for j = 1, turn_slot:getSlotNumber() do
+                local die_slot = turn_slot:getSlot(j)
+                local die = die_slot:getDie()
+                if die then
+                    die.view:kill()
+                    die_slot:removeDie()
                 end
             end
         end
