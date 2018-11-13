@@ -20,7 +20,7 @@ local Match = Class {
     __includes = {ELEMENT}
 }
 
-function Match:init(rows, columns, pos, cell_size, w, h, players_info)
+function Match:init(rows, columns, pos, cell_size, w, h, players_info, my_id)
     ELEMENT.init(self)
     self.state = 'not started'
     self.pos = pos
@@ -30,30 +30,30 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info)
                            (h - cell_size * rows) / 2), cell_size)
     self.controllers = {}
     self.turn_slots = {}
-    self.dice_areas = {}
 
     -- Assuming two players for now
     assert(#players_info == 2)
-    self.controllers[1] = Controller(map, "orange", unpack(players_info[1]))
-    self.controllers[2] = Controller(map, "purple",unpack(players_info[2]))
+    local colors = {"orange", "purple"}
+    self.controllers[1] = Controller(map, colors[1], unpack(players_info[1]))
+    self.controllers[2] = Controller(map, colors[2],unpack(players_info[2]))
     local d_w, d_h = DieHelper.getDieDimensions()
     -- Taking margins into account
     d_h = d_h + 6
     local t_slots_y = pos.y + h - d_h - 40
     local t_slot_w = (w - 20) / 2
     local t_slot_h = d_h + 30
-    self.turn_slots[1] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, t_slots_y),
-                                       t_slot_w, t_slot_h, "orange")
-    self.turn_slots[2] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, t_slots_y),
-                                       t_slot_w, t_slot_h, "purple")
+    self.turn_slots[my_id] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, t_slots_y),
+                                       t_slot_w, t_slot_h, colors[my_id])
+    self.turn_slots[3 - my_id] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, t_slots_y),
+                                       t_slot_w, t_slot_h, colors[3 - my_id])
 
     local dice_area_w_gap = 35
     local dice_area_h_gap = 35
     local dice_area_h = h - 260 - (d_h + 20)
     local dice_area_w = (w - cell_size * columns) / 2 - 2*dice_area_w_gap
     local dice_area_y = t_slots_y - dice_area_h_gap - dice_area_h
+    self.dice_areas = {}
     self.dice_areas[1] = DiceArea(8, Vector(dice_area_w_gap, 220), dice_area_w, dice_area_h)
-    self.dice_areas[2] = DiceArea(6, Vector(w - dice_area_w - dice_area_w_gap, 220), dice_area_w, dice_area_h)
 
     self.hide_player = {}
     self.hide_player[1] = false
