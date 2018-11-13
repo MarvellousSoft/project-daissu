@@ -11,6 +11,10 @@ local GS = {
     GAME     = require "gamestates.game",     --Game Gamestate
 }
 
+-- Networking
+local Server = require "classes.net.server"
+local Client = require "classes.net.client"
+
 ------------------
 --LÖVE FUNCTIONS--
 ------------------
@@ -27,10 +31,12 @@ function love.load()
     ]]
     ResManager.init()
 
-    Gamestate.switch(GS.GAME) --Jump to the inicial state
+    Gamestate.switch(GS.GAME, tonumber(arg[2])) --Jump to the inicial state
 
 end
 
 function love.update(dt)
     Timer.update(dt)
+    Server.update(dt)
+    Client.update(dt)
 end

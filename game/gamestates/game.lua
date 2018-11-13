@@ -13,6 +13,9 @@ local Background = require "classes.background"
 local Match = require "classes.match.match"
 local Actions = require "classes.actions"
 
+local Server = require "classes.net.server"
+local Client = require "classes.net.client"
+
 local state = {}
 
 --LOCAL VARIABLES--
@@ -27,10 +30,20 @@ local die
 
 --STATE FUNCTIONS--
 
-function state:enter()
+function state:enter(prev, local_player)
     Background():register("BG", nil, "background")
+    print('Starting game with local_player', local_player)
 
-    local match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, {{2, 2}, {4, 4}})
+    if local_player == 1 then -- this is server
+        print('SERVER INIT')
+        Server.start()
+        Client.start('localhost')
+    else
+        print('CLIENT INIT')
+        Client.start(arg[3])
+    end
+
+    local match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, {{2, 2, local_player == 1 and 'local' or 'remote'}, {4, 4, local_player == 2 and 'local' or 'remote'}})
     match:start()
 
     --Create some example dice
@@ -76,7 +89,6 @@ end
 
 function state:keypressed(key, scancode, isrepeat)
     local match = Util.findId("match")
-
     if key == "r" then
         Util.findId("my_die"):roll()
     end

@@ -42,7 +42,7 @@ local helpers = {
 
 function Actions.executeAction(match, action, controller, callback)
     if helpers[action] and helpers[action].getInputHandler then
-        match.action_input_handler = helpers[action].getInputHandler(controller, callback)
+        controller:waitForInput(match, helpers[action].getInputHandler(controller, callback))
     elseif helpers[action] then
         helpers[action].showAction(controller, callback)
     else

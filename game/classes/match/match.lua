@@ -15,7 +15,7 @@ local Match = Class {
     __includes = {ELEMENT}
 }
 
-function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
+function Match:init(rows, columns, pos, cell_size, w, h, players_info)
     ELEMENT.init(self)
     self.state = 'not started'
     self.pos = pos
@@ -28,9 +28,9 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_positions)
     self.dice_areas = {}
 
     -- Assuming two players for now
-    assert(#players_positions == 2)
-    self.controllers[1] = Controller(map, "orange", unpack(players_positions[1]))
-    self.controllers[2] = Controller(map, "purple",unpack(players_positions[2]))
+    assert(#players_info == 2)
+    self.controllers[1] = Controller(map, "orange", unpack(players_info[1]))
+    self.controllers[2] = Controller(map, "purple",unpack(players_info[2]))
     local d_w, d_h = DieHelper.getDieDimensions()
     -- Taking margins into account
     d_h = d_h + 6
