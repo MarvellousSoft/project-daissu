@@ -20,7 +20,7 @@ local Match = Class {
     __includes = {ELEMENT}
 }
 
-function Match:init(rows, columns, pos, cell_size, w, h, players_info, my_id)
+function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
     ELEMENT.init(self)
     self.state = 'not started'
     self.pos = pos
@@ -42,10 +42,11 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, my_id)
     local t_slots_y = pos.y + h - d_h - 40
     local t_slot_w = (w - 20) / 2
     local t_slot_h = d_h + 30
-    self.turn_slots[my_id] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, t_slots_y),
-                                       t_slot_w, t_slot_h, colors[my_id])
-    self.turn_slots[3 - my_id] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, t_slots_y),
-                                       t_slot_w, t_slot_h, colors[3 - my_id])
+    self.turn_slots[local_id] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, t_slots_y),
+                                       t_slot_w, t_slot_h, colors[local_id])
+    self.turn_slots[3 - local_id] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, t_slots_y),
+                                       t_slot_w, t_slot_h, colors[3 - local_id])
+    self.local_id = local_id
 
     local dice_area_w_gap = 35
     local dice_area_h_gap = 35
@@ -83,7 +84,7 @@ function Match:draw()
     local start_p = self:startingPlayer()
     for i, turn_slots in ipairs(self.turn_slots) do
         if not self.hide_player[i] then
-            turn_slots:draw((self.state ~= 'playing turn' and start_p == i), i == 1 and 'right' or 'left')
+            turn_slots:draw(start_p == i, i == self.local_id and 'right' or 'left')
         end
     end
 
@@ -159,7 +160,7 @@ function Match:toggleHide(player)
     end
 end
 
-function Match:playTurn(my_id)
+function Match:playTurn(local_id)
     local invert = self:startingPlayer() == 2
     local order = {}
     for i, turn_slots in ipairs(self.turn_slots) do
@@ -170,10 +171,10 @@ function Match:playTurn(my_id)
         end
     end
     local actions = {}
-    for i, die_slot in ipairs(self.turn_slots[my_id]:getObj().slots) do
+    for i, die_slot in ipairs(self.turn_slots[local_id]:getObj().slots) do
         actions[i] = die_slot.die and die_slot.die:getCurrent() or 'none'
     end
-    Client.send('actions locked', {i = my_id, actions = actions})
+    Client.send('actions locked', {i = local_id, actions = actions})
     Client.listenOnce('turn ready', function(all_actions)
         self:playTurnFromActions(all_actions, order)
     end)
