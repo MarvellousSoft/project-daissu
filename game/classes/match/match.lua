@@ -63,6 +63,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
     self.number_of_turns = 1
 
     self.active_slot = false --Which slot is being played at the moment
+    self.next_active_slot = false --Which slot will be played next
 
     self.action_input_handler = nil
 
@@ -88,17 +89,16 @@ function Match:draw()
         end
     end
 
-    --Draw which is the current and next action
+    --Draw indicator for current action, if any
     if self.active_slot then
-        --Draw current slot
         local player_i, action_i = self:getCurrentActiveSlot()
         self.turn_slots[player_i]:drawCurrentAction(action_i)
-        --Draw next slot, if it exists
-        action_i = player_i == self:startingPlayer() and action_i or action_i + 1
-        player_i = (player_i%#self.controllers) + 1
-        if action_i <= self.turn_slots[player_i]:getObj():getSize() then
-            self.turn_slots[player_i]:drawNextAction(action_i)
-        end
+    end
+
+    --Draw indicator for next action, if any
+    if self.next_active_slot then
+        local player_i, action_i = self:getNextActiveSlot()
+        self.turn_slots[player_i]:drawNextAction(action_i)
     end
 
 end
@@ -115,13 +115,34 @@ local function playTurnRec(self, player_actions, order, player_i, action_i, size
     if action_i > size then
         callback()
         self.active_slot = false
+        self.next_active_slot = false
         self.number_of_turns = self.number_of_turns + 1
         return
     end
     -- All actions of this index have been played
     if p_i == nil then return playTurnRec(self, player_actions, order, 1, action_i + 1, size, callback) end
 
+    --Set current active slot to draw indicator
     self.active_slot = {p_i, action_i}
+    --Try to find next active slot, to help draw indicator
+    self.next_active_slot = false
+    local t_action_i = action_i
+    local t_player_i = player_i + 1
+    while t_action_i <= size do
+        local t_pi = order[t_player_i]
+        if t_pi == nil then
+            t_player_i = 1
+            t_action_i = t_action_i + 1
+        else
+            local action = player_actions[t_pi][t_action_i]
+            if action ~= 'none' then
+                self.next_active_slot = {t_pi, t_action_i}
+                break
+            else
+                t_player_i = t_player_i + 1
+            end
+        end
+    end
 
     local action = player_actions[p_i][action_i]
     print('Action ' .. action_i .. ' for Player ' .. p_i .. ' = ' .. action)
@@ -209,6 +230,15 @@ end
 function Match:getCurrentActiveSlot()
     if self.active_slot then
         return unpack(self.active_slot)
+    else
+        return false
+    end
+end
+
+--Return the next slot which will be processed, if any
+function Match:getNextActiveSlot()
+    if self.next_active_slot then
+        return unpack(self.next_active_slot)
     else
         return false
     end
