@@ -33,6 +33,9 @@ function TurnSlotsView:init(obj, pos, w, h, color)
     --Starting player image
     self.starting_player_image = IMG["starting_player_"..color]
 
+    --Current slot image
+    self.current_action_image = IMG["current_action_"..color]
+
 end
 
 function TurnSlotsView:draw(draw_starting_player, position)
@@ -70,17 +73,24 @@ function TurnSlotsView:draw(draw_starting_player, position)
 end
 
 --Given an index, draw an arrow above given slot
-function TurnSlotsView:drawCurrentAction(index)
+function TurnSlotsView:drawCurrentAction(index, alpha)
+    local scale = alpha and 1 or 1.5
+    alpha = alpha or 255
     local s_v = self:getObj().slots[index].view
-    local image = IMG.current_slot
-    local scale = 3
+    local image = self.current_action_image
     local x = s_v.pos.x + s_v.w/2 - image:getWidth()*scale/2
     local gap, magnitude, max_offset = 5, 7, 5
     local offset = math.sin(magnitude*love.timer.getTime())*max_offset
     local y = s_v.pos.y - gap - image:getHeight()*scale - offset
-    love.graphics.setColor(255,0,0)
+    love.graphics.setColor(255,255,255, alpha)
     love.graphics.draw(image, x, y, nil, scale)
 end
+
+--Given an index, draw an arrow above given slot to represent next action to be played
+function TurnSlotsView:drawNextAction(index)
+    self:drawCurrentAction(index, 150)
+end
+
 
 --Return all dice in its slots
 function TurnSlotsView:getDice()

@@ -11,7 +11,8 @@ function TurnSlots:init(n)
     end
 end
 
-function TurnSlots:getSlotNumber()
+--Return how many slots it has
+function TurnSlots:getSize()
     return #self.slots
 end
 

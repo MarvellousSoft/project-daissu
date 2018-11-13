@@ -87,10 +87,17 @@ function Match:draw()
         end
     end
 
-    --Draw which is the current action
+    --Draw which is the current and next action
     if self.active_slot then
+        --Draw current slot
         local player_i, action_i = self:getCurrentActiveSlot()
         self.turn_slots[player_i]:drawCurrentAction(action_i)
+        --Draw next slot, if it exists
+        action_i = player_i == self:startingPlayer() and action_i or action_i + 1
+        player_i = (player_i%#self.controllers) + 1
+        if action_i <= self.turn_slots[player_i]:getObj():getSize() then
+            self.turn_slots[player_i]:drawNextAction(action_i)
+        end
     end
 
 end
@@ -248,7 +255,7 @@ function Match:removeOpponentDice()
     for i, controller in ipairs(self.controllers) do
         if controller.source == "remote" then
             turn_slot = self.turn_slots[i]:getObj()
-            for j = 1, turn_slot:getSlotNumber() do
+            for j = 1, turn_slot:getSize() do
                 local die_slot = turn_slot:getSlot(j)
                 local die = die_slot:getDie()
                 if die then
