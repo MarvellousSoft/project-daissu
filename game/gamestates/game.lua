@@ -30,7 +30,11 @@ local die
 
 --STATE FUNCTIONS--
 
+local my_id
+
 function state:enter(prev, local_player)
+    my_id = local_player
+
     Background():register("BG", nil, "background")
     print('Starting game with local_player', local_player)
 
@@ -93,7 +97,7 @@ function state:keypressed(key, scancode, isrepeat)
         Util.findId("my_die"):roll()
     end
     if key == 't' then
-        match:playTurn()
+        match:playTurn(my_id)
     end
     if key == '1' then
         match:toggleHide(1)

@@ -39,6 +39,19 @@ function Server.start()
             end
         end
     end)
+
+    local actions, count = {}, 0
+    server:on('actions locked', function(data, client)
+        count = count + 1
+        actions[data.i] = data.actions
+        if count == #client_list then
+            for i, c in ipairs(client_list) do
+                c:send('turn ready', actions)
+            end
+            count = 0
+            actions = {}
+        end
+    end)
 end
 
 function Server.update(dt)

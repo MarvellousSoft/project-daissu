@@ -11,6 +11,8 @@ local TurnSlotsView = require "classes.turn_slots.turn_slots_view"
 local DiceArea = require "classes.dice_area"
 local Actions = require "classes.actions"
 
+local Client = require "classes.net.client"
+
 local Match = Class {
     __includes = {ELEMENT}
 }
@@ -146,22 +148,24 @@ function Match:toggleHide(player)
     end
 end
 
-function Match:playTurn()
+function Match:playTurn(my_id)
     local invert = self:startingPlayer() == 2
-    local actions = {}
     local order = {}
     for i, turn_slots in ipairs(self.turn_slots) do
-        actions[i] = {}
-        for j, die_slot in ipairs(turn_slots:getObj().slots) do
-            actions[i][j] = die_slot.die and die_slot.die:getCurrent() or 'none'
-        end
         if invert then
             order[i] = #self.turn_slots - i + 1
         else
             order[i] = i
         end
     end
-    self:playTurnFromActions(actions, order)
+    local actions = {}
+    for i, die_slot in ipairs(self.turn_slots[my_id]:getObj().slots) do
+        actions[i] = die_slot.die and die_slot.die:getCurrent() or 'none'
+    end
+    Client.send('actions locked', {i = my_id, actions = actions})
+    Client.listenOnce('turn ready', function(all_actions)
+        self:playTurnFromActions(all_actions, order)
+    end)
 end
 
 --Get first available slot from a player's turn slots, if any
