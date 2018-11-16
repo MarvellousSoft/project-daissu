@@ -32,17 +32,20 @@ function rgb_funcs.convert(r, g, b, a)
 
     --Get lightness in %
     local l = (min+max)/2
+    local delta = max - min
 
     --Get saturation in %
     local s
-    if l < .5 then
-        s =  (max-min)/(max+min)
+    if delta == 0 then
+        s = 0
+    elseif 2 * l - 1 > 0 then
+        s = delta / (1 - (2 * l - 1))
     else
-        s = (max-min)/(2-max-min)
+        s = delta / (1 + (2 * l - 1))
     end
 
     --Get Hue in degrees
-    local h
+    local h = 0
     if r == max then
         h = (g-b)/(max-min)
     elseif g == max then
@@ -50,10 +53,10 @@ function rgb_funcs.convert(r, g, b, a)
     elseif b == max then
         h = 4.0 + (r-g)/(max-min)
     end
-    h = h*60
+    h = h* 60 / 360
 
     --Convert them to the standard values
-    return Hsl.sdtv(h,s,l,a)
+    return h * 255, s * 255, l * 255, a
 end
 
 --Return red, green and blue levels of given color c

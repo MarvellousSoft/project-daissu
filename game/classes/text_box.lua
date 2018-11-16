@@ -177,7 +177,6 @@ end
 function TextBox:draw(bad_lines)
     Color.set(self.color)
     -- background
-    Color.set(Color.white())
     love.graphics.rectangle("fill", self.pos.x, self.pos.y, self.w, self.h)
 
     -- Set stencil for the rectangle containing the code
@@ -189,6 +188,19 @@ function TextBox:draw(bad_lines)
     love.graphics.setFont(self.font)
     love.graphics.setLineWidth(.2)
     local dx = (self.show_line_num and self.font:getWidth("20  ") or 0) + 5
+    Color.set(self.text_color)
+    for i = 0, self.line_cur - 1 do
+        local line = self.show_line_num and string.format("%2d  %s", i + 1, self.lines[i + 1]) or self.lines[i + 1]
+        love.graphics.print(line, self.pos.x + 3, self.pos.y - self.line_h * self.dy + i * self.line_h + (self.line_h - self.font_h) / 2)
+
+        if bad_lines and bad_lines[i + 1] and self.cursor.i ~= i + 1 then
+            Color.set(self.err_color)
+            local y = self.pos.y - self.line_h * self.dy + (i + 0.9) * self.line_h
+            love.graphics.line(self.pos.x + dx, y, self.pos.x + self.font:getWidth(line), y)
+            Color.set(self.text_color)
+        end
+
+    end
 
     local c = Color.new(self.text_color)
     c.l = c.l / 2
@@ -226,29 +238,7 @@ function TextBox:draw(bad_lines)
             end
         end
     end
-    if true then return end
 
-    -- Draw code flow markers
-    if self.exec_line_prev and self.hide_cursor then
-        Color.set(Color.white())
-        local h = self.line_h / 2
-        local x = self.pos.x + (self.show_line_num and 4 or 0) * self.font_w
-        local y = self.pos.y - self.dy * self.line_h + (self.exec_line_prev - 1) * self.line_h
-        local w = self.max_char* self.font_w
-        local dy = (self.line_h - h) / 2
-        love.graphics.setLineWidth(.2)
-        love.graphics.rectangle("line", x, y, w, self.line_h, 1)
-
-        if self.exec_line_next and self.exec_line_next ~= self.exec_line then
-            local y2 = self.pos.y - self.dy * self.line_h + (self.exec_line_next - 1) * self.line_h
-            x = x + 5
-            love.graphics.polygon("fill", x + w, y2 + h, x + w + 12, y2 + h/2, x + w + 12, y2 + h + h/2)
-            x = x + 3
-            love.graphics.line(x + w, y + h, x + w + 15, y + h)
-            love.graphics.line(x + w + 15, y + h, x + w + 15, y2 + h)
-            love.graphics.line(x + w, y2 + h, x + w + 15, y2 + h)
-        end
-    end
     -- Remove stencil
     --love.graphics.setStencilTest()
 end
