@@ -25,18 +25,24 @@ function Button:init(x, y, w, h, text, func)
     self.iw = w/self.image:getWidth()
     self.ih = w/self.image:getHeight()
 
-    --Get correct font size based on button size
-    i = 40
-    repeat
-        self.font = Font.get("regular", i)
-    until self.font:getWidth(self.text) <= w - 2*self.w_gap and
-          self.font:getHeight(self.text) <= h - 2*self.h_gap
+    self:setText(text)
 
     self.func = func
 
     self.text_color = Color.black()
     self.text_y_offset = 5
 
+end
+
+function Button:setText(text)
+    --Get correct font size based on button size
+    local i = 40
+    repeat
+        self.font = Font.get("regular", i)
+        i = i - 1
+    until self.font:getWidth(text) <= self.w - 2*self.w_gap and
+          self.font:getHeight(text) <= self.h - 2*self.h_gap
+    self.text = text
 end
 
 --CLASS FUNCTIONS--

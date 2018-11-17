@@ -618,6 +618,10 @@ function TextBox:update(dt)
                 if c2.p > #self.lines[c2.i] + 1 then
                     c2.p = 1
                     c2.i = c2.i + 1
+                    if c2.i > #self.lines then
+                        c2.i = c2.i - 1
+                        c2.p = #self.lines[c2.i] + 1
+                    end
                 end
             end
         end

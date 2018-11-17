@@ -69,7 +69,6 @@ function color_funcs.convert(c)
         return RGB(r,g,b,a)
     elseif c.tp == "RGB" then
         local h,s,l,a = Rgb.convert(c.r, c.g, c.b, c.a)
-        print(h, s, l, a)
         return HSL(h,s,l,a)
     end
 end

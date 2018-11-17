@@ -32,19 +32,18 @@ local die
 
 local my_id
 
-function state:enter(prev, local_player)
+function state:enter(prev, local_player, host)
     my_id = local_player
 
     Background():register("BG", nil, "background")
-    print('Starting game with local_player', local_player)
 
-    if local_player == 1 then -- this is server
+    if host == true then -- this is server
         print('SERVER INIT')
         Server.start()
         Client.start('localhost')
     else
         print('CLIENT INIT')
-        Client.start(arg[3])
+        Client.start(host)
     end
 
     local match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, {{2, 2, local_player == 1 and 'local' or 'remote'}, {4, 4, local_player == 2 and 'local' or 'remote'}}, my_id)

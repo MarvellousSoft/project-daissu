@@ -13,15 +13,9 @@ local client_list = {}
 function Server.start()
     assert(server == nil)
 
-    -- https://stackoverflow.com/a/8979647
-    -- Couldn't find a better way to get the IP
-    local temp_socket = socket.udp()
-    temp_socket:setpeername("74.125.115.104",80)
-    ip = temp_socket:getsockname()
 
     -- weird port to avoid collisions
     server = sock.newServer("*", 47123)
-    print("Connect to", ip)
 
     server:on('connect', function(data, client)
         print('Client connected --', client)
@@ -58,6 +52,14 @@ function Server.update(dt)
     if server then
         server:update()
     end
+end
+
+function Server.get_ip()
+    -- https://stackoverflow.com/a/8979647
+    -- Couldn't find a better way to get the IP
+    local temp_socket = socket.udp()
+    temp_socket:setpeername("74.125.115.104",80)
+    return temp_socket:getsockname()
 end
 
 return Server
