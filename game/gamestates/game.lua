@@ -32,24 +32,15 @@ local die
 
 local my_id
 
-function state:enter(prev, local_player, host)
+function state:enter(prev, local_player, char_type)
     my_id = local_player
 
     Background():register("BG", nil, "background")
 
-    if host == true then -- this is server
-        print('SERVER INIT')
-        Server.start()
-        Client.start('localhost')
-    else
-        print('CLIENT INIT')
-        Client.start(host)
-    end
-
     local match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, {{2, 2, local_player == 1 and 'local' or 'remote'}, {4, 4, local_player == 2 and 'local' or 'remote'}}, my_id)
     match:start()
 
-    if local_player == 1 then -- meele
+    if char_type == 'ranged' then
         DieView(Die({"long walk", "long walk", "long walk", "walk"}, 1), 50, 30, Color.green()):register("L2", "die_view")
         DieView(Die({"long walk", "long walk", "long walk", "walk"}, 1), 120, 30, Color.green()):register("L2", "die_view")
         DieView(Die({"shoot","shoot","explosion shot"}, 1), 190, 30, Color.red()):register("L2", "die_view")

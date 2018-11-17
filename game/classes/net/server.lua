@@ -22,8 +22,14 @@ function Server.start()
         table.insert(client_list, client)
     end)
 
-    server:on('disconnect', function(...)
-        print('Client disconnected --', ...)
+    server:on('disconnect', function(data, client)
+        print('Client disconnected --', client)
+        for i, cl in ipairs(client_list) do
+            if cl == client then
+                table.remove(client_list, i)
+                return
+            end
+        end
     end)
 
     server:on('action input', function(data, client)
@@ -60,6 +66,21 @@ function Server.get_ip()
     local temp_socket = socket.udp()
     temp_socket:setpeername("74.125.115.104",80)
     return temp_socket:getsockname()
+end
+
+function Server.on(event, callback)
+    assert(server ~= nil)
+    server:on(event, callback)
+end
+
+function Server.removeCallback(callback)
+    assert(server ~= nil)
+    server:removeCallback(callback)
+end
+
+function Server.clientIterator()
+    assert(server ~= nil)
+    return ipairs(client_list)
 end
 
 return Server

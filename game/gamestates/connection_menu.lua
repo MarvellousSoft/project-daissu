@@ -43,7 +43,7 @@ function state:enter()
     end)
 
     go_button = Button(500, 450, 100, 100, "Go!", function()
-        Gamestate.switch(require "gamestates.game", chosen_char, hosting or box.lines[1])
+        Gamestate.switch(require "gamestates.await_connection", hosting or box.lines[1], chars[chosen_char])
     end)
 end
 
