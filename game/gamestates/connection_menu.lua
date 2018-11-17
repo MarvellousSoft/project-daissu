@@ -15,7 +15,6 @@ local chars = {"meele", "ranged"}
 local chosen_char = 1
 local char_button
 local go_button
-local ip = Server.get_ip()
 
 function state:enter()
     local accepted = {}
@@ -77,9 +76,9 @@ function state:draw()
     Font.set('regular', 25)
     love.graphics.print("Your character: " .. chars[chosen_char], 480, 380)
 
-    if hosting then
+    if hosting and Server.external_ip then
         Font.set('regular', 18)
-        love.graphics.print('Your IP is: ' .. ip, 400, WIN_H - 50)
+        love.graphics.print('Your IP is: ' .. Server.external_ip, 400, WIN_H - 50)
     end
 
     go_button:draw()

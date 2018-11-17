@@ -54,18 +54,31 @@ function Server.start()
     end)
 end
 
+-- This is VERY ugly. I'm doing an HTTP request by hand, since I need it
+-- asynchronous and don't want to use other libraries
+Server.external_ip = nil
+local conn = socket.connect('myexternalip.com', 80)
+conn:send('GET /raw HTTP/1.1\r\nHost: myexternalip.com\r\n\r\n')
+local nx_line = false
+
 function Server.update(dt)
+    if conn ~= nil and Server.external_ip == nil then
+        conn:settimeout(0)
+        local rcv, status = conn:receive()
+        while status ~= 'timeout' do
+            if nx_line then
+                conn = nil
+                Server.external_ip = rcv
+                break
+            elseif rcv == '' then
+                nx_line = true
+            end
+            rcv, status = conn:receive()
+        end
+    end
     if server then
         server:update()
     end
-end
-
-function Server.get_ip()
-    -- https://stackoverflow.com/a/8979647
-    -- Couldn't find a better way to get the IP
-    local temp_socket = socket.udp()
-    temp_socket:setpeername("74.125.115.104",80)
-    return temp_socket:getsockname()
 end
 
 function Server.on(event, callback)

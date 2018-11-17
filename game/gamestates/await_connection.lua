@@ -7,8 +7,11 @@ local Util = require "util"
 
 local state = {}
 
+local hosting = false
+
 function state:enter(prev, host, char_type)
     if host == true then -- this is the server
+        hosting = true
         print('SERVER INIT')
         Server.start()
         local count = 0
@@ -48,6 +51,10 @@ function state:draw()
     Color.set(Color.white())
     Font.set('regular', 50)
     love.graphics.print("Waiting for connection...", 300, 300)
+    if hosting and Server.external_ip then
+        Font.set('regular', 18)
+        love.graphics.print('Your IP is: ' .. Server.external_ip, 400, WIN_H - 50)
+    end
 end
 
 --Return state functions
