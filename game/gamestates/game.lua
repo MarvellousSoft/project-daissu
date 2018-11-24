@@ -13,7 +13,6 @@ local Background = require "classes.background"
 local Match = require "classes.match.match"
 local Actions = require "classes.actions"
 
-local Server = require "classes.net.server"
 local Client = require "classes.net.client"
 
 local state = {}

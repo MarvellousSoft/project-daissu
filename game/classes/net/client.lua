@@ -9,7 +9,7 @@ function Client.start(server_ip)
     assert(client == nil)
     print('Will connect to ' .. server_ip)
 
-    client = sock.newClient(server_ip, 47123)
+    client = sock.newClient(server_ip, 47111)
     client:on('connect', function()
         print('Connected to server')
     end)

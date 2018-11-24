@@ -13,7 +13,6 @@ local GS = {
 }
 
 -- Networking
-local Server = require "classes.net.server"
 local Client = require "classes.net.client"
 
 ------------------
@@ -39,6 +38,5 @@ end
 
 function love.update(dt)
     Timer.update(dt)
-    Server.update(dt)
     Client.update(dt)
 end
