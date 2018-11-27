@@ -28,8 +28,10 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
     self.w, self.h = w, h
     self.local_id = local_id
     local map = Map(rows, columns)
-    self.map_view = MapView(map, pos + Vector((w - cell_size * columns) / 2,
-                           (h - cell_size * rows) / 2), cell_size)
+    local map_w = cell_size * columns
+    local map_h = cell_size * rows
+    local map_pos = pos + Vector((w - map_w) / 2,(h - map_h) / 2)
+    self.map_view = MapView(map, map_pos, cell_size)
     self.controllers = {}
     self.turn_slots = {}
 
@@ -44,8 +46,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
     local d_w, d_h = DieHelper.getDieDimensions()
     -- Taking margins into account
     d_h = d_h + 6
-    local t_slots_y = pos.y + h - d_h - 40
-    local t_slot_w = (w - 20) / 2
+    local t_slots_y = map_pos.y + map_h - d_h - 40
+    local t_slot_w = (w-map_w) / 2 - 20
     local t_slot_h = d_h + 30
     self.turn_slots[local_id] = self.player_area.turn_slots
     self.turn_slots[3 - local_id] = TurnSlotsView(TurnSlots(6,3-local_id), Vector(pos.x + w / 2 + 5, t_slots_y),

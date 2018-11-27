@@ -17,8 +17,9 @@ function TurnSlotsView:init(obj, pos, w, h, color, player_num)
     d_w = d_w + 2*DieHelper.getDieSlotMargin()
     d_h = d_h + 2*DieHelper.getDieSlotMargin() + DieHelper.getDieUnderside()
 
+    local margin = 10
     for i, slot in ipairs(obj.slots) do
-        local view = DieSlotView(slot, Vector(10 + pos.x + (i - 1) * (w - 20 - d_w) / (slots_n - 1), pos.y + (h - d_h)/2))
+        local view = DieSlotView(slot, Vector(margin + pos.x + (i - 1) * (w - 2*margin - d_w) / (slots_n - 1), pos.y + (h - d_h)/2))
         view:setSubtype("die_slot_view")
     end
 

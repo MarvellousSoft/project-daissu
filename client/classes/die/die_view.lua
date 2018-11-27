@@ -21,7 +21,7 @@ function DieView:init(die, x, y, color)
     VIEW.init(self,die)
 
     self.w, self.h = DieHelper.getDieDimensions()
-
+    
     self.sx, self.sy = 1, 1
 
     --Color for die border
