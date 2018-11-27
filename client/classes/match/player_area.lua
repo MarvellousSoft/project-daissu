@@ -7,19 +7,24 @@ local DiceArea = require "classes.dice_area"
 
 local PlayerArea = Class {}
 
-function PlayerArea:init(match, cell_size, color)
+function PlayerArea:init(match, color)
+    local map = match.map_view
+    local columns = map:getObj().columns
+    local rows = map:getObj().rows
+    local map_h = map.cell_size * rows
+    local map_w = map.cell_size * columns
     local d_w, d_h = DieHelper.getDieDimensions()
+    -- Taking margins into account
     d_h = d_h + 6
-    local t_slots_y = match.pos.y + match.h - d_h - 40
-    local t_slot_w = (match.w - 20) / 2
+    local t_slots_y = map.pos.y + map_h - d_h - 40
+    local t_slot_w = (WIN_W-map_w) / 2 - 20
     local t_slot_h = d_h + 30
     self.turn_slots = TurnSlotsView(TurnSlots(6, match.local_id), Vector(match.pos.x + 5, t_slots_y), t_slot_w, t_slot_h, color)
 
-    local columns = match.map_view:getObj().columns
     local dice_area_w_gap = 35
     local dice_area_h_gap = 35
     local dice_area_h = match.h - 260 - (d_h + 20)
-    local dice_area_w = (match.w - cell_size * columns) / 2 - 2 * dice_area_w_gap
+    local dice_area_w = (match.w - map.cell_size * columns) / 2 - 2 * dice_area_w_gap
     local dice_area_y = t_slots_y - dice_area_h_gap - dice_area_h
     self.dice_area = DiceArea(8, Vector(dice_area_w_gap, 220), dice_area_w, dice_area_h, local_id)
 

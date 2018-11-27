@@ -37,22 +37,17 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
 
     -- Assuming two players for now
     assert(#players_info == 2)
-    local colors = {"orange", "purple"}
-    self.controllers[1] = Controller(map, colors[1], unpack(players_info[1]))
-    self.controllers[2] = Controller(map, colors[2],unpack(players_info[2]))
 
-    self.player_area = PlayerArea(self, cell_size, colors[local_id])
+    self.colors = {"orange", "purple"} --Colors for each player
 
-    local d_w, d_h = DieHelper.getDieDimensions()
-    -- Taking margins into account
-    d_h = d_h + 6
-    local t_slots_y = map_pos.y + map_h - d_h - 40
-    local t_slot_w = (w-map_w) / 2 - 20
-    local t_slot_h = d_h + 30
+    self.player_area = PlayerArea(self, self.colors[local_id])
+
+    self.controllers[1] = Controller(map, self.colors[1], unpack(players_info[1]))
+    self.controllers[2] = Controller(map, self.colors[2],unpack(players_info[2]))
+
     self.turn_slots[local_id] = self.player_area.turn_slots
-    self.turn_slots[3 - local_id] = TurnSlotsView(TurnSlots(6,3-local_id), Vector(pos.x + w / 2 + 5, t_slots_y),
-                                       t_slot_w, t_slot_h, colors[3 - local_id])
-
+    self.turn_slots[3 - local_id] = TurnSlotsView(TurnSlots(6,3-local_id), Vector(pos.x + w / 2 + 5, WIN_H-100),
+                                       100, 30, self.colors[3 - local_id])
     self.number_of_turns = 1
 
     self.active_slot = false --Which slot is being played at the moment
@@ -138,7 +133,7 @@ function Match:playTurnFromActions(player_actions, order)
     assert(#player_actions == #self.controllers)
     assert(self.state == 'waiting for turn')
     self.state = 'playing turn'
-    self:createOpponentDice(player_actions)
+    self:createActionList(player_actions, order)
     local size = math.max(unpack(Util.map(player_actions, function(list) return #list end)))
     playTurnRec(self, player_actions, order, 1, 1, size, function()
         self.state = 'waiting for turn'
@@ -227,7 +222,9 @@ function Match:mousepressed(x, y, but, ...)
 end
 
 --Iterate for all other players and create dice for their corresponding actions
-function Match:createOpponentDice(player_actions)
+function Match:createActionList(player_actions, order)
+    local p_i = 1
+    local action_i = 1
     for i, actions in ipairs(player_actions) do
         if self.controllers[i].source == 'remote' then
             for j, action in ipairs(actions) do
