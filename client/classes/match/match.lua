@@ -22,7 +22,7 @@ local Match = Class {
     __includes = {ELEMENT}
 }
 
-function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
+function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id, archetype)
     ELEMENT.init(self)
     self.state = 'not started'
     self.pos = pos
@@ -41,7 +41,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
 
     self.colors = {"orange", "purple"} --Colors for each player
 
-    self.player_area = PlayerArea(self, self.colors[local_id])
+    self.player_area = PlayerArea(self, self.colors[local_id], archetype)
 
     self.action_list = nil
 
@@ -225,6 +225,7 @@ function Match:startingPlayer()
 end
 
 function Match:mousepressed(x, y, but, ...)
+    self.player_area:mousepressed(x, y, but, ...)
     if but ~= 1 then return end
     local i, j = self.map_view:getTileOnPosition(Vector(x, y))
     if i and self.action_input_handler and self.action_input_handler:accept(i, j) then
@@ -293,5 +294,16 @@ function Match:getColors()
     return self.colors
 end
 
+function Match:update(dt)
+    self.player_area:update(dt)
+end
+
+function Match:mousemoved(...)
+    self.player_area:mousemoved(...)
+end
+
+function Match:mousereleased(...)
+    self.player_area:mousereleased(...)
+end
 
 return Match

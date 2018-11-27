@@ -30,26 +30,15 @@ local die
 --STATE FUNCTIONS--
 
 local my_id
+local match
 
 function state:enter(prev, local_player, char_type)
     my_id = local_player
 
     Background():register("BG", nil, "background")
 
-    local match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, {{2, 2, local_player == 1 and 'local' or 'remote'}, {4, 4, local_player == 2 and 'local' or 'remote'}}, my_id)
+    match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, {{2, 2, local_player == 1 and 'local' or 'remote'}, {4, 4, local_player == 2 and 'local' or 'remote'}}, my_id, char_type)
     match:start()
-
-    if char_type == 'ranged' then
-        DieView(Die({"long walk", "long walk", "long walk", "walk"}, my_id), 50, 30, Color.green()):register("L2", "die_view")
-        DieView(Die({"long walk", "long walk", "long walk", "walk"}, my_id), 120, 30, Color.green()):register("L2", "die_view")
-        DieView(Die({"shoot","shoot","explosion shot"}, my_id), 190, 30, Color.red()):register("L2", "die_view")
-        DieView(Die({"shove", "shove", "walk", "long walk"}, my_id), 260, 30, Color.yellow()):register("L2", "die_view")
-    else
-        DieView(Die({"walk", "run and hit", "long walk"}, my_id), 50, 30, Color.green(), 2):register("L2", "die_view")
-        DieView(Die({"walk", "run and hit", "long walk"}, my_id), 120, 30, Color.green(), 2):register("L2", "die_view")
-        DieView(Die({"strong punch", "strong punch", "run and hit"}, my_id), 190, 30, Color.red(), 2):register("L2", "die_view")
-        DieView(Die({"roundhouse", "hookshot"}, my_id), 260, 30, Color.yellow(), 2):register("L2", "die_view")
-    end
 end
 
 function state:leave()
@@ -60,6 +49,7 @@ end
 
 
 function state:update(dt)
+    match:update(dt)
 
     if switch == "menu" then
         --Gamestate.switch(GS.MENU)
@@ -81,7 +71,6 @@ function state:draw()
 end
 
 function state:keypressed(key, scancode, isrepeat)
-    local match = Util.findId("match")
     if key == "r" then
         Util.findId("my_die"):roll()
     end
@@ -90,38 +79,20 @@ function state:keypressed(key, scancode, isrepeat)
     end
     if key == 'a' then
         local action = io.read()
-        local match = Util.findId('match')
         Actions.executeAction(match, action, match.controllers[1], function() print('done custom action') end)
     end
 end
 
 function state:mousemoved(...)
-    local dies = Util.findSubtype("die_view")
-    if dies then
-        for die_view in pairs(dies) do
-            die_view:mousemoved(...)
-        end
-    end
+    match:mousemoved(...)
 end
 
 function state:mousepressed(...)
-    local dies = Util.findSubtype("die_view")
-    if dies then
-        for die_view in pairs(dies) do
-            die_view:mousepressed(...)
-        end
-    end
-    local match = Util.findId("match")
     match:mousepressed(...)
 end
 
 function state:mousereleased(...)
-    local dies = Util.findSubtype("die_view")
-    if dies then
-        for die_view in pairs(dies) do
-            die_view:mousereleased(...)
-        end
-    end
+    match:mousereleased(...)
 end
 
 --Return state functions

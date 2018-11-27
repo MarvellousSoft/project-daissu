@@ -40,17 +40,17 @@ function DieSlotView:draw()
     local dice = Util.findSubtype("die_view")
     local has_die_over = false
     local die_player_number = false
-    for die_view in pairs(dice) do
-        if die_view:getObj() ~= dieslot:getDie() and
-           not die_view.is_moving and
-           self.pos.x <= die_view.pos.x + die_view.w and
-           self.pos.x + self.w >= die_view.pos.x and
-           self.pos.y <= die_view.pos.y + die_view.h and
-           self.pos.y + self.h >= die_view.pos.y then
-               has_die_over = true
-               die_player_number = die_view:getObj():getPlayer()
-        end
-    end
+    --for die_view in pairs(dice) do
+    --    if die_view:getObj() ~= dieslot:getDie() and
+    --       not die_view.is_moving and
+    --       self.pos.x <= die_view.pos.x + die_view.w and
+    --       self.pos.x + self.w >= die_view.pos.x and
+    --       self.pos.y <= die_view.pos.y + die_view.h and
+    --       self.pos.y + self.h >= die_view.pos.y then
+    --           has_die_over = true
+    --           die_player_number = die_view:getObj():getPlayer()
+    --    end
+    --end
 
     --Get proper image
     local image
