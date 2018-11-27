@@ -1,5 +1,6 @@
 local ELEMENT = require "classes.primitives.element"
 local Class = require "common.extra_libs.hump.class"
+
 local Vector = require "common.extra_libs.hump.vector"
 local Util = require "util"
 local Map = require "classes.map.map"
@@ -8,11 +9,11 @@ local Controller = require "classes.map.controller"
 local DieHelper = require "classes.die.helper"
 local TurnSlots = require "classes.turn_slots.turn_slots"
 local TurnSlotsView = require "classes.turn_slots.turn_slots_view"
-local DiceArea = require "classes.dice_area"
 local Actions = require "classes.actions"
 local Die = require "classes.die.die"
 local DieView = require "classes.die.die_view"
 local Color = require "classes.color.color"
+local PlayerArea = require "classes.match.player_area"
 
 local Client = require "classes.net.client"
 
@@ -25,6 +26,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
     self.state = 'not started'
     self.pos = pos
     self.w, self.h = w, h
+    self.local_id = local_id
     local map = Map(rows, columns)
     self.map_view = MapView(map, pos + Vector((w - cell_size * columns) / 2,
                            (h - cell_size * rows) / 2), cell_size)
@@ -36,29 +38,18 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
     local colors = {"orange", "purple"}
     self.controllers[1] = Controller(map, colors[1], unpack(players_info[1]))
     self.controllers[2] = Controller(map, colors[2],unpack(players_info[2]))
+
+    self.player_area = PlayerArea(self, cell_size, colors[local_id])
+
     local d_w, d_h = DieHelper.getDieDimensions()
     -- Taking margins into account
     d_h = d_h + 6
     local t_slots_y = pos.y + h - d_h - 40
     local t_slot_w = (w - 20) / 2
     local t_slot_h = d_h + 30
-    self.turn_slots[local_id] = TurnSlotsView(TurnSlots(6,local_id), Vector(pos.x + 5, t_slots_y),
-                                       t_slot_w, t_slot_h, colors[local_id])
+    self.turn_slots[local_id] = self.player_area.turn_slots
     self.turn_slots[3 - local_id] = TurnSlotsView(TurnSlots(6,3-local_id), Vector(pos.x + w / 2 + 5, t_slots_y),
                                        t_slot_w, t_slot_h, colors[3 - local_id])
-    self.local_id = local_id
-
-    local dice_area_w_gap = 35
-    local dice_area_h_gap = 35
-    local dice_area_h = h - 260 - (d_h + 20)
-    local dice_area_w = (w - cell_size * columns) / 2 - 2*dice_area_w_gap
-    local dice_area_y = t_slots_y - dice_area_h_gap - dice_area_h
-    self.dice_areas = {}
-    self.dice_areas[1] = DiceArea(8, Vector(dice_area_w_gap, 220), dice_area_w, dice_area_h, local_id)
-
-    self.hide_player = {}
-    self.hide_player[1] = false
-    self.hide_player[2] = false
 
     self.number_of_turns = 1
 
@@ -74,31 +65,15 @@ function Match:draw()
     --Draw grid
     self.map_view:draw(self)
 
-    --Draw dice area
-    for i, dice_area in ipairs(self.dice_areas) do
-        if not self.hide_player[i] then
-            dice_area:draw()
-        end
-    end
+    --Draw Player area
+    self.player_area:draw(start_p)
 
     --Draw turn slots
     local start_p = self:startingPlayer()
     for i, turn_slots in ipairs(self.turn_slots) do
-        if not self.hide_player[i] then
+        if i ~= self.local_id then
             turn_slots:draw(start_p == i, i == self.local_id and 'right' or 'left')
         end
-    end
-
-    --Draw indicator for current action, if any
-    if self.active_slot then
-        local player_i, action_i = self:getCurrentActiveSlot()
-        self.turn_slots[player_i]:drawCurrentAction(action_i)
-    end
-
-    --Draw indicator for next action, if any
-    if self.next_active_slot then
-        local player_i, action_i = self:getNextActiveSlot()
-        self.turn_slots[player_i]:drawNextAction(action_i)
     end
 
 end
@@ -169,24 +144,12 @@ function Match:playTurnFromActions(player_actions, order)
     end)
 end
 
-function Match:toggleHide(player)
-    self.hide_player[player] = not self.hide_player[player]
-    local dice_area = self.dice_areas[player]
-    for i, die in ipairs(dice_area:getDice()) do
-        die.view.invisible = not die.view.invisible
-    end
-    local turn_slot_view = self.turn_slots[player]
-    for i, die in ipairs(turn_slot_view:getDice()) do
-        die.view.invisible = not die.view.invisible
-    end
-end
-
 function Match:playTurn(local_id)
     local invert = self:startingPlayer() == 2
     local order = {}
     for i, turn_slots in ipairs(self.turn_slots) do
         if invert then
-            order[i] = #self.turn_slots - i + 1
+            order[i] = #self.controllers - i + 1
         else
             order[i] = i
         end
@@ -215,7 +178,7 @@ end
 
 --Get first available slot from a player's dice area, if any
 function Match:getAvailableDiceAreaSlot()
-    local dice_area = self.dice_areas[1]
+    local dice_area = self.player_area.dice_area
     for i, slot_view in ipairs(dice_area.die_slots) do
         local slot = slot_view:getObj()
         if not slot:getDie() then
@@ -253,9 +216,6 @@ function Match:startingPlayer()
 end
 
 function Match:mousepressed(x, y, but, ...)
-    for i, dice_area in ipairs(self.dice_areas) do
-        dice_area:mousepressed(x, y, but, ...)
-    end
     if but ~= 1 then return end
     local i, j = self.map_view:getTileOnPosition(Vector(x, y))
     if i and self.action_input_handler and self.action_input_handler:accept(i, j) then

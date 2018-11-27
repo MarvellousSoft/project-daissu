@@ -88,12 +88,6 @@ function state:keypressed(key, scancode, isrepeat)
     if key == 't' then
         match:playTurn(my_id)
     end
-    if key == '1' then
-        match:toggleHide(1)
-    end
-    if key == '2' then
-        match:toggleHide(2)
-    end
     if key == 'a' then
         local action = io.read()
         local match = Util.findId('match')
