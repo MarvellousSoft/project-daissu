@@ -136,7 +136,11 @@ end
 function DieView:mousepressed(x, y, button)
     local match = Util.findId("match")
     local die = self:getObj()
-    if self.moving or match:getLocalId() ~= die:getPlayer() then return end
+    if self.moving or
+       match.state == "playing turn" or
+       match:getLocalId() ~= die:getPlayer() then
+           return
+    end
     local collided = self:collidesPoint(x,y)
     if button == 1 and collided then
         self.picked = true
@@ -174,7 +178,11 @@ end
 function DieView:mousereleased(x, y, button)
     local match = Util.findId("match")
     local die = self:getObj()
-    if self.moving or match:getLocalId() ~= die:getPlayer() then return end
+    if self.moving or
+       match.state == "playing turn" or
+       match:getLocalId() ~= die:getPlayer() then
+           return
+    end
     if self.picked and button == 1 then
         self:setDrawTable("L2") --Return it to normal draw layer
         local slots = Util.findSubtype("die_slot_view")
@@ -244,7 +252,11 @@ end
 function DieView:mousemoved(x, y, dx, dy)
     local match = Util.findId("match")
     local die = self:getObj()
-    if self.moving or match:getLocalId() ~= die:getPlayer() then return end
+    if self.moving or
+       match.state == "playing turn" or
+       match:getLocalId() ~= die:getPlayer() then
+           return
+    end
     if self.picked then
         self.pos.x = self.pos.x + dx
         self.pos.y = self.pos.y + dy
