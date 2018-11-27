@@ -4,6 +4,7 @@ local Util = require "util"
 local Color = require "classes.color.color"
 local Button = require "classes.button"
 local Gamestate = require "common.extra_libs.hump.gamestate"
+local argparse = require "argparse"
 
 local state = {}
 
@@ -13,7 +14,23 @@ local chosen_char = 1
 local char_button
 local go_button
 
+local function connect_to_server(options, host, char)
+    Gamestate.switch(require "gamestates.await_connection", options, host, chars[chosen_char])
+end
+
+local function getCmdOptions()
+    local parser = argparse()
+    parser:argument("game")
+    parser:option("--host")
+    parser:option("--char")
+    parser:option("--room")
+    parser:flag("--auto-connect")
+    return parser:parse()
+end
+
 function state:enter()
+    local options = getCmdOptions()
+
     local accepted = {}
     for i = 1, 26 do
         local c_lower, c_upper = string.char(97 + i - 1), string.char(65 + i - 1)
@@ -27,15 +44,26 @@ function state:enter()
     accepted['.'] = '.'
     box = TextBox(450, 300, 300, 30, 1, 1, false, Font.get('regular', 25), accepted, Color.convert(Color.new(10, 30, 10, 255, 'RGB')))
     box:activate()
-    box:putString('159.89.154.166')
+    box:putString(options.host or '159.89.154.166')
+    if options.char then
+        for i, c in ipairs(chars) do
+            if c == options.char then
+                chosen_char = i
+            end
+        end
+    end
 
     char_button = Button(400, 350, 60, 60, "Change", function()
         chosen_char = (chosen_char % #chars) + 1
     end)
 
     go_button = Button(500, 450, 100, 100, "Go!", function()
-        Gamestate.switch(require "gamestates.await_connection", box.lines[1], chars[chosen_char])
+        connect_to_server(options, box.lines[1], chars[chosen_char])
     end)
+
+    if options.auto_connect then
+        connect_to_server(options, box.lines[1], chars[chosen_char])
+    end
 end
 
 function state:leave()

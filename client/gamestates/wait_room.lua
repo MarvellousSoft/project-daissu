@@ -11,7 +11,7 @@ local box
 local room
 local room_button
 
-function state:enter(prev, char_type)
+function state:enter(prev, options, char_type)
     room = 'default'
     Client.listenOnce('start game', function(i)
         Gamestate.switch(require "gamestates.game", i, char_type)
@@ -23,7 +23,11 @@ function state:enter(prev, char_type)
     end
     box = TextBox(450, 300, 300, 30, 1, 1, false, Font.get('regular', 25), accepted, Color.convert(Color.new(10, 30, 10, 255, 'RGB')))
     box:activate()
-    box:putString('default')
+    if options.room then
+        room = options.room
+        Client.send('change room', room)
+    end
+    box:putString(room)
 
     room_button = Button(350, 300, 100, 100, "Change room", function()
         if box.lines[1] == '' then return end

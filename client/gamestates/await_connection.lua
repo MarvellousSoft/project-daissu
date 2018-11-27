@@ -6,10 +6,10 @@ local Util = require "util"
 
 local state = {}
 
-function state:enter(prev, host, char_type)
+function state:enter(prev, options, host, char_type)
     Client.start(host)
     Client.listenOnce('connect', function()
-        Gamestate.switch(require "gamestates.wait_room", char_type)
+        Gamestate.switch(require "gamestates.wait_room", options, char_type)
     end)
 end
 
