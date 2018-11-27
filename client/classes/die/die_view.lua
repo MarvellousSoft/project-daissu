@@ -134,7 +134,9 @@ end
 --Mouse functions
 
 function DieView:mousepressed(x, y, button)
-    if self.moving then return end
+    local match = Util.findId("match")
+    local die = self:getObj()
+    if self.moving or match:getLocalId() ~= die:getPlayer() then return end
     local collided = self:collidesPoint(x,y)
     if button == 1 and collided then
         self.picked = true
@@ -142,27 +144,27 @@ function DieView:mousepressed(x, y, button)
         self.previous_pos.x = self.pos.x
         self.previous_pos.y = self.pos.y
     elseif button == 2 and collided and not self.picked then
-        local player = self:getObj():getPlayer()
+        local player = die:getPlayer()
         local match = Util.findId("match")
         --This die was in a slot
-        if self:getObj().slot then
+        if die.slot then
             local slot
             --From turn slot go to dice area slot
-            if self:getObj().slot.type == "turn" then
-                slot = match:getAvailableDiceAreaSlot(player)
+            if die.slot.type == "turn" then
+                slot = match:getAvailableDiceAreaSlot()
             --From dice area slot go to turn slot
-            elseif self:getObj().slot.type == "dice_area" then
+        elseif die.slot.type == "dice_area" then
                 slot = match:getAvailableTurnSlot(player)
             end
             if slot then
-                self:getObj().slot:removeDie()
-                slot:putDie(self:getObj())
+                die.slot:removeDie()
+                slot:putDie(die)
             end
         --This die was was not in a slot -> go to first available dice area slot
         else
-            local slot = match:getAvailableDiceAreaSlot(player)
+            local slot = match:getAvailableDiceAreaSlot()
             if slot then
-                slot:putDie(self:getObj())
+                slot:putDie(die)
             end
         end
     end
@@ -170,7 +172,9 @@ function DieView:mousepressed(x, y, button)
 end
 
 function DieView:mousereleased(x, y, button)
-    if self.moving then return end
+    local match = Util.findId("match")
+    local die = self:getObj()
+    if self.moving or match:getLocalId() ~= die:getPlayer() then return end
     if self.picked and button == 1 then
         self:setDrawTable("L2") --Return it to normal draw layer
         local slots = Util.findSubtype("die_slot_view")
@@ -179,7 +183,7 @@ function DieView:mousereleased(x, y, button)
             for slot_view in pairs(slots) do
                 if self:collidesRect(slot_view.pos.x,slot_view.pos.y,slot_view.w,slot_view.h) then
                     --Leave previous slot, if any
-                    local my_slot = self.obj.slot
+                    local my_slot = die.slot
                     if my_slot then my_slot:removeDie() end
 
                     local target_slot = slot_view:getObj()
@@ -211,7 +215,7 @@ function DieView:mousereleased(x, y, button)
                     end
 
                     --Occupy current slot
-                    target_slot:putDie(self:getObj())
+                    target_slot:putDie(die)
 
                     should_return = false
                 end
@@ -237,7 +241,9 @@ function DieView:mousereleased(x, y, button)
 end
 
 function DieView:mousemoved(x, y, dx, dy)
-    if self.moving then return end
+    local match = Util.findId("match")
+    local die = self:getObj()
+    if self.moving or match:getLocalId() ~= die:getPlayer() then return end
     if self.picked then
         self.pos.x = self.pos.x + dx
         self.pos.y = self.pos.y + dy

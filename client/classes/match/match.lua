@@ -214,8 +214,8 @@ function Match:getAvailableTurnSlot(player)
 end
 
 --Get first available slot from a player's dice area, if any
-function Match:getAvailableDiceAreaSlot(player)
-    local dice_area = self.dice_areas[player]
+function Match:getAvailableDiceAreaSlot()
+    local dice_area = self.dice_areas[1]
     for i, slot_view in ipairs(dice_area.die_slots) do
         local slot = slot_view:getObj()
         if not slot:getDie() then
@@ -296,6 +296,10 @@ function Match:removeOpponentDice()
             end
         end
     end
+end
+
+function Match:getLocalId()
+    return self.local_id
 end
 
 return Match

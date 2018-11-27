@@ -40,15 +40,15 @@ function state:enter(prev, local_player, char_type)
     match:start()
 
     if char_type == 'ranged' then
-        DieView(Die({"long walk", "long walk", "long walk", "walk"}, 1), 50, 30, Color.green()):register("L2", "die_view")
-        DieView(Die({"long walk", "long walk", "long walk", "walk"}, 1), 120, 30, Color.green()):register("L2", "die_view")
-        DieView(Die({"shoot","shoot","explosion shot"}, 1), 190, 30, Color.red()):register("L2", "die_view")
-        DieView(Die({"shove", "shove", "walk", "long walk"}, 1), 260, 30, Color.yellow()):register("L2", "die_view")
+        DieView(Die({"long walk", "long walk", "long walk", "walk"}, my_id), 50, 30, Color.green()):register("L2", "die_view")
+        DieView(Die({"long walk", "long walk", "long walk", "walk"}, my_id), 120, 30, Color.green()):register("L2", "die_view")
+        DieView(Die({"shoot","shoot","explosion shot"}, my_id), 190, 30, Color.red()):register("L2", "die_view")
+        DieView(Die({"shove", "shove", "walk", "long walk"}, my_id), 260, 30, Color.yellow()):register("L2", "die_view")
     else
-        DieView(Die({"walk", "run and hit", "long walk"}, 2), 50, 30, Color.green(), 2):register("L2", "die_view")
-        DieView(Die({"walk", "run and hit", "long walk"}, 2), 120, 30, Color.green(), 2):register("L2", "die_view")
-        DieView(Die({"strong punch", "strong punch", "run and hit"}, 2), 190, 30, Color.red(), 2):register("L2", "die_view")
-        DieView(Die({"roundhouse", "hookshot"}, 2), 260, 30, Color.yellow(), 2):register("L2", "die_view")
+        DieView(Die({"walk", "run and hit", "long walk"}, my_id), 50, 30, Color.green(), 2):register("L2", "die_view")
+        DieView(Die({"walk", "run and hit", "long walk"}, my_id), 120, 30, Color.green(), 2):register("L2", "die_view")
+        DieView(Die({"strong punch", "strong punch", "run and hit"}, my_id), 190, 30, Color.red(), 2):register("L2", "die_view")
+        DieView(Die({"roundhouse", "hookshot"}, my_id), 260, 30, Color.yellow(), 2):register("L2", "die_view")
     end
 end
 
