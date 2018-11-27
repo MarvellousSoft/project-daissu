@@ -63,8 +63,9 @@ function setup.config()
         die_slot_over = new(path.."UI/die_slot_over.png"),
         die_slot_occupied = new(path.."UI/die_slot_occupied.png"),
         die_slot_wrong = new(path.."UI/die_slot_wrong.png"),
-        current_action_purple = new(path.."UI/current_action_purple.png"),
-        current_action_orange = new(path.."UI/current_action_orange.png"),
+        next_action_purple = new(path.."UI/next_action_purple.png"),
+        next_action_orange = new(path.."UI/next_action_orange.png"),
+        next_action_grey = new(path.."UI/current_action_grey.png"),
         button = new(path.."UI/button.png"),
         --CHARACTERS
         player_orange  = new(path.."characters/player1.png"),

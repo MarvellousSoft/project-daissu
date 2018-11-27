@@ -14,6 +14,7 @@ local Die = require "classes.die.die"
 local DieView = require "classes.die.die_view"
 local Color = require "classes.color.color"
 local PlayerArea = require "classes.match.player_area"
+local ActionList = require "classes.match.action_list"
 
 local Client = require "classes.net.client"
 
@@ -41,6 +42,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
     self.colors = {"orange", "purple"} --Colors for each player
 
     self.player_area = PlayerArea(self, self.colors[local_id])
+
+    self.action_list = nil
 
     self.controllers[1] = Controller(map, self.colors[1], unpack(players_info[1]))
     self.controllers[2] = Controller(map, self.colors[2],unpack(players_info[2]))
@@ -71,6 +74,11 @@ function Match:draw()
         if i ~= self.local_id then
             turn_slots:draw(start_p == i, i == self.local_id and 'right' or 'left')
         end
+    end
+
+    --Draw Action List
+    if self.action_list then
+        self.action_list:draw()
     end
 
 end
@@ -120,9 +128,11 @@ local function playTurnRec(self, player_actions, order, player_i, action_i, size
     print('Action ' .. action_i .. ' for Player ' .. p_i .. ' = ' .. action)
     if action ~= 'none' then
         Actions.executeAction(self, action, self.controllers[p_i], function()
+            self.action_list:bump()
             playTurnRec(self, player_actions, order, player_i + 1, action_i, size, callback)
         end)
     else
+        self.action_list:bump()
         return playTurnRec(self, player_actions, order, player_i + 1, action_i, size, callback)
     end
 end
@@ -138,6 +148,7 @@ function Match:playTurnFromActions(player_actions, order)
     self:createActionList(player_actions, order, size)
     playTurnRec(self, player_actions, order, 1, 1, size, function()
         self.state = 'waiting for turn'
+        self.action_list = nil
         self:removeOpponentDice()
     end)
 end
@@ -224,27 +235,20 @@ end
 
 function Match:createActionList(player_actions, order, size)
     local action_list = {}
+    local player_list = {}
     local p_i = 1
     local action_i = 1
     while action_i <= size do
-        if t_pi == nil then
-            t_player_i = 1
-            t_action_i = t_action_i + 1
+        local player = order[p_i]
+        if player == nil then
+            p_i = 1
+            action_i = action_i + 1
         else
-        end
-        if self.controllers[i].source == 'remote' then
-            for j, action in ipairs(actions) do
-                if action ~= "none" then
-                    local slot = self.turn_slots[i]:getObj():getSlot(j)
-                    local slotv = slot.view
-                    local diev = DieView(Die({action}, i), slotv.pos.x, slotv.pos.y-30, Color.new(150,150,150))
-                    diev:register("L2", "die_view")
-                    local die = diev:getObj()
-                    slot:putDie(die)
-                end
-            end
+            table.insert(action_list, player_actions[player][action_i])
+            table.insert(player_list, player)
         end
     end
+    self.action_list = ActionList(Vector(10, WIN_H - 80), action_list, player_list)
 end
 
 --Iterate for all other players and create dice for their corresponding actions
@@ -284,5 +288,10 @@ end
 function Match:getLocalId()
     return self.local_id
 end
+
+function Match:getColors()
+    return self.colors
+end
+
 
 return Match
