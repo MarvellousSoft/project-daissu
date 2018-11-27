@@ -133,8 +133,9 @@ function Match:playTurnFromActions(player_actions, order)
     assert(#player_actions == #self.controllers)
     assert(self.state == 'waiting for turn')
     self.state = 'playing turn'
-    self:createActionList(player_actions, order)
+    self:createOpponentDice(player_actions)
     local size = math.max(unpack(Util.map(player_actions, function(list) return #list end)))
+    self:createActionList(player_actions, order, size)
     playTurnRec(self, player_actions, order, 1, 1, size, function()
         self.state = 'waiting for turn'
         self:removeOpponentDice()
@@ -221,10 +222,33 @@ function Match:mousepressed(x, y, but, ...)
     end
 end
 
---Iterate for all other players and create dice for their corresponding actions
-function Match:createActionList(player_actions, order)
+function Match:createActionList(player_actions, order, size)
+    local action_list = {}
     local p_i = 1
     local action_i = 1
+    while action_i <= size do
+        if t_pi == nil then
+            t_player_i = 1
+            t_action_i = t_action_i + 1
+        else
+        end
+        if self.controllers[i].source == 'remote' then
+            for j, action in ipairs(actions) do
+                if action ~= "none" then
+                    local slot = self.turn_slots[i]:getObj():getSlot(j)
+                    local slotv = slot.view
+                    local diev = DieView(Die({action}, i), slotv.pos.x, slotv.pos.y-30, Color.new(150,150,150))
+                    diev:register("L2", "die_view")
+                    local die = diev:getObj()
+                    slot:putDie(die)
+                end
+            end
+        end
+    end
+end
+
+--Iterate for all other players and create dice for their corresponding actions
+function Match:createOpponentDice(player_actions)
     for i, actions in ipairs(player_actions) do
         if self.controllers[i].source == 'remote' then
             for j, action in ipairs(actions) do
