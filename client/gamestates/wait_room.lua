@@ -10,10 +10,13 @@ local state = {}
 local box
 local room
 local room_button
+local cl_list = {}
 
 function state:enter(prev, options, char_type)
     room = 'default'
+    local cb = Client.on('client list', function(list) cl_list = list end)
     Client.listenOnce('start game', function(i)
+        assert(Client.removeCallback(cb))
         Gamestate.switch(require "gamestates.game", i, char_type)
     end)
 
@@ -55,6 +58,13 @@ function state:draw()
     Color.set(Color.white())
     Font.set('regular', 20)
     love.graphics.print('Your current room is ' .. room, 400, 600)
+
+    Font.set('regular', 15)
+    local i = 0
+    for cl, room in pairs(cl_list) do
+        love.graphics.print(cl .. ': ' .. room, 1000, 300 + i * 20)
+        i = i + 1
+    end
 end
 
 function state:keypressed(...)

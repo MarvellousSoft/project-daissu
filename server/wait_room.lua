@@ -28,6 +28,16 @@ local function remClientFromRoom(client)
     end
 end
 
+local function sendClientList()
+    local cl_list = {}
+    for cl, room in pairs(clients) do
+        cl_list[cl:getConnectId()] = room
+    end
+    for cl in pairs(clients) do
+        cl:send('client list', cl_list)
+    end
+end
+
 function WaitRoom.init()
     -- default room for all players
     rooms.default = {}
@@ -36,14 +46,7 @@ function WaitRoom.init()
     Server.on('connect', function(data, client)
         print('Client connected --', client) io.flush()
         addClientToRoom(client, 'default')
-        local cl_list = {}
-        for cl in pairs(clients) do
-            table.insert(cl_list, cl:getConnectId())
-            if cl ~= client then
-                cl:send('add client', client:getConnectId())
-            end
-        end
-        client:send('initial clients', cl_list)
+        sendClientList()
     end)
 
     Server.on('change room', function(room, client)
@@ -61,6 +64,7 @@ function WaitRoom.init()
                 print('Creating match for clients ', a, ' and ', b)
                 MatchManager.startMatch(a, b)
             end
+            sendClientList()
         end
     end)
 
@@ -70,9 +74,7 @@ function WaitRoom.init()
             -- Client is no longer in wait room
         else
             remClientFromRoom(client)
-            for cl in pairs(clients) do
-                cl:send('rem client', client:getConnectId())
-            end
+            sendClientList()
         end
     end)
 end

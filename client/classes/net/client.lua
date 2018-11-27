@@ -36,4 +36,12 @@ function Client.listenOnce(event, callback)
     client:on(event, c)
 end
 
+function Client.on(event, callback)
+    return client:on(event, callback)
+end
+
+function Client.removeCallback(callback)
+    return client:removeCallback(callback)
+end
+
 return Client
