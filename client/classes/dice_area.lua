@@ -14,7 +14,7 @@ local DiceArea = Class{
     __includes={DRAWABLE}
 }
 
-function DiceArea:init(dice_n, pos, w, h)
+function DiceArea:init(dice_n, pos, w, h,player_num)
     DRAWABLE.init(self, pos.x, pos.y, Color.purple())
     self.w = w
     self.h = h
@@ -24,7 +24,7 @@ function DiceArea:init(dice_n, pos, w, h)
     self.die_slots = {}
     for i = 1, dice_n do
         local v = Vector.fromPolar((i - 1) * 2 * math.pi / dice_n, math.min(w, h) / 2 - math.min(dw, dh) / 2 - 40)
-        self.die_slots[i] = DieSlotView(DieSlot("dice_area"), mid + v - Vector(dw / 2, dh / 2))
+        self.die_slots[i] = DieSlotView(DieSlot("dice_area",player_num), mid + v - Vector(dw / 2, dh / 2))
         self.die_slots[i]:setSubtype("die_slot_view")
     end
 

@@ -181,7 +181,8 @@ function DieView:mousereleased(x, y, button)
         local should_return = true
         if slots then
             for slot_view in pairs(slots) do
-                if self:collidesRect(slot_view.pos.x,slot_view.pos.y,slot_view.w,slot_view.h) then
+                if slot_view:getObj():getPlayer() == die:getPlayer() and
+                   self:collidesRect(slot_view.pos.x,slot_view.pos.y,slot_view.w,slot_view.h) then
                     --Leave previous slot, if any
                     local my_slot = die.slot
                     if my_slot then my_slot:removeDie() end

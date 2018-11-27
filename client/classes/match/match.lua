@@ -42,9 +42,9 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
     local t_slots_y = pos.y + h - d_h - 40
     local t_slot_w = (w - 20) / 2
     local t_slot_h = d_h + 30
-    self.turn_slots[local_id] = TurnSlotsView(TurnSlots(6), Vector(pos.x + 5, t_slots_y),
+    self.turn_slots[local_id] = TurnSlotsView(TurnSlots(6,local_id), Vector(pos.x + 5, t_slots_y),
                                        t_slot_w, t_slot_h, colors[local_id])
-    self.turn_slots[3 - local_id] = TurnSlotsView(TurnSlots(6), Vector(pos.x + w / 2 + 5, t_slots_y),
+    self.turn_slots[3 - local_id] = TurnSlotsView(TurnSlots(6,3-local_id), Vector(pos.x + w / 2 + 5, t_slots_y),
                                        t_slot_w, t_slot_h, colors[3 - local_id])
     self.local_id = local_id
 
@@ -54,7 +54,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id)
     local dice_area_w = (w - cell_size * columns) / 2 - 2*dice_area_w_gap
     local dice_area_y = t_slots_y - dice_area_h_gap - dice_area_h
     self.dice_areas = {}
-    self.dice_areas[1] = DiceArea(8, Vector(dice_area_w_gap, 220), dice_area_w, dice_area_h)
+    self.dice_areas[1] = DiceArea(8, Vector(dice_area_w_gap, 220), dice_area_w, dice_area_h, local_id)
 
     self.hide_player = {}
     self.hide_player[1] = false

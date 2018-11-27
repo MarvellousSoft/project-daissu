@@ -8,7 +8,7 @@ local TurnSlotsView = Class {
     __includes = {View}
 }
 
-function TurnSlotsView:init(obj, pos, w, h, color)
+function TurnSlotsView:init(obj, pos, w, h, color, player_num)
     View.init(self, obj)
     local slots_n = #obj.slots
     local d_w, d_h = DieHelper.getDieDimensions()

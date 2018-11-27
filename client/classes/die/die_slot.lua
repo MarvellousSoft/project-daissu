@@ -10,10 +10,11 @@ local DieSlot = Class{
     __includes={ELEMENT}
 }
 
-function DieSlot:init(type)
+function DieSlot:init(type, player_num)
     ELEMENT.init(self)
     self.die = nil --Which die is on this slot. nil if none.
     self.type = type --What type of slot this is
+    self.player_num = player_num --From what player id this slot "belongs" to
 end
 
 --CLASS FUNCTIONS--
@@ -48,6 +49,10 @@ end
 
 function DieSlot:getDie()
     return self.die
+end
+
+function DieSlot:getPlayer()
+    return self.player_num
 end
 
 return DieSlot
