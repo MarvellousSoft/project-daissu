@@ -28,6 +28,7 @@ function DieSlotView:init(die_slot, pos)
     self.free_image = IMG.die_slot_free
     self.has_dice_over_image = IMG.die_slot_over --If player is dragging a dice over this object
     self.occupied_image = IMG.die_slot_occupied
+    self.wrong_image = IMG.die_slot_wrong --If player cant put his die on this slot
 end
 
 --CLASS FUNCTIONS--
@@ -37,7 +38,8 @@ function DieSlotView:draw()
     local g = love.graphics
 
     local dice = Util.findSubtype("die_view")
-    local has_dice_over = false
+    local has_die_over = false
+    local die_player_number = false
     for die_view in pairs(dice) do
         if die_view:getObj() ~= dieslot:getDie() and
            not die_view.is_moving and
@@ -45,14 +47,19 @@ function DieSlotView:draw()
            self.pos.x + self.w >= die_view.pos.x and
            self.pos.y <= die_view.pos.y + die_view.h and
            self.pos.y + self.h >= die_view.pos.y then
-               has_dice_over = true
+               has_die_over = true
+               die_player_number = die_view:getObj():getPlayer()
         end
     end
 
     --Get proper image
     local image
-    if has_dice_over then
-        image = self.has_dice_over_image
+    if has_die_over then
+        if die_player_number == dieslot:getPlayer() then
+            image = self.has_dice_over_image
+        else
+            image = self.wrong_image
+        end
     elseif dieslot.die then
         image = self.occupied_image
     else
