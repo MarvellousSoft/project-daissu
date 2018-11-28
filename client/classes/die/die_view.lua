@@ -142,10 +142,10 @@ function DieView:handleUnpick(player_area)
     self:addTimer('growing', MAIN_TIMER, "tween", 0.5, self, {sx = 1, sy = 1}, 'out-elastic')
     local die = self:getObj()
     local best_col, best_slot = 0, nil
-    for slot_view in player_area:allSlots() do
-        local col = self:collidesRect(slot_view.pos.x,slot_view.pos.y,slot_view.w,slot_view.h)
+    for slot in player_area:allSlots() do
+        local col = self:collidesRect(slot.view.pos.x, slot.view.pos.y, slot.view.w, slot.view.h)
         if col > best_col then
-            best_col, best_slot = col, slot_view
+            best_col, best_slot = col, slot
         end
     end
     if best_col > 0 then
@@ -154,7 +154,7 @@ function DieView:handleUnpick(player_area)
         assert(my_slot ~= nil)
         my_slot:removeDie()
 
-        local target_slot = best_slot:getObj()
+        local target_slot = best_slot
 
         --Check for previous die in this new slot and remove it
         if target_slot:getDie() then
@@ -189,41 +189,21 @@ end
 
 --Mouse functions
 
-function DieView:mousepressed(x, y, button)
-    local match = Util.findId("match")
+function DieView:handleRightClick(player_area)
     local die = self:getObj()
-    if self.moving or
-       match.state == "playing turn" or
-       match:getLocalId() ~= die:getPlayer() then
-           return
-    end
-    local collided = self:collidesPoint(x,y)
-    if button == 2 and collided and not self.picked then
-        local player = die:getPlayer()
-        local match = Util.findId("match")
-        --This die was in a slot
-        if die.slot then
-            local slot
-            --From turn slot go to dice area slot
-            if die.slot.type == "turn" then
-                slot = match:getAvailableDiceAreaSlot()
-            --From dice area slot go to turn slot
-            elseif die.slot.type == "dice_area" then
-                slot = match:getAvailableTurnSlot(player)
-            end
-            if slot then
-                die.slot:removeDie()
-                slot:putDie(die)
-            end
-        --This die was was not in a slot -> go to first available dice area slot
-        else
-            local slot = match:getAvailableDiceAreaSlot()
-            if slot then
-                slot:putDie(die)
-            end
-        end
+    local slot
+    --From turn slot go to dice area slot
+    if die.slot.type == "turn" then
+        slot = player_area:getAvailableMatSlot()
+    --From dice area slot go to turn slot
+    elseif die.slot.type == "mat" then
+        slot = player_area:getAvailableTurnSlot()
     end
 
+    if slot then
+        die.slot:removeDie()
+        slot:putDie(die)
+    end
 end
 
 --Collision functions

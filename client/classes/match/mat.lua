@@ -24,8 +24,8 @@ function Mat:init(dice_n, pos, w, h, player_num)
     self.slots = {}
     for i = 1, dice_n do
         local v = Vector.fromPolar((i - 1) * 2 * math.pi / dice_n, math.min(w, h) / 2 - math.min(dw, dh) / 2 - 40)
-        self.slots[i] = DieSlotView(DieSlot("dice_area", player_num), mid + v - Vector(dw / 2, dh / 2))
-        self.slots[i]:setSubtype("die_slot_view")
+        self.slots[i] = DieSlot("mat", player_num)
+        DieSlotView(self.slots[i], mid + v - Vector(dw / 2, dh / 2))
     end
 
     self.image = IMG.mat
@@ -49,16 +49,16 @@ function Mat:draw()
 
     --Draw slot
     for _, die_slot in ipairs(self.slots) do
-        die_slot:draw()
+        die_slot.view:draw()
     end
 end
 
 --Return all dices that are in a die slot in this area
 function Mat:getDice()
     local t = {}
-    for _, die_slot_view in ipairs(self.slots) do
-        if die_slot_view:getObj():getDie() then
-            table.insert(t, die_slot_view:getObj():getDie())
+    for _, die_slot in ipairs(self.slots) do
+        if die_slot:getDie() then
+            table.insert(t, die_slot:getDie())
         end
     end
 

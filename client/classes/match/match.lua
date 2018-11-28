@@ -53,7 +53,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     self.controllers[1] = Controller(map, self.colors[1], unpack(players_info[1]))
     self.controllers[2] = Controller(map, self.colors[2],unpack(players_info[2]))
 
-    self.turn_slots[local_id] = self.player_area.turn_slots
+    self.turn_slots[local_id] = self.player_area.turn_slots.view
     self.turn_slots[3 - local_id] = TurnSlotsView(TurnSlots(6,3-local_id), Vector(pos.x + w / 2 + 5, WIN_H-100),
                                        100, 30, self.colors[3 - local_id])
     self.number_of_turns = 1
@@ -176,31 +176,6 @@ function Match:playTurn(local_id)
     Client.listenOnce('turn ready', function(all_actions)
         self:playTurnFromActions(all_actions, order)
     end)
-end
-
---Get first available slot from a player's turn slots, if any
-function Match:getAvailableTurnSlot(player)
-    local turn_slot_view = self.turn_slots[player]
-    for i, slot in ipairs(turn_slot_view:getObj().slots) do
-        if not slot:getDie() then
-            return slot
-        end
-    end
-
-    return nil
-end
-
---Get first available slot from a player's dice area, if any
-function Match:getAvailableDiceAreaSlot()
-    local dice_area = self.player_area.dice_area
-    for i, slot_view in ipairs(dice_area.slots) do
-        local slot = slot_view:getObj()
-        if not slot:getDie() then
-            return slot
-        end
-    end
-
-    return nil
 end
 
 --Return which slot has an active action being processed, if any

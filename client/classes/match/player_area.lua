@@ -21,7 +21,8 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
     local t_slots_pos = Vector(pos.x + 5, pos.y + h - d_h - 40)
     local t_slot_w = w - 10
     local t_slot_h = d_h + 30
-    self.turn_slots = TurnSlotsView(TurnSlots(6, match.local_id), t_slots_pos, t_slot_w, t_slot_h, color)
+    self.turn_slots = TurnSlots(6, match.local_id)
+    TurnSlotsView(self.turn_slots, t_slots_pos, t_slot_w, t_slot_h, color)
 
     self.mat = Mat(8, Vector(pos.x + 5, pos.y), w - 10, h - t_slot_h - 20, local_id)
 
@@ -30,7 +31,7 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
     self.dice = {}
     for i, die in ipairs(Archetypes.getBaseBag(archetype, match.local_id)) do
         table.insert(self.dice, DieView(die, 0, 0, Color.green()))
-        self.mat.slots[i]:getObj():putDie(self.dice[i]:getObj(), true)
+        self.mat.slots[i]:putDie(self.dice[i]:getObj(), true)
     end
 
     self.picked_die = nil
@@ -39,7 +40,7 @@ end
 function PlayerArea:draw()
     local start_p = self.match:startingPlayer()
     self.mat:draw()
-    self.turn_slots:draw(start_p == self.match.local_id, 'left')
+    self.turn_slots.view:draw(start_p == self.match.local_id, 'left')
 
     for i, die in ipairs(self.dice) do
         if die ~= self.picked_die then
@@ -66,25 +67,46 @@ function PlayerArea:mousemoved(x, y, dx, dy)
 end
 
 function PlayerArea:mousepressed(x, y, but)
-    if but ~= 1 or self.picked_die then return end
-    for i, die in ipairs(self.dice) do
-        if not die.is_moving and die:collidesPoint(x, y) then
-            self.picked_die = die
-            die:handlePick(self)
-            return
+    if not self.picked_die then
+        for i, die in ipairs(self.dice) do
+            if not die.is_moving and die:collidesPoint(x, y) then
+                if but == 1 then
+                    self.picked_die = die
+                    die:handlePick(self)
+                elseif but == 2 then
+                    die:handleRightClick(self)
+                end
+                return
+            end
+        end
+    end
+end
+
+function PlayerArea:getAvailableTurnSlot()
+    for i, slot in ipairs(self.turn_slots.slots) do
+        if not slot:getDie() then
+            return slot
+        end
+    end
+end
+
+function PlayerArea:getAvailableMatSlot()
+    for i, slot in ipairs(self.mat.slots) do
+        if not slot:getDie() then
+            return slot
         end
     end
 end
 
 -- Iterator throught the DieSlotView in mat a turn_slots
 function PlayerArea:allSlots()
-    local da, tl = self.mat.slots, self.turn_slots:getObj().slots
+    local da, tl = self.mat.slots, self.turn_slots.slots
     local da_n = #da
     local i = 0
     return function()
         i = i + 1
         if i > da_n then
-            return tl[i - da_n] and tl[i - da_n].view
+            return tl[i - da_n] and tl[i - da_n]
         else
             return da[i]
         end
