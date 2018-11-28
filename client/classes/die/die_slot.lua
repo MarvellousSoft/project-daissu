@@ -20,26 +20,16 @@ end
 --CLASS FUNCTIONS--
 
 --Put a die in this slot, remove previous die and update position
-function DieSlot:putDie(die)
-    if self.die then self:removeDie() end
+function DieSlot:putDie(die, snap)
+    assert(self.die == nil)
     self.die = die
     assert(die.slot == nil)
     self.die.slot = self
-    local die_view = self.die.view
 
     --Create animation that moves die to this slot
-    die_view.is_moving = true
-    local tpos = Vector(0,0)
-    tpos.x = self.view.pos.x + self.view.margin
-    tpos.y = self.view.pos.y + self.view.margin
-    local d = die_view.pos:dist(tpos)/die_view.move_speed
-    die_view:removeTimer("moving")
-    die_view:addTimer("moving", MAIN_TIMER, "tween", d, die_view.pos,
-                     {x = tpos.x, y = tpos.y}, 'out-quad',
-                     function ()
-                         die_view.is_moving = false
-                     end
-    )
+    if self.view then
+        self.view:centerDie(snap)
+    end
 end
 
 function DieSlot:removeDie()

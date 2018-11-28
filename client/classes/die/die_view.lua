@@ -41,8 +41,7 @@ function DieView:init(die, x, y, color)
     self.rolling_face_change_speed = .1 --Speed to change face while rolling
     self.change_side = false
 
-    self.moving = false --If this die is currently moving
-    self.move_speed = 1000 --How fast this die move when tweening position
+    self.move_speed = 80 --How fast this die move when tweening position
 end
 
 function DieView:update(dt)
@@ -131,6 +130,58 @@ function DieView:rollAnimation()
 
 end
 
+function DieView:handlePick(player_area)
+    self:removeTimer('growing');
+    self.sx, self.sy = 1, 1
+    self:addTimer('growing', MAIN_TIMER, "tween", 0.5, self, {sx = 1.3, sy = 1.3}, 'out-elastic')
+end
+
+function DieView:handleUnpick(player_area)
+    self:removeTimer('growing');
+    self.sx, self.sy = 1.3, 1.3
+    self:addTimer('growing', MAIN_TIMER, "tween", 0.5, self, {sx = 1, sy = 1}, 'out-elastic')
+    local die = self:getObj()
+    for slot_view in player_area:allSlots() do
+        if self:collidesRect(slot_view.pos.x,slot_view.pos.y,slot_view.w,slot_view.h) then
+            --Leave previous slot, if any
+            local my_slot = die.slot
+            assert(my_slot ~= nil)
+            my_slot:removeDie()
+
+            local target_slot = slot_view:getObj()
+
+            --Check for previous die in this new slot and remove it
+            if target_slot:getDie() then
+                local prev_die = target_slot:getDie()
+                target_slot:removeDie()
+                my_slot:putDie(prev_die)
+            end
+
+            --Occupy current slot
+            target_slot:putDie(die)
+            return
+        end
+    end
+    die.slot.view:centerDie()
+end
+
+function DieView:slideCenterTo(pos, snap)
+    local tpos = pos - Vector(self.w / 2, self.h / 2)
+    if snap then
+        self.pos = tpos
+        return
+    end
+    local d = math.sqrt(self.pos:dist(tpos)) / self.move_speed
+    self.is_moving = true
+    self:removeTimer("moving")
+    self:addTimer("moving", MAIN_TIMER, "tween", d, self.pos,
+                        {x = tpos.x, y = tpos.y}, 'out-quad',
+                        function ()
+                            self.is_moving = false
+                        end
+    )
+end
+
 --Mouse functions
 
 function DieView:mousepressed(x, y, button)
@@ -142,12 +193,7 @@ function DieView:mousepressed(x, y, button)
            return
     end
     local collided = self:collidesPoint(x,y)
-    if button == 1 and collided then
-        self.picked = true
-        self:setDrawTable("L2upper") --Make it draw above other dice
-        self.previous_pos.x = self.pos.x
-        self.previous_pos.y = self.pos.y
-    elseif button == 2 and collided and not self.picked then
+    if button == 2 and collided and not self.picked then
         local player = die:getPlayer()
         local match = Util.findId("match")
         --This die was in a slot
@@ -173,90 +219,6 @@ function DieView:mousepressed(x, y, button)
         end
     end
 
-end
-
-function DieView:mousereleased(x, y, button, player_area)
-    local match = Util.findId("match")
-    local die = self:getObj()
-    if self.moving or
-       match.state == "playing turn" or
-       match:getLocalId() ~= die:getPlayer() then
-           return
-    end
-    if self.picked and button == 1 then
-        self:setDrawTable("L2") --Return it to normal draw layer
-        local should_return = true
-        for slot_view in player_area:allSlots() do
-            if self:collidesRect(slot_view.pos.x,slot_view.pos.y,slot_view.w,slot_view.h) then
-                --Leave previous slot, if any
-                local my_slot = die.slot
-                if my_slot then my_slot:removeDie() end
-
-                local target_slot = slot_view:getObj()
-
-                --Check for previous die in this new slot and remove it
-                if target_slot:getDie() then
-                    local prev_die = target_slot:getDie()
-                    target_slot:removeDie()
-                    --If self die was already in slot, put this die in its slot
-                    local prev_view = prev_die.view
-                    if my_slot then
-                        my_slot:putDie(prev_die)
-                    else
-                        --Else just put the die on self die previous position, using tween
-                        --Create animation that moves die to this slot
-                        prev_view.is_moving = true
-                        local tpos = Vector(0,0)
-                        tpos.x = self.previous_pos.x
-                        tpos.y = self.previous_pos.y
-                        local d = prev_view.pos:dist(tpos)/prev_view.move_speed
-                        prev_view:removeTimer("moving")
-                        prev_view:addTimer("moving", MAIN_TIMER, "tween", d, prev_view.pos,
-                                            {x = tpos.x, y = tpos.y}, 'out-quad',
-                                            function ()
-                                                prev_view.is_moving = false
-                                            end
-                        )
-                    end
-                end
-
-                --Occupy current slot
-                target_slot:putDie(die)
-
-                should_return = false
-            end
-        end
-        if should_return then
-            --Return to previous position, using tween
-            self.is_moving = true
-            local tpos = Vector(0,0)
-            tpos.x = self.previous_pos.x
-            tpos.y = self.previous_pos.y
-            local d = self.pos:dist(tpos)/self.move_speed
-            self:removeTimer("moving")
-            self:addTimer("moving", MAIN_TIMER, "tween", d, self.pos,
-                             {x = tpos.x, y = tpos.y}, 'out-quad',
-                             function ()
-                                 self.is_moving = false
-                             end
-            )
-        end
-        self.picked = false
-    end
-end
-
-function DieView:mousemoved(x, y, dx, dy)
-    local match = Util.findId("match")
-    local die = self:getObj()
-    if self.moving or
-       match.state == "playing turn" or
-       match:getLocalId() ~= die:getPlayer() then
-           return
-    end
-    if self.picked then
-        self.pos.x = self.pos.x + dx
-        self.pos.y = self.pos.y + dy
-    end
 end
 
 --Collision functions

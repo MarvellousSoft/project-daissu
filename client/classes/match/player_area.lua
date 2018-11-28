@@ -36,7 +36,7 @@ function PlayerArea:init(match, color, archetype)
     self.dice = {}
     for i, die in ipairs(Archetypes.getBaseBag(archetype, match.local_id)) do
         table.insert(self.dice, DieView(die, 0, 0, Color.green()))
-        self.mat.slots[i]:getObj():putDie(self.dice[i]:getObj())
+        self.mat.slots[i]:getObj():putDie(self.dice[i]:getObj(), true)
     end
 
     self.picked_die = nil
@@ -74,8 +74,9 @@ end
 function PlayerArea:mousepressed(x, y, but)
     if but ~= 1 or self.picked_die then return end
     for i, die in ipairs(self.dice) do
-        if not die.moving and die:collidesPoint(x, y) then
+        if not die.is_moving and die:collidesPoint(x, y) then
             self.picked_die = die
+            die:handlePick(self)
             return
         end
     end
@@ -98,7 +99,9 @@ end
 
 function PlayerArea:mousereleased(x, y, but)
     if self.picked_die and but == 1 then
+        local die = self.picked_die
         self.picked_die = nil
+        die:handleUnpick(self)
     end
 end
 
