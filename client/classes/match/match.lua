@@ -188,7 +188,7 @@ end
 --Get first available slot from a player's dice area, if any
 function Match:getAvailableDiceAreaSlot()
     local dice_area = self.player_area.dice_area
-    for i, slot_view in ipairs(dice_area.die_slots) do
+    for i, slot_view in ipairs(dice_area.slots) do
         local slot = slot_view:getObj()
         if not slot:getDie() then
             return slot

@@ -36,7 +36,7 @@ function PlayerArea:init(match, color, archetype)
     self.dice = {}
     for i, die in ipairs(Archetypes.getBaseBag(archetype, match.local_id)) do
         table.insert(self.dice, DieView(die, 0, 0, Color.green()))
-        self.dice_area.die_slots[i]:getObj():putDie(self.dice[i]:getObj())
+        self.dice_area.slots[i]:getObj():putDie(self.dice[i]:getObj())
     end
 end
 
@@ -68,9 +68,24 @@ function PlayerArea:mousepressed(...)
     end
 end
 
-function PlayerArea:mousereleased(...)
+-- Iterator throught the DieSlotView in dice_area a turn_slots
+function PlayerArea:allSlots()
+    local da, tl = self.dice_area.slots, self.turn_slots:getObj().slots
+    local da_n = #da
+    local i = 0
+    return function()
+        i = i + 1
+        if i > da_n then
+            return tl[i - da_n] and tl[i - da_n].view
+        else
+            return da[i]
+        end
+    end
+end
+
+function PlayerArea:mousereleased(x, y, button)
     for i, die in ipairs(self.dice) do
-        die:mousereleased(...)
+        die:mousereleased(x, y, button, self)
     end
 end
 

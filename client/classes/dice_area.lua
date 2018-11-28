@@ -21,11 +21,11 @@ function DiceArea:init(dice_n, pos, w, h, player_num)
 
     local dw, dh = DieSlotView.getSize()
     local mid = pos + Vector(w / 2, h / 2)
-    self.die_slots = {}
+    self.slots = {}
     for i = 1, dice_n do
         local v = Vector.fromPolar((i - 1) * 2 * math.pi / dice_n, math.min(w, h) / 2 - math.min(dw, dh) / 2 - 40)
-        self.die_slots[i] = DieSlotView(DieSlot("dice_area", player_num), mid + v - Vector(dw / 2, dh / 2))
-        self.die_slots[i]:setSubtype("die_slot_view")
+        self.slots[i] = DieSlotView(DieSlot("dice_area", player_num), mid + v - Vector(dw / 2, dh / 2))
+        self.slots[i]:setSubtype("die_slot_view")
     end
 
     self.image = IMG.dice_area
@@ -48,7 +48,7 @@ function DiceArea:draw()
                        self.img_sx, self.img_sy)
 
     --Draw slot
-    for _, die_slot in ipairs(self.die_slots) do
+    for _, die_slot in ipairs(self.slots) do
         die_slot:draw()
     end
 end
@@ -56,7 +56,7 @@ end
 --Return all dices that are in a die slot in this area
 function DiceArea:getDice()
     local t = {}
-    for _, die_slot_view in ipairs(self.die_slots) do
+    for _, die_slot_view in ipairs(self.slots) do
         if die_slot_view:getObj():getDie() then
             table.insert(t, die_slot_view:getObj():getDie())
         end

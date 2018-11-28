@@ -71,6 +71,7 @@ function DieView:draw()
     --Draw die icon
     local icon = self.side_images[self.rolling and self.rolling_face or die:getCurrentNum()]
     icon:setFilter("linear")
+    
     local x, y = self.pos.x - self.w*(self.sx-1)/2, self.pos.y - self.h*(self.sy-1)/2
     local margin = 0
     local sx = (self.w-2*margin)/icon:getWidth()*self.sx
@@ -156,7 +157,7 @@ function DieView:mousepressed(x, y, button)
             if die.slot.type == "turn" then
                 slot = match:getAvailableDiceAreaSlot()
             --From dice area slot go to turn slot
-        elseif die.slot.type == "dice_area" then
+            elseif die.slot.type == "dice_area" then
                 slot = match:getAvailableTurnSlot(player)
             end
             if slot then
@@ -174,7 +175,7 @@ function DieView:mousepressed(x, y, button)
 
 end
 
-function DieView:mousereleased(x, y, button)
+function DieView:mousereleased(x, y, button, player_area)
     local match = Util.findId("match")
     local die = self:getObj()
     if self.moving or
@@ -184,49 +185,45 @@ function DieView:mousereleased(x, y, button)
     end
     if self.picked and button == 1 then
         self:setDrawTable("L2") --Return it to normal draw layer
-        local slots = Util.findSubtype("die_slot_view")
         local should_return = true
-        if slots then
-            for slot_view in pairs(slots) do
-                if slot_view:getObj():getPlayer() == die:getPlayer() and
-                   self:collidesRect(slot_view.pos.x,slot_view.pos.y,slot_view.w,slot_view.h) then
-                    --Leave previous slot, if any
-                    local my_slot = die.slot
-                    if my_slot then my_slot:removeDie() end
+        for slot_view in player_area:allSlots() do
+            if self:collidesRect(slot_view.pos.x,slot_view.pos.y,slot_view.w,slot_view.h) then
+                --Leave previous slot, if any
+                local my_slot = die.slot
+                if my_slot then my_slot:removeDie() end
 
-                    local target_slot = slot_view:getObj()
+                local target_slot = slot_view:getObj()
 
-                    --Check for previous die in this new slot and remove it
-                    if target_slot:getDie() then
-                        local prev_die = target_slot:getDie()
-                        target_slot:removeDie()
-                        --If self die was already in slot, put this die in its slot
-                        local prev_view = prev_die.view
-                        if my_slot then
-                            my_slot:putDie(prev_die)
-                        else
-                            --Else just put the die on self die previous position, using tween
-                            --Create animation that moves die to this slot
-                            prev_view.is_moving = true
-                            local tpos = Vector(0,0)
-                            tpos.x = self.previous_pos.x
-                            tpos.y = self.previous_pos.y
-                            local d = prev_view.pos:dist(tpos)/prev_view.move_speed
-                            prev_view:removeTimer("moving")
-                            prev_view:addTimer("moving", MAIN_TIMER, "tween", d, prev_view.pos,
-                                             {x = tpos.x, y = tpos.y}, 'out-quad',
-                                             function ()
-                                                 prev_view.is_moving = false
-                                             end
-                            )
-                        end
+                --Check for previous die in this new slot and remove it
+                if target_slot:getDie() then
+                    local prev_die = target_slot:getDie()
+                    target_slot:removeDie()
+                    --If self die was already in slot, put this die in its slot
+                    local prev_view = prev_die.view
+                    if my_slot then
+                        my_slot:putDie(prev_die)
+                    else
+                        --Else just put the die on self die previous position, using tween
+                        --Create animation that moves die to this slot
+                        prev_view.is_moving = true
+                        local tpos = Vector(0,0)
+                        tpos.x = self.previous_pos.x
+                        tpos.y = self.previous_pos.y
+                        local d = prev_view.pos:dist(tpos)/prev_view.move_speed
+                        prev_view:removeTimer("moving")
+                        prev_view:addTimer("moving", MAIN_TIMER, "tween", d, prev_view.pos,
+                                            {x = tpos.x, y = tpos.y}, 'out-quad',
+                                            function ()
+                                                prev_view.is_moving = false
+                                            end
+                        )
                     end
-
-                    --Occupy current slot
-                    target_slot:putDie(die)
-
-                    should_return = false
                 end
+
+                --Occupy current slot
+                target_slot:putDie(die)
+
+                should_return = false
             end
         end
         if should_return then
