@@ -141,28 +141,34 @@ function DieView:handleUnpick(player_area)
     self.sx, self.sy = 1.3, 1.3
     self:addTimer('growing', MAIN_TIMER, "tween", 0.5, self, {sx = 1, sy = 1}, 'out-elastic')
     local die = self:getObj()
+    local best_col, best_slot = 0, nil
     for slot_view in player_area:allSlots() do
-        if self:collidesRect(slot_view.pos.x,slot_view.pos.y,slot_view.w,slot_view.h) then
-            --Leave previous slot, if any
-            local my_slot = die.slot
-            assert(my_slot ~= nil)
-            my_slot:removeDie()
-
-            local target_slot = slot_view:getObj()
-
-            --Check for previous die in this new slot and remove it
-            if target_slot:getDie() then
-                local prev_die = target_slot:getDie()
-                target_slot:removeDie()
-                my_slot:putDie(prev_die)
-            end
-
-            --Occupy current slot
-            target_slot:putDie(die)
-            return
+        local col = self:collidesRect(slot_view.pos.x,slot_view.pos.y,slot_view.w,slot_view.h)
+        if col > best_col then
+            best_col, best_slot = col, slot_view
         end
     end
-    die.slot.view:centerDie()
+    if best_col > 0 then
+        --Leave previous slot, if any
+        local my_slot = die.slot
+        assert(my_slot ~= nil)
+        my_slot:removeDie()
+
+        local target_slot = best_slot:getObj()
+
+        --Check for previous die in this new slot and remove it
+        if target_slot:getDie() then
+            local prev_die = target_slot:getDie()
+            target_slot:removeDie()
+            my_slot:putDie(prev_die)
+        end
+
+        --Occupy current slot
+        target_slot:putDie(die)
+        return
+    else
+        die.slot.view:centerDie()
+    end
 end
 
 function DieView:slideTo(pos, snap)
@@ -229,13 +235,13 @@ function DieView:collidesPoint(x,y)
            y >= s.pos.y and y <= s.pos.y + s.h
 end
 
---Checks if given rect(x,y,w,h) collides with this view
-function DieView:collidesRect(x,y,w,h)
-    local s = self
-    return not ((s.pos.x + s.w < x) or
-                (x + w < s.pos.x) or
-                (s.pos.y + self.h < y) or
-                (y + h < s.pos.y))
+-- Returns the area of the collision of rect(x,y,w,h) with this view
+function DieView:collidesRect(x, y, w, h)
+    local x_l, x_r = math.max(x, self.pos.x), math.min(x + w, self.pos.x + self.w)
+    if x_l >= x_r then return 0 end
+    local y_l, y_r = math.max(y, self.pos.y), math.min(y + h, self.pos.y + self.h)
+    if y_l >= y_r then return 0 end
+    return (x_r - x_l) * (y_r - y_l)
 end
 
 --UTILITY FUNCTIONS--
