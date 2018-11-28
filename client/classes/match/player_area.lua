@@ -38,6 +38,8 @@ function PlayerArea:init(match, color, archetype)
         table.insert(self.dice, DieView(die, 0, 0, Color.green()))
         self.dice_area.slots[i]:getObj():putDie(self.dice[i]:getObj())
     end
+
+    self.picked_die = nil
 end
 
 function PlayerArea:draw()
@@ -46,7 +48,13 @@ function PlayerArea:draw()
     self.turn_slots:draw(start_p == self.match.local_id, 'left')
 
     for i, die in ipairs(self.dice) do
-        die:draw()
+        if die ~= self.picked_die then
+            die:draw()
+        end
+    end
+
+    if self.picked_die then
+        self.picked_die:draw()
     end
 end
 
@@ -56,15 +64,20 @@ function PlayerArea:update(dt)
     end
 end
 
-function PlayerArea:mousemoved(...)
-    for i, die in ipairs(self.dice) do
-        die:mousemoved(...)
+function PlayerArea:mousemoved(x, y, dx, dy)
+    if self.picked_die then
+        self.picked_die.pos.x = self.picked_die.pos.x + dx
+        self.picked_die.pos.y = self.picked_die.pos.y + dy
     end
 end
 
-function PlayerArea:mousepressed(...)
+function PlayerArea:mousepressed(x, y, but)
+    if but ~= 1 or self.picked_die then return end
     for i, die in ipairs(self.dice) do
-        die:mousepressed(...)
+        if not die.moving and die:collidesPoint(x, y) then
+            self.picked_die = die
+            return
+        end
     end
 end
 
@@ -83,9 +96,9 @@ function PlayerArea:allSlots()
     end
 end
 
-function PlayerArea:mousereleased(x, y, button)
-    for i, die in ipairs(self.dice) do
-        die:mousereleased(x, y, button, self)
+function PlayerArea:mousereleased(x, y, but)
+    if self.picked_die and but == 1 then
+        self.picked_die = nil
     end
 end
 
