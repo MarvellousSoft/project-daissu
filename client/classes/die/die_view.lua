@@ -165,17 +165,16 @@ function DieView:handleUnpick(player_area)
     die.slot.view:centerDie()
 end
 
-function DieView:slideCenterTo(pos, snap)
-    local tpos = pos - Vector(self.w / 2, self.h / 2)
+function DieView:slideTo(pos, snap)
     if snap then
-        self.pos = tpos
+        self.pos = pos
         return
     end
-    local d = math.sqrt(self.pos:dist(tpos)) / self.move_speed
+    local d = math.sqrt(self.pos:dist(pos)) / self.move_speed
     self.is_moving = true
     self:removeTimer("moving")
     self:addTimer("moving", MAIN_TIMER, "tween", d, self.pos,
-                        {x = tpos.x, y = tpos.y}, 'out-quad',
+                        {x = pos.x, y = pos.y}, 'out-quad',
                         function ()
                             self.is_moving = false
                         end

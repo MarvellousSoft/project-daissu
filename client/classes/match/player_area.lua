@@ -10,26 +10,20 @@ local Color = require "classes.color.color"
 
 local PlayerArea = Class {}
 
-function PlayerArea:init(match, color, archetype)
+function PlayerArea:init(pos, w, h, match, color, archetype)
     local map = match.map_view
     local columns = map:getObj().columns
     local rows = map:getObj().rows
     local map_h = map.cell_size * rows
     local map_w = map.cell_size * columns
-    local d_w, d_h = DieHelper.getDieDimensions()
     -- Taking margins into account
-    d_h = d_h + 6
-    local t_slots_y = map.pos.y + map_h - d_h - 40
-    local t_slot_w = (WIN_W-map_w) / 2 - 20
+    local d_h = DieHelper.getDieDimensions() + 6
+    local t_slots_pos = Vector(pos.x + 5, pos.y + h - d_h - 40)
+    local t_slot_w = w - 10
     local t_slot_h = d_h + 30
-    self.turn_slots = TurnSlotsView(TurnSlots(6, match.local_id), Vector(match.pos.x + 5, t_slots_y), t_slot_w, t_slot_h, color)
+    self.turn_slots = TurnSlotsView(TurnSlots(6, match.local_id), t_slots_pos, t_slot_w, t_slot_h, color)
 
-    local mat_w_gap = 35
-    local mat_h_gap = 35
-    local mat_h = match.h - 260 - (d_h + 20)
-    local mat_w = (match.w - map.cell_size * columns) / 2 - 2 * mat_w_gap
-    local mat_y = t_slots_y - mat_h_gap - mat_h
-    self.mat = Mat(8, Vector(mat_w_gap, 220), mat_w, mat_h, local_id)
+    self.mat = Mat(8, Vector(pos.x + 5, pos.y), w - 10, h - t_slot_h - 20, local_id)
 
     self.match = match
 

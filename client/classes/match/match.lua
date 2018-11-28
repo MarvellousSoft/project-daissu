@@ -41,7 +41,12 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
 
     self.colors = {"orange", "purple"} --Colors for each player
 
-    self.player_area = PlayerArea(self, self.colors[local_id], archetype)
+    local player_info_h = 100
+
+    local margin = 5
+    local pa_pos = Vector(margin, player_info_h + margin)
+    local pa_w, pa_h = map_pos.x - 2 * margin, map_pos.y + map_h - pa_pos.y
+    self.player_area = PlayerArea(pa_pos, pa_w, pa_h, self, self.colors[local_id], archetype)
 
     self.action_list = nil
 

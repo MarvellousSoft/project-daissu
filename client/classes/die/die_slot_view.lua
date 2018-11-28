@@ -35,7 +35,7 @@ end
 function DieSlotView:centerDie(snap)
     local die = self:getObj().die
     assert(die ~= nil)
-    die.view:slideCenterTo(self.pos + Vector(self.w / 2, self.h / 2), snap)
+    die.view:slideTo(self.pos + Vector(self.margin, self.margin), snap)
 end
 
 --CLASS FUNCTIONS--
