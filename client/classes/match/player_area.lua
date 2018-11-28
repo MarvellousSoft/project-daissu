@@ -3,7 +3,7 @@ local Vector = require "common.extra_libs.hump.vector"
 local DieHelper = require "classes.die.helper"
 local TurnSlots = require "classes.turn_slots.turn_slots"
 local TurnSlotsView = require "classes.turn_slots.turn_slots_view"
-local DiceArea = require "classes.dice_area"
+local Mat = require "classes.match.mat"
 local Archetypes = require "classes.archetypes"
 local DieView = require "classes.die.die_view"
 local Color = require "classes.color.color"
@@ -24,19 +24,19 @@ function PlayerArea:init(match, color, archetype)
     local t_slot_h = d_h + 30
     self.turn_slots = TurnSlotsView(TurnSlots(6, match.local_id), Vector(match.pos.x + 5, t_slots_y), t_slot_w, t_slot_h, color)
 
-    local dice_area_w_gap = 35
-    local dice_area_h_gap = 35
-    local dice_area_h = match.h - 260 - (d_h + 20)
-    local dice_area_w = (match.w - map.cell_size * columns) / 2 - 2 * dice_area_w_gap
-    local dice_area_y = t_slots_y - dice_area_h_gap - dice_area_h
-    self.dice_area = DiceArea(8, Vector(dice_area_w_gap, 220), dice_area_w, dice_area_h, local_id)
+    local mat_w_gap = 35
+    local mat_h_gap = 35
+    local mat_h = match.h - 260 - (d_h + 20)
+    local mat_w = (match.w - map.cell_size * columns) / 2 - 2 * mat_w_gap
+    local mat_y = t_slots_y - mat_h_gap - mat_h
+    self.mat = Mat(8, Vector(mat_w_gap, 220), mat_w, mat_h, local_id)
 
     self.match = match
 
     self.dice = {}
     for i, die in ipairs(Archetypes.getBaseBag(archetype, match.local_id)) do
         table.insert(self.dice, DieView(die, 0, 0, Color.green()))
-        self.dice_area.slots[i]:getObj():putDie(self.dice[i]:getObj())
+        self.mat.slots[i]:getObj():putDie(self.dice[i]:getObj())
     end
 
     self.picked_die = nil
@@ -44,7 +44,7 @@ end
 
 function PlayerArea:draw()
     local start_p = self.match:startingPlayer()
-    self.dice_area:draw()
+    self.mat:draw()
     self.turn_slots:draw(start_p == self.match.local_id, 'left')
 
     for i, die in ipairs(self.dice) do
@@ -81,9 +81,9 @@ function PlayerArea:mousepressed(x, y, but)
     end
 end
 
--- Iterator throught the DieSlotView in dice_area a turn_slots
+-- Iterator throught the DieSlotView in mat a turn_slots
 function PlayerArea:allSlots()
-    local da, tl = self.dice_area.slots, self.turn_slots:getObj().slots
+    local da, tl = self.mat.slots, self.turn_slots:getObj().slots
     local da_n = #da
     local i = 0
     return function()

@@ -10,11 +10,11 @@ local funcs = {}
 
 --CLASS DEFINITION--
 
-local DiceArea = Class{
+local Mat = Class{
     __includes={DRAWABLE}
 }
 
-function DiceArea:init(dice_n, pos, w, h, player_num)
+function Mat:init(dice_n, pos, w, h, player_num)
     DRAWABLE.init(self, pos.x, pos.y, Color.purple())
     self.w = w
     self.h = h
@@ -28,14 +28,14 @@ function DiceArea:init(dice_n, pos, w, h, player_num)
         self.slots[i]:setSubtype("die_slot_view")
     end
 
-    self.image = IMG.dice_area
+    self.image = IMG.mat
     self.img_sx = self.w/self.image:getWidth()
     self.img_sy = self.h/self.image:getHeight()
 end
 
 --CLASS FUNCTIONS--
 
-function DiceArea:draw()
+function Mat:draw()
     --Draw bg shadow
     Color.set(Color.black())
     local off = 8
@@ -54,7 +54,7 @@ function DiceArea:draw()
 end
 
 --Return all dices that are in a die slot in this area
-function DiceArea:getDice()
+function Mat:getDice()
     local t = {}
     for _, die_slot_view in ipairs(self.slots) do
         if die_slot_view:getObj():getDie() then
@@ -65,4 +65,4 @@ function DiceArea:getDice()
     return t
 end
 
-return DiceArea
+return Mat

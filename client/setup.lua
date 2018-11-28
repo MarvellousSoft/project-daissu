@@ -54,7 +54,7 @@ function setup.config()
         maptile_regular = new(path.."tiles/maptile1.png"),
         maptile_broken = new(path.."tiles/maptile2.png"),
         --UI
-        dice_area = new(path.."UI/dice_area.png"),
+        mat = new(path.."UI/mat.png"),
         turn_slots_orange = new(path.."UI/turn_slots_orange.png"),
         turn_slots_purple = new(path.."UI/turn_slots_purple.png"),
         starting_player_purple = new(path.."UI/starting_player_purple.png"),

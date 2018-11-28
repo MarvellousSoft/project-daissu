@@ -1,7 +1,6 @@
 local Color   = require "classes.color.color"
 local Die     = require "classes.die.die"
 local DieView = require "classes.die.die_view"
-local DiceArea = require "classes.dice_area"
 
 --MODULE FOR THE GAMESTATE: GAME--
 local Class = require "common.extra_libs.hump.class"
