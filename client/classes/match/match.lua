@@ -227,6 +227,7 @@ function Match:createActionList(player_actions, order, size)
         else
             table.insert(action_list, player_actions[player][action_i])
             table.insert(player_list, player)
+            p_i = p_i + 1
         end
     end
     self.action_list = ActionList(Vector(10, WIN_H - 80), action_list, player_list)

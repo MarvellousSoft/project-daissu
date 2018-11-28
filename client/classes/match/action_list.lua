@@ -3,6 +3,8 @@ local Class     = require "common.extra_libs.hump.class"
 local Color     = require "classes.color.color"
 local DieHelper = require "classes.die.helper"
 local Util      = require "util"
+local Die       = require "classes.die.die"
+local DieView   = require "classes.die.die_view"
 
 local funcs = {}
 
@@ -24,10 +26,10 @@ function ActionList:init(pos,actions,players)
     self.dice = {}
     local die_w, die_h = DieHelper:getDieDimensions()
     local image = IMG.next_action_grey
-    self.dx = die_w + 2*self.gap + image:getWidth() --How far apart each action is
+    local dx = die_w + 2*self.gap + image:getWidth() --How far apart each action is
     for i, action in ipairs(actions) do
         local player = self.players[i]
-        self.dice[idx] = DieView(Die({action}, player), self.pos.x + (i-1) * dx, self.pos.y, self.colors[player])
+        self.dice[i] = DieView(Die({action}, player), self.pos.x + (i-1) * dx, self.pos.y, Color[self.colors[player]]())
     end
 
     --Y position for the arrows
@@ -37,16 +39,17 @@ function ActionList:init(pos,actions,players)
 end
 
 function ActionList:draw()
+    local dx = DieHelper.getDieDimensions() + 2 * self.gap + IMG.next_action_grey:getWidth() --How far apart each action is
     local x = self.pos.x - self.gap - IMG.next_action_grey:getWidth()
     for i,die in ipairs(self.dice) do
         --Draw correspondent arrow for this action
         local image
-        if i < self.current_action then
+        if i <= self.current_action then
             image = IMG["next_action_grey"]
         else
-            image = IMG["next_action_"..self.colors[i]]
+            image = IMG["next_action_"..self.colors[self.players[i]]]
         end
-        love.graphics.draw(image, x, self.arrow.y)
+        love.graphics.draw(image, x, self.arrow_y)
         x = x + dx
         --Draw die representing this action
         die:draw()
@@ -56,3 +59,5 @@ end
 function ActionList:bump()
     self.current_action = self.current_action + 1
 end
+
+return ActionList
