@@ -10,6 +10,10 @@ local Util      = require "util"
 
 local funcs = {}
 
+--LOCAL FUNCTIONS DLECARATIONS
+
+local getColor
+
 --CLASS DEFINITION--
 
 local DieView = Class{
@@ -24,8 +28,7 @@ function DieView:init(die, x, y, color)
     self.sx, self.sy = 1, 1
 
     --Color for die border
-    self.color_darker = Color.new(self.color.r*.8,self.color.g*.8,self.color.b*.8)
-    self.color_border = Color.new(self.color.r*.2,self.color.g*.2,self.color.b*.2)
+    self:setColor(color)
 
     --Loads up icon for every side
     self.side_images = {}
@@ -70,7 +73,7 @@ function DieView:draw()
     --Draw die icon
     local icon = self.side_images[self.rolling and self.rolling_face or die:getCurrentNum()]
     icon:setFilter("linear")
-    
+
     local x, y = self.pos.x - self.w*(self.sx-1)/2, self.pos.y - self.h*(self.sy-1)/2
     local margin = 0
     local sx = (self.w-2*margin)/icon:getWidth()*self.sx
@@ -80,6 +83,12 @@ function DieView:draw()
     g.draw(icon, x + margin + off, y + margin + off, nil, sx, sy)
     Color.set(Color.white())
     g.draw(icon, x + margin, y + margin, nil, sx, sy)
+end
+
+function DieView:setColor(color)
+  self.color = Color.new(color.r,color.g,color.b)
+  self.color_darker = Color.new(color.r*.8,color.g*.8,color.b*.8)
+  self.color_border = Color.new(color.r*.2,color.g*.2,color.b*.2)
 end
 
 function DieView:rollAnimation()

@@ -25,6 +25,7 @@ function ActionList:init(pos,actions,players)
 
     self.dice = {}
     local die_w, die_h = DieHelper:getDieDimensions()
+    die_h = die_h + DieHelper:getDieUnderside()
     local image = IMG.next_action_grey
     local dx = die_w + 2*self.gap + image:getWidth() --How far apart each action is
     for i, action in ipairs(actions) do
@@ -35,24 +36,30 @@ function ActionList:init(pos,actions,players)
     --Y position for the arrows
     self.arrow_y = self.pos.y + die_h/2 - image:getWidth()/2
 
+    self.grey_color = Color.new(150,150,150) --For dice that already had their action done
+
     self.current_action = 1
 end
 
 function ActionList:draw()
+    local g = love.graphics
     local dx = DieHelper.getDieDimensions() + 2 * self.gap + IMG.next_action_grey:getWidth() --How far apart each action is
     local x = self.pos.x - self.gap - IMG.next_action_grey:getWidth()
     for i,die in ipairs(self.dice) do
-        --Draw correspondent arrow for this action
         local image
-        if i <= self.current_action then
+        if i < self.current_action then
+            die:setColor(self.grey_color)
             image = IMG["next_action_grey"]
         else
             image = IMG["next_action_"..self.colors[self.players[i]]]
         end
-        love.graphics.draw(image, x, self.arrow_y)
-        x = x + dx
+        --Draw correspondent arrow for this action
+        g.setColor(255,255,255,255)
+        g.draw(image, x, self.arrow_y)
         --Draw die representing this action
         die:draw()
+        --Update arrou position
+        x = x + dx
     end
 end
 
