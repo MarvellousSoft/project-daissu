@@ -4,7 +4,7 @@ local Util = require "util"
 local Color = require "classes.color.color"
 local Button = require "classes.button"
 local Gamestate = require "common.extra_libs.hump.gamestate"
-local argparse = require "argparse"
+local argparse = require "common.extra_libs.argparse"
 
 local state = {}
 
