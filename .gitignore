@@ -1,4 +1,6 @@
 # Compiled Lua sources
+build/
+node_modules/
 luac.out
 
 # vim

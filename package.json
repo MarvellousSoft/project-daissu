@@ -1,0 +1,24 @@
+{
+  "name": "project-daissu",
+  "version": "1.0.0",
+  "description": "Dice-Combat turn-based strategy cyberpunk action game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./build.sh",
+    "love": "npm run build && cd build && love"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marvelloussoft/project-daissu.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marvelloussoft/project-daissu/issues"
+  },
+  "homepage": "https://github.com/marvelloussoft/project-daissu#readme",
+  "dependencies": {
+    "typescript-to-lua": "^0.11.1"
+  }
+}

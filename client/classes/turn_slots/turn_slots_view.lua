@@ -27,6 +27,7 @@ function TurnSlotsView:init(obj, pos, w, h, color, player_num)
     self.w, self.h = w, h
 
     --Bg image
+    color = color or "purple"
     self.image = IMG["turn_slots_"..color]
     self.iw = self.w/self.image:getWidth()
     self.ih = self.h/self.image:getHeight()
