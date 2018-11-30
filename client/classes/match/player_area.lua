@@ -57,14 +57,14 @@ function PlayerArea:update(dt)
 end
 
 function PlayerArea:mousemoved(x, y, dx, dy)
-    if self.picked_die then
+    if self.picked_die and self.match.state ~= 'playing turn' then
         self.picked_die.pos.x = self.picked_die.pos.x + dx
         self.picked_die.pos.y = self.picked_die.pos.y + dy
     end
 end
 
 function PlayerArea:mousepressed(x, y, but)
-    if not self.picked_die then
+    if not self.picked_die and self.match.state ~= 'playing turn' then
         for i, die in ipairs(self.dice) do
             if not die.is_moving and die:collidesPoint(x, y) then
                 if but == 1 then
@@ -111,7 +111,7 @@ function PlayerArea:allSlots()
 end
 
 function PlayerArea:mousereleased(x, y, but)
-    if self.picked_die and but == 1 then
+    if self.picked_die and but == 1 and self.match.state ~= 'playing turn' then
         local die = self.picked_die
         self.picked_die = nil
         die:handleUnpick(self)
