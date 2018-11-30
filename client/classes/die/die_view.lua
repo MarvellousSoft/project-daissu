@@ -45,6 +45,8 @@ function DieView:init(die, x, y, color)
     self.change_side = false
 
     self.move_speed = 80 --How fast this die move when tweening position
+
+    self.alpha = 255
 end
 
 function DieView:update(dt)
@@ -61,13 +63,13 @@ function DieView:draw()
     local x, y = self.pos.x  - self.w*(self.sx-1)/2, self.pos.y  - self.h*(self.sy-1)/2
     local w, h = self.w * self.sx, self.h * self.sy
     g.setLineWidth(3)
-    Color.set(self.color_darker)
+    Color.setWithAlpha(self.color_darker,self.alpha)
     g.rectangle("fill", x, y + h/6, w, h, 5, 5)
-    Color.set(self.color_border)
+    Color.setWithAlpha(self.color_border,self.alpha)
     g.rectangle("line", x, y + h/6, w, h, 5, 5)
-    Color.set(self.color)
+    Color.setWithAlpha(self.color,self.alpha)
     g.rectangle("fill", x, y, w, h, 5, 5)
-    Color.set(self.color_border)
+    Color.setWithAlpha(self.color_border,self.alpha)
     g.rectangle("line", x, y, w, h, 5, 5)
 
     --Draw die icon
@@ -79,9 +81,9 @@ function DieView:draw()
     local sx = (self.w-2*margin)/icon:getWidth()*self.sx
     local sy = (self.h-2*margin)/icon:getHeight()*self.sy
     local off = 2
-    Color.set(Color.black())
+    Color.setWithAlpha(Color.black(),self.alpha)
     g.draw(icon, x + margin + off, y + margin + off, nil, sx, sy)
-    Color.set(Color.white())
+    Color.setWithAlpha(Color.white(),self.alpha)
     g.draw(icon, x + margin, y + margin, nil, sx, sy)
 end
 
@@ -89,6 +91,24 @@ function DieView:setColor(color)
   self.color = Color.new(color.r,color.g,color.b)
   self.color_darker = Color.new(color.r*.8,color.g*.8,color.b*.8)
   self.color_border = Color.new(color.r*.2,color.g*.2,color.b*.2)
+end
+
+--Animation for the die to fade in
+function DieView:enter()
+    self.alpha = 0
+    self:removeTimer('change_visibility');
+    self:addTimer('change_visibility', MAIN_TIMER, "tween", 0.3, self,
+                  {alpha = 255}, 'out-quad')
+end
+
+--Animation for the die to fade out and destroy itself
+function DieView:leave()
+    self:removeTimer('change_visibility');
+    self:addTimer('change_visibility', MAIN_TIMER, "tween", 0.3, self,
+                  {alpha = 0}, 'in-quad',
+                  function()
+                    self:kill()
+                  end)
 end
 
 function DieView:rollAnimation()

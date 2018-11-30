@@ -74,6 +74,9 @@ function rgb_funcs.copy(c1, c2)  c1.r, c1.g, c1.b, c1.a = c2.r, c2.g, c2.b, c2.a
 --Set the color used for drawing
 function rgb_funcs.set(c) love.graphics.setColor(c.r, c.g, c.b, c.a) end
 
+--Set the color used for drawing, using given alpha
+function rgb_funcs.setWithAlpha(c,alpha) love.graphics.setColor(c.r, c.g, c.b, alpha) end
+
 --Set the color used for drawing using 255 as alpha amount
 function rgb_funcs.setOpaque(c) love.graphics.setColor(c.r, c.g, c.b, 255) end
 

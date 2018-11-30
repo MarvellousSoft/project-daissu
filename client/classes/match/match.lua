@@ -250,9 +250,11 @@ function Match:createOpponentDice(player_actions)
         for i, ts in ipairs(self.turn_slots) do
             if i ~= self.local_id then
                 ts:setVisible()
-                wait(.5)
+                wait(.3)
             end
         end
+        
+        wait(.1)
 
         --Create dummy dice
         for i, actions in ipairs(player_actions) do
@@ -263,9 +265,10 @@ function Match:createOpponentDice(player_actions)
                         local slotv = slot.view
                         local diev = DieView(Die({action}, i), slotv.pos.x, slotv.pos.y-50, Color.new(150,150,150))
                         diev:register("L2", "die_view")
+                        diev:enter()
                         local die = diev:getObj()
                         slot:putDie(die)
-                        wait(.2)
+                        wait(.1)
                     end
                 end
             end
@@ -274,26 +277,30 @@ function Match:createOpponentDice(player_actions)
 end
 
 function Match:removeOpponentDice()
-    for i, controller in ipairs(self.controllers) do
-        if controller.source == "remote" then
-            turn_slot = self.turn_slots[i]:getObj()
-            for j = 1, turn_slot:getSize() do
-                local die_slot = turn_slot:getSlot(j)
-                local die = die_slot:getDie()
-                if die then
-                    die.view:kill()
-                    die_slot:removeDie()
+    MAIN_TIMER:script(function(wait)
+        for i, controller in ipairs(self.controllers) do
+            if controller.source == "remote" then
+                turn_slot = self.turn_slots[i]:getObj()
+                for j = 1, turn_slot:getSize() do
+                    local die_slot = turn_slot:getSlot(j)
+                    local die = die_slot:getDie()
+                    if die then
+                        die.view:leave()
+                        die_slot:removeDie()
+                        wait(.1)
+                    end
                 end
             end
         end
-    end
-
-    --Make opponents turn slots invisible
-    for i, ts in ipairs(self.turn_slots) do
-        if i ~= self.local_id then
-            ts:setInvisible()
+        wait(.3)
+        --Make opponents turn slots invisible
+        for i, ts in ipairs(self.turn_slots) do
+            if i ~= self.local_id then
+                ts:setInvisible()
+                wait(.3)
+            end
         end
-    end
+    end)
 end
 
 function Match:getLocalId()

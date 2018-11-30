@@ -62,6 +62,17 @@ function color_funcs.set(c)
 
 end
 
+--Set color c as love drawing color, but use given alpha
+function color_funcs.setWithAlpha(c,alpha)
+
+    if c.tp == "RGB" then
+        Rgb.setWithAlpha(c,alpha)
+    elseif c.tp == "HSL" then
+        Hsl.setWithAlpha(c,alpha)
+    end
+
+end
+
 --Converts the color you provide to opposite mode (HSL to RGB, and RGB to HSL)
 function color_funcs.convert(c)
     if c.tp == "HSL" then

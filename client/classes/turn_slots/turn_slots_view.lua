@@ -128,10 +128,10 @@ function TurnSlotsView:setInvisible()
     self:removeTimer('change_visibility');
     self:addTimer('change_visibility', MAIN_TIMER, "tween", 0.3, self,
                   {alpha = 0}, 'in-quad')
-  local offset = 30
-  self:removeTimer('change_offset');
-  self:addTimer('change_offset', MAIN_TIMER, "tween", 0.3, self.pos,
-                {y = self.pos.y-offset}, 'in-quad')
+    local offset = 30
+    self:removeTimer('change_offset');
+    self:addTimer('change_offset', MAIN_TIMER, "tween", 0.3, self.pos,
+                  {y = self.pos.y-offset}, 'in-quad')
 end
 
 return TurnSlotsView
