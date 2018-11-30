@@ -88,53 +88,63 @@ function rgb_funcs.setTransp(c) love.graphics.setColor(c.r, c.g, c.b, 0) end
 ---------------
 
 --Dark Black
-function rgb_funcs.black()
-    return RGB(0,0,0)
+local _black = RGB(0,0,0)
+function rgb_funcs.black(new)
+    return new and RGB(0,0,0) or _black
 end
 
 --Clean white
-function rgb_funcs.white()
-    return RGB(255,255,255)
+local _white = RGB(255,255,255)
+function rgb_funcs.white(new)
+    return new and RGB(255,255,255) or _white
 end
 
 --Cheerful red
-function rgb_funcs.red()
-    return RGB(240,41,74)
+local _red = RGB(240,41,74)
+function rgb_funcs.red(new)
+    return new and RGB(240,41,74) or _red
 end
 
 --Calm green
-function rgb_funcs.green()
-    return RGB(99,247,92)
+local _green = RGB(99,247,92)
+function rgb_funcs.green(new)
+    return new and RGB(99,247,92) or _green
 end
 
 --Smooth blue
-function rgb_funcs.blue()
-    return RGB(25,96,209)
+local _blue = RGB(25,96,209)
+function rgb_funcs.blue(new)
+    return new and RGB(25,96,209) or _blue
 end
 
 --Jazzy orange
-function rgb_funcs.orange()
-    return RGB(247,154,92)
+local _orange = RGB(247,154,92)
+function rgb_funcs.orange(new)
+    return new and RGB(247,154,92) or _orange
 end
 
 --Sunny yellow
-function rgb_funcs.yellow()
-    return RGB(240,225,65)
+local _yellow = RGB(240,225,65)
+function rgb_funcs.yellow(new)
+    return new and RGB(240,225,65) or _yellow
 end
 
 --Sexy purple
-function rgb_funcs.purple()
-    return RGB(142,62,240)
+local _purple = RGB(142,62,240)
+function rgb_funcs.purple(new)
+    return new and RGB(142,62,240) or _purple
 end
 
 --Happy pink
-function rgb_funcs.pink()
-    return RGB(242,85,195)
+local _pink = RGB(242,85,195)
+function rgb_funcs.pink(new)
+    return new and RGB(242,85,195) or _pink
 end
 
 --Invisible transparent
-function rgb_funcs.transp()
-    return RGB(0,0,0,0)
+local _transp = RGB(0,0,0,0)
+function rgb_funcs.transp(new)
+    return new and RGB(0,0,0,0) or _transp
 end
 
 --Return functions

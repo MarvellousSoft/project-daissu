@@ -87,53 +87,63 @@ function hsl.setTransp(c) love.graphics.setColor(hsl.convert(c.h, c.s, c.l, 0)) 
 ---------------
 
 --Dark Black
-function hsl.black()
-    return HSL(hsl.stdv(0,0,0))
+local _black = HSL(hsl.stdv(0,0,0))
+function hsl.black(new)
+    return new and HSL(hsl.stdv(0,0,0)) or _black
 end
 
 --Clean white
-function hsl.white()
-    return HSL(hsl.stdv(0,0,100))
+local _white = HSL(hsl.stdv(0,0,100))
+function hsl.white(new)
+    return new and HSL(hsl.stdv(0,0,100)) or _white
 end
 
 --Cheerful red
-function hsl.red()
-    return HSL(hsl.stdv(351,95.4,57.1))
+local _red = HSL(hsl.stdv(351,95.4,57.1))
+function hsl.red(new)
+    return new and HSL(hsl.stdv(351,95.4,57.1)) or _red
 end
 
 --Calm green
-function hsl.green()
-    return HSL(hsl.stdv(117,90.6,66.5))
+local _green = HSL(hsl.stdv(117,90.6,66.5))
+function hsl.green(new)
+    return new and HSL(hsl.stdv(117,90.6,66.5)) or _green
 end
 
 --Smooth blue
-function hsl.blue()
-    return HSL(hsl.stdv(217,78.6,45.9))
+local _blue = HSL(hsl.stdv(217,78.6,45.9))
+function hsl.blue(new)
+    return new and HSL(hsl.stdv(217,78.6,45.9)) or _blue
 end
 
 --Jazzy orange
-function hsl.orange()
-    return HSL(hsl.stdv(24,90.6,66.5))
+local _orange = HSL(hsl.stdv(24,90.6,66.5))
+function hsl.orange(new)
+    return new and HSL(hsl.stdv(24,90.6,66.5)) or _orange
 end
 
 --Sunny yellow
-function hsl.yellow()
-    return HSL(hsl.stdv(55,85.4,59.8))
+local _yellow = HSL(hsl.stdv(55,85.4,59.8))
+function hsl.yellow(new)
+    return new and HSL(hsl.stdv(55,85.4,59.8)) or _yellow
 end
 
 --Sexy purple
-function hsl.purple()
-    return HSL(hsl.stdv(267,85.6,59.2))
+local _purple = HSL(hsl.stdv(267,85.6,59.2))
+function hsl.purple(new)
+    return new and HSL(hsl.stdv(267,85.6,59.2)) or _purple
 end
 
 --Happy pink
-function hsl.pink()
-    return HSL(hsl.stdv(318,85.8,64.1))
+local _pink = HSL(hsl.stdv(318,85.8,64.1))
+function hsl.pink(new)
+    return new and HSL(hsl.stdv(318,85.8,64.1)) or _pink
 end
 
 --Invisible transparent
-function hsl.transp()
-    return HSL(0,0,0,0)
+local _transp = HSL(0,0,0,0)
+function hsl.transp(new)
+    return new and HSL(0,0,0,0) or _transp
 end
 
 --Return functions
