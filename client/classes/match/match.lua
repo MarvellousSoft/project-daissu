@@ -244,28 +244,33 @@ end
 
 --Iterate for all other players and create dice for their corresponding actions
 function Match:createOpponentDice(player_actions)
-    --Make opponents turn slots visible
-    for i, ts in ipairs(self.turn_slots) do
-        if i ~= self.local_id then
-            ts:setTargetAlpha(255)
-        end
-    end
+    MAIN_TIMER:script(function(wait)
 
-    --Create dummy dice
-    for i, actions in ipairs(player_actions) do
-        if self.controllers[i].source == 'remote' then
-            for j, action in ipairs(actions) do
-                if action ~= "none" then
-                    local slot = self.turn_slots[i]:getObj():getSlot(j)
-                    local slotv = slot.view
-                    local diev = DieView(Die({action}, i), slotv.pos.x, slotv.pos.y-30, Color.new(150,150,150))
-                    diev:register("L2", "die_view")
-                    local die = diev:getObj()
-                    slot:putDie(die)
+        --Make opponents turn slots visible
+        for i, ts in ipairs(self.turn_slots) do
+            if i ~= self.local_id then
+                ts:setVisible()
+                wait(.5)
+            end
+        end
+
+        --Create dummy dice
+        for i, actions in ipairs(player_actions) do
+            if self.controllers[i].source == 'remote' then
+                for j, action in ipairs(actions) do
+                    if action ~= "none" then
+                        local slot = self.turn_slots[i]:getObj():getSlot(j)
+                        local slotv = slot.view
+                        local diev = DieView(Die({action}, i), slotv.pos.x, slotv.pos.y-50, Color.new(150,150,150))
+                        diev:register("L2", "die_view")
+                        local die = diev:getObj()
+                        slot:putDie(die)
+                        wait(.2)
+                    end
                 end
             end
         end
-    end
+    end)
 end
 
 function Match:removeOpponentDice()
@@ -286,7 +291,7 @@ function Match:removeOpponentDice()
     --Make opponents turn slots invisible
     for i, ts in ipairs(self.turn_slots) do
         if i ~= self.local_id then
-            ts:setTargetAlpha(0)
+            ts:setInvisible()
         end
     end
 end
@@ -301,9 +306,6 @@ end
 
 function Match:update(dt)
     self.player_area:update(dt)
-    for _, ts in ipairs(self.turn_slots) do
-        ts:update(dt)
-    end
 end
 
 function Match:mousemoved(...)

@@ -1,14 +1,16 @@
-local Class = require "common.extra_libs.hump.class"
-local Vector = require "common.extra_libs.hump.vector"
-local View = require "classes.primitives.view"
+local Class       = require "common.extra_libs.hump.class"
+local Vector      = require "common.extra_libs.hump.vector"
+local View        = require "classes.primitives.view"
+local Element     = require "classes.primitives.element"
 local DieSlotView = require "classes.die.die_slot_view"
-local DieHelper = require "classes.die.helper"
+local DieHelper   = require "classes.die.helper"
 
 local TurnSlotsView = Class {
-    __includes = {View}
+    __includes = {View, Element}
 }
 
 function TurnSlotsView:init(obj, pos, w, h, color, player_num)
+    Element.init(self)
     View.init(self, obj)
     local slots_n = #obj.slots
     local d_w, d_h = DieHelper.getDimensions()
@@ -39,7 +41,7 @@ function TurnSlotsView:init(obj, pos, w, h, color, player_num)
 
     --Transparency for this object
     self.alpha = 255
-    self.target_alpha = 255
+
 end
 
 function TurnSlotsView:draw(draw_starting_player, position)
@@ -107,18 +109,29 @@ function TurnSlotsView:getDice()
     return t
 end
 
-function TurnSlotsView:update(dt)
-    --Update transparency
-    self.alpha = self.alpha + (self.target_alpha - self.alpha)*dt
-end
-
 function TurnSlotsView:setAlpha(value)
     self.alpha = value
-    self.target_alpha = value
 end
 
-function TurnSlotsView:setTargetAlpha(value)
-    self.target_alpha = value
+function TurnSlotsView:setVisible()
+    self:removeTimer('change_visibility');
+    self:addTimer('change_visibility', MAIN_TIMER, "tween", 0.5, self,
+                  {alpha = 255}, 'out-quad')
+    local offset = 20
+    self.pos.y = self.pos.y - offset
+    self:removeTimer('change_offset');
+    self:addTimer('change_offset', MAIN_TIMER, "tween", 0.5, self.pos,
+                  {y = self.pos.y+offset}, 'out-quad')
+end
+
+function TurnSlotsView:setInvisible()
+    self:removeTimer('change_visibility');
+    self:addTimer('change_visibility', MAIN_TIMER, "tween", 0.3, self,
+                  {alpha = 0}, 'in-quad')
+  local offset = 30
+  self:removeTimer('change_offset');
+  self:addTimer('change_offset', MAIN_TIMER, "tween", 0.3, self.pos,
+                {y = self.pos.y-offset}, 'in-quad')
 end
 
 return TurnSlotsView
