@@ -56,7 +56,7 @@ function TurnSlotsView:draw(draw_starting_player, position)
 
     --Draw each slot
     for i, slot in ipairs(self:getObj().slots) do
-        slot.view:draw(self.alpha)
+        slot.view:draw()
     end
 
     --Draw starting player icon, if needed
@@ -110,28 +110,44 @@ function TurnSlotsView:getDice()
 end
 
 function TurnSlotsView:setAlpha(value)
+    --Set this turn slot alpha
     self.alpha = value
+    --Set all die slots alpha
+    for i, slot in ipairs(self:getObj().slots) do
+        slot.view:setAlpha(value)
+    end
 end
 
 function TurnSlotsView:setVisible()
-    self:removeTimer('change_visibility');
-    self:addTimer('change_visibility', MAIN_TIMER, "tween", 0.5, self,
-                  {alpha = 255}, 'out-quad')
+    local d = .5
     local offset = 20
+    --Set turn slot visible
+    self:removeTimer('change_visibility', MAIN_TIMER)
+    self:addTimer('change_visibility', MAIN_TIMER, "tween", d, self,
+                  {alpha = 255}, 'out-quad',function()print("what")end)
     self.pos.y = self.pos.y - offset
-    self:removeTimer('change_offset');
-    self:addTimer('change_offset', MAIN_TIMER, "tween", 0.5, self.pos,
-                  {y = self.pos.y+offset}, 'out-quad')
+    self:removeTimer('change_offset', MAIN_TIMER)
+    self:addTimer('change_offset', MAIN_TIMER, "tween", d, self.pos,
+                  {y = self.pos.y+offset}, 'out-quad',function()print("whataa")end)
+    --Set all die slots visible
+    for i, slot in ipairs(self:getObj().slots) do
+        slot.view:setVisible(d, offset)
+    end
 end
 
 function TurnSlotsView:setInvisible()
-    self:removeTimer('change_visibility');
-    self:addTimer('change_visibility', MAIN_TIMER, "tween", 0.3, self,
-                  {alpha = 0}, 'in-quad')
+    local d = .3
     local offset = 30
-    self:removeTimer('change_offset');
-    self:addTimer('change_offset', MAIN_TIMER, "tween", 0.3, self.pos,
+    self:removeTimer('change_visibility', MAIN_TIMER)
+    self:addTimer('change_visibility', MAIN_TIMER, "tween", d, self,
+                  {alpha = 0}, 'in-quad')
+    self:removeTimer('change_offset', MAIN_TIMER)
+    self:addTimer('change_offset', MAIN_TIMER, "tween", d, self.pos,
                   {y = self.pos.y-offset}, 'in-quad')
+    --Set all die slots invisible
+    for i, slot in ipairs(self:getObj().slots) do
+        slot.view:setInvisible(d, offset)
+    end
 end
 
 return TurnSlotsView

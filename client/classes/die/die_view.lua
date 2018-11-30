@@ -96,14 +96,14 @@ end
 --Animation for the die to fade in
 function DieView:enter()
     self.alpha = 0
-    self:removeTimer('change_visibility');
+    self:removeTimer('change_visibility', MAIN_TIMER)
     self:addTimer('change_visibility', MAIN_TIMER, "tween", 0.3, self,
                   {alpha = 255}, 'out-quad')
 end
 
 --Animation for the die to fade out and destroy itself
 function DieView:leave()
-    self:removeTimer('change_visibility');
+    self:removeTimer('change_visibility', MAIN_TIMER)
     self:addTimer('change_visibility', MAIN_TIMER, "tween", 0.3, self,
                   {alpha = 0}, 'in-quad',
                   function()
@@ -160,13 +160,13 @@ function DieView:rollAnimation()
 end
 
 function DieView:handlePick(player_area)
-    self:removeTimer('growing');
+    self:removeTimer('growing', MAIN_TIMER)
     self.sx, self.sy = 1, 1
     self:addTimer('growing', MAIN_TIMER, "tween", 0.5, self, {sx = 1.3, sy = 1.3}, 'out-elastic')
 end
 
 function DieView:handleUnpick(player_area)
-    self:removeTimer('growing');
+    self:removeTimer('growing', MAIN_TIMER)
     self.sx, self.sy = 1.3, 1.3
     self:addTimer('growing', MAIN_TIMER, "tween", 0.5, self, {sx = 1, sy = 1}, 'out-elastic')
     local die = self:getObj()
@@ -207,7 +207,7 @@ function DieView:slideTo(pos, snap)
     end
     local d = math.sqrt(self.pos:dist(pos)) / self.move_speed
     self.is_moving = true
-    self:removeTimer("moving")
+    self:removeTimer("moving", MAIN_TIMER)
     self:addTimer("moving", MAIN_TIMER, "tween", d, self.pos,
                         {x = pos.x, y = pos.y}, 'out-quad',
                         function ()
