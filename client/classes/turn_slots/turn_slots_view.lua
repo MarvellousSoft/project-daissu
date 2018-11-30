@@ -124,11 +124,11 @@ function TurnSlotsView:setVisible()
     --Set turn slot visible
     self:removeTimer('change_visibility', MAIN_TIMER)
     self:addTimer('change_visibility', MAIN_TIMER, "tween", d, self,
-                  {alpha = 255}, 'out-quad',function()print("what")end)
+                  {alpha = 255}, 'out-quad')
     self.pos.y = self.pos.y - offset
     self:removeTimer('change_offset', MAIN_TIMER)
     self:addTimer('change_offset', MAIN_TIMER, "tween", d, self.pos,
-                  {y = self.pos.y+offset}, 'out-quad',function()print("whataa")end)
+                  {y = self.pos.y+offset}, 'out-quad')
     --Set all die slots visible
     for i, slot in ipairs(self:getObj().slots) do
         slot.view:setVisible(d, offset)

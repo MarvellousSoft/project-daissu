@@ -30,11 +30,14 @@ function ActionList:init(pos,actions,players)
     local dx = die_w + 2*self.gap + image:getWidth() --How far apart each action is
     for i, action in ipairs(actions) do
         local player = self.players[i]
-        self.dice[i] = DieView(Die({action}, player), self.pos.x + (i-1) * dx, self.pos.y, Color[self.colors[player]]())
+        self.dice[i] = DieView(
+                        Die({action}, player),
+                                self.pos.x + image:getWidth() + self.gap + (i-1) * dx,
+                                self.pos.y, Color[self.colors[player]]())
     end
 
     --Y position for the arrows
-    self.arrow_y = self.pos.y + die_h/2 - image:getWidth()/2
+    self.arrow_y = self.pos.y + die_h/2 - image:getHeight()/2
 
     self.grey_color = Color.new(150,150,150) --For dice that already had their action done
 
@@ -44,7 +47,7 @@ end
 function ActionList:draw()
     local g = love.graphics
     local dx = DieHelper.getDimensions() + 2 * self.gap + IMG.next_action_grey:getWidth() --How far apart each action is
-    local x = self.pos.x - self.gap - IMG.next_action_grey:getWidth()
+    local x = self.pos.x
     for i,die in ipairs(self.dice) do
         local image
         if i < self.current_action then
