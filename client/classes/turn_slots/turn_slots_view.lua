@@ -11,11 +11,11 @@ local TurnSlotsView = Class {
 function TurnSlotsView:init(obj, pos, w, h, color, player_num)
     View.init(self, obj)
     local slots_n = #obj.slots
-    local d_w, d_h = DieHelper.getDieDimensions()
+    local d_w, d_h = DieHelper.getDimensions()
 
     -- Accounting for margin in DieSlots
     d_w = d_w + 2*DieHelper.getDieSlotMargin()
-    d_h = d_h + 2*DieHelper.getDieSlotMargin() + DieHelper.getDieUnderside()
+    d_h = d_h + 2*DieHelper.getDieSlotMargin() + DieHelper.getUnderside()
 
     local margin = 10
     for i, slot in ipairs(obj.slots) do

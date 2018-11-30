@@ -20,9 +20,9 @@ function DieSlotView:init(die_slot, pos)
     VIEW.init(self, die_slot)
 
     --Graphic variable
-    local w, h = DieHelper.getDieDimensions()
+    local w, h = DieHelper.getDimensions()
     self.w = w + 2 * DieSlotView.margin
-    self.h = h + 2 * DieSlotView.margin + DieHelper.getDieUnderside()
+    self.h = h + 2 * DieSlotView.margin + DieHelper.getUnderside()
     self.line_width = 5
 
     --Images
@@ -84,7 +84,7 @@ end
 
 --Return width and height of this slot
 function DieSlotView.getSize()
-    local w, h = DieHelper.getDieDimensions()
+    local w, h = DieHelper.getDimensions()
     w = w + 2 * DieSlotView.margin
     h = h + 2 * DieSlotView.margin
     return w, h

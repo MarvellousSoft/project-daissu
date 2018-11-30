@@ -1,6 +1,5 @@
 local Class = require "common.extra_libs.hump.class"
 local Vector = require "common.extra_libs.hump.vector"
-local DieHelper = require "classes.die.helper"
 local TurnSlots = require "classes.turn_slots.turn_slots"
 local TurnSlotsView = require "classes.turn_slots.turn_slots_view"
 local Mat = require "classes.match.mat"
@@ -17,10 +16,8 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
     local map_h = map.cell_size * rows
     local map_w = map.cell_size * columns
     -- Taking margins into account
-    local d_h = DieHelper.getDieDimensions() + 6
-    local t_slots_pos = Vector(pos.x + 5, pos.y + h - d_h - 40)
-    local t_slot_w = w - 10
-    local t_slot_h = d_h + 30
+    local t_slot_w, t_slot_h = w - 10, 90
+    local t_slots_pos = Vector(pos.x + 5, pos.y + h - t_slot_h)
     self.turn_slots = TurnSlots(6, match.local_id)
     TurnSlotsView(self.turn_slots, t_slots_pos, t_slot_w, t_slot_h, color)
 

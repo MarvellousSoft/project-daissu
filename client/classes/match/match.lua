@@ -53,9 +53,15 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     self.controllers[1] = Controller(map, self.colors[1], unpack(players_info[1]))
     self.controllers[2] = Controller(map, self.colors[2],unpack(players_info[2]))
 
+    local ts_w = pa_w - 10
+    local ts_h = 90
     self.turn_slots[local_id] = self.player_area.turn_slots.view
-    self.turn_slots[3 - local_id] = TurnSlotsView(TurnSlots(6,3-local_id), Vector(pos.x + w / 2 + 5, WIN_H-100),
-                                       100, 30, self.colors[3 - local_id])
+    self.turn_slots[3 - local_id] = TurnSlotsView(
+                                        TurnSlots(6,3-local_id),
+                                                  Vector(map_pos.x + map_w + 5,
+                                                         map_pos.y+map_h-ts_h),
+
+                                        ts_w, ts_h, self.colors[3 - local_id])
     self.number_of_turns = 1
 
     self.active_slot = false --Which slot is being played at the moment

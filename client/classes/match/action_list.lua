@@ -24,8 +24,8 @@ function ActionList:init(pos,actions,players)
     self.gap = 10 --Gap between actions and arrows
 
     self.dice = {}
-    local die_w, die_h = DieHelper:getDieDimensions()
-    die_h = die_h + DieHelper:getDieUnderside()
+    local die_w, die_h = DieHelper:getDimensions()
+    die_h = die_h + DieHelper:getUnderside()
     local image = IMG.next_action_grey
     local dx = die_w + 2*self.gap + image:getWidth() --How far apart each action is
     for i, action in ipairs(actions) do
@@ -43,7 +43,7 @@ end
 
 function ActionList:draw()
     local g = love.graphics
-    local dx = DieHelper.getDieDimensions() + 2 * self.gap + IMG.next_action_grey:getWidth() --How far apart each action is
+    local dx = DieHelper.getDimensions() + 2 * self.gap + IMG.next_action_grey:getWidth() --How far apart each action is
     local x = self.pos.x - self.gap - IMG.next_action_grey:getWidth()
     for i,die in ipairs(self.dice) do
         local image

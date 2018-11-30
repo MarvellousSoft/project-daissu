@@ -2,12 +2,12 @@
 
 local f = {}
 
-function f.getDieDimensions()
+function f.getDimensions()
     return 50, 50
 end
 
-function f.getDieUnderside()
-    local w, h = f.getDieDimensions()
+function f.getUnderside()
+    local w, h = f.getDimensions()
     return h/6
 end
 
