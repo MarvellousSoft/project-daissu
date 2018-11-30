@@ -25,13 +25,45 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
 
     self.match = match
 
-    self.dice = {}
-    for i, die in ipairs(Archetypes.getBaseBag(archetype, match.local_id)) do
-        table.insert(self.dice, DieView(die, 0, 0, die.color or Color.new(180,180,180)))
-        self.mat.slots[i]:putDie(self.dice[i]:getObj(), true)
-    end
+    self.bag = Archetypes.getBaseBag(archetype, match.local_id)
+    self.dice_views = {}
+    self.grave = {}
+
+    self:shuffleBag()
 
     self.picked_die = nil
+end
+
+function PlayerArea:shuffleBag()
+    local bag = self.bag
+    local n = #bag
+    for i = 1, n do
+        local j = love.math.random(i, n)
+        bag[i], bag[j] = bag[j], bag[i]
+    end
+end
+
+function PlayerArea:shuffleGraveIntoBag()
+    assert(self.bag[1] == nil)
+    for i, die in ipairs(self.grave) do
+        table.insert(self.bag, die)
+    end
+    self.grave = {}
+    self:shuffleBag()
+end
+
+function PlayerArea:grab(count)
+    for i = 1, count do
+        if self.bag[1] == nil then
+            self:shuffleGraveIntoBag()
+        end
+        local slot = self:getAvailableMatSlot()
+        if slot == nil then return end
+        local die = table.remove(self.bag)
+        if die == nil then return end
+        table.insert(self.dice_views, DieView(die, 0, 0, die.color or Color.new(180,180,180)))
+        slot:putDie(die, true)
+    end
 end
 
 function PlayerArea:draw()
@@ -39,7 +71,7 @@ function PlayerArea:draw()
     self.mat:draw()
     self.turn_slots.view:draw(start_p == self.match.local_id, 'left')
 
-    for i, die in ipairs(self.dice) do
+    for i, die in ipairs(self.dice_views) do
         if die ~= self.picked_die then
             die:draw()
         end
@@ -51,21 +83,21 @@ function PlayerArea:draw()
 end
 
 function PlayerArea:update(dt)
-    for i, die in ipairs(self.dice) do
+    for i, die in ipairs(self.dice_views) do
         die:update(dt)
     end
 end
 
 function PlayerArea:mousemoved(x, y, dx, dy)
-    if self.picked_die and self.match.state ~= 'playing turn' then
+    if self.picked_die and self.match.state == 'choosing actions' then
         self.picked_die.pos.x = self.picked_die.pos.x + dx
         self.picked_die.pos.y = self.picked_die.pos.y + dy
     end
 end
 
 function PlayerArea:mousepressed(x, y, but)
-    if not self.picked_die and self.match.state ~= 'playing turn' then
-        for i, die in ipairs(self.dice) do
+    if not self.picked_die and self.match.state == 'choosing actions' then
+        for i, die in ipairs(self.dice_views) do
             if not die.is_moving and die:collidesPoint(x, y) then
                 if but == 1 then
                     self.picked_die = die
@@ -76,6 +108,26 @@ function PlayerArea:mousepressed(x, y, but)
                 return
             end
         end
+    end
+end
+
+function PlayerArea:destroyPlayedDice()
+    local all_dice = {}
+    for i, die_view in ipairs(self.dice_views) do
+        all_dice[die_view:getObj()] = true
+    end
+    for i, slot in ipairs(self.turn_slots.slots) do
+        if slot:getDie() then
+            local die = slot:getDie()
+            all_dice[die] = nil -- removing
+            die.view = nil -- destroying view
+            slot:removeDie()
+            table.insert(self.grave, die)
+        end
+    end
+    self.dice_views = {}
+    for die in pairs(all_dice) do
+        table.insert(self.dice_views, die.view)
     end
 end
 
@@ -111,7 +163,7 @@ function PlayerArea:allSlots()
 end
 
 function PlayerArea:mousereleased(x, y, but)
-    if self.picked_die and but == 1 and self.match.state ~= 'playing turn' then
+    if self.picked_die and but == 1 and self.match.state == 'choosing actions' then
         local die = self.picked_die
         self.picked_die = nil
         die:handleUnpick(self)

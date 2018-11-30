@@ -102,6 +102,12 @@ function Match:start()
     self.state = 'waiting for turn'
 end
 
+function Match:startTurn()
+    assert(self.state == 'waiting for turn')
+    self.state = 'choosing actions'
+    self.player_area:grab(2)
+end
+
 -- This recursively plays each action in a turn
 local function playTurnRec(self, player_actions, order, player_i, action_i, size, callback)
     local p_i = order[player_i]
@@ -153,21 +159,25 @@ end
 
 -- player_actions is a list of lists, the i-th with the actions of the i-th player
 -- order is a list with the order of the players
-function Match:playTurnFromActions(player_actions, order)
+function Match:playTurnFromActions(player_actions, order, callback)
     assert(#player_actions == #self.controllers)
-    assert(self.state == 'waiting for turn')
+    assert(self.state == 'actions locked')
     self.state = 'playing turn'
     self:createOpponentDice(player_actions)
     local size = math.max(unpack(Util.map(player_actions, function(list) return #list end)))
     self:createActionList(player_actions, order, size)
     playTurnRec(self, player_actions, order, 1, 1, size, function()
         self.state = 'waiting for turn'
+        self.player_area:destroyPlayedDice()
         self.action_list = nil
         self:removeOpponentDice()
+        if callback then callback() end
     end)
 end
 
-function Match:playTurn(local_id)
+function Match:playTurn(local_id, callback)
+    assert(self.state == 'choosing actions')
+    self.state = 'actions locked'
     local invert = self:startingPlayer() == 2
     local order = {}
     for i, turn_slots in ipairs(self.turn_slots) do
@@ -183,7 +193,7 @@ function Match:playTurn(local_id)
     end
     Client.send('actions locked', {i = local_id, actions = actions})
     Client.listenOnce('turn ready', function(all_actions)
-        self:playTurnFromActions(all_actions, order)
+        self:playTurnFromActions(all_actions, order, callback)
     end)
 end
 
