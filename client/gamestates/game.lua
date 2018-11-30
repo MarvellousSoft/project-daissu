@@ -38,7 +38,7 @@ function state:enter(prev, local_player, char_type)
 
     match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, {{2, 2, local_player == 1 and 'local' or 'remote'}, {4, 4, local_player == 2 and 'local' or 'remote'}}, my_id, char_type)
     match:start()
-    match:startTurn()
+    MAIN_TIMER:after(1, function() match:startTurn() end)
 end
 
 function state:leave()
@@ -76,7 +76,9 @@ function state:keypressed(key, scancode, isrepeat)
     end
     if key == 't' then
         match:playTurn(my_id, function()
-            match:startTurn()
+            MAIN_TIMER:after(1.5, function()
+                match:startTurn()
+            end)
         end)
     end
     if key == 'a' then

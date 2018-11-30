@@ -1,16 +1,12 @@
-local ELEMENT = require "classes.primitives.element"
 local Class   = require "common.extra_libs.hump.class"
 
 local funcs = {}
 
 --CLASS DEFINITION--
 
-local Die = Class{
-    __includes={ELEMENT}
-}
+local Die = Class {}
 
 function Die:init(sides, player_num, color)
-    ELEMENT.init(self)
     self.num_sides = #sides --Number of sides this die has
     self.sides = sides --Array of strings contaning what every side has
     self.current_side = 1

@@ -23,11 +23,16 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
 
     self.mat = Mat(8, Vector(pos.x + 5, pos.y), w - 10, h - t_slot_h - 20, local_id)
 
+    self.bag_pos = pos + Vector(30, 30)
+    self.grave_pos = pos + Vector(w - 30, 30)
+
     self.match = match
 
     self.bag = Archetypes.getBaseBag(archetype, match.local_id)
     self.dice_views = {}
     self.grave = {}
+
+    self.extra_views = {}
 
     self:shuffleBag()
 
@@ -43,6 +48,8 @@ function PlayerArea:shuffleBag()
     end
 end
 
+-- In the future, this should probably have an animation,
+-- and thus receive a callback to call when it ends
 function PlayerArea:shuffleGraveIntoBag()
     assert(self.bag[1] == nil)
     for i, die in ipairs(self.grave) do
@@ -61,8 +68,12 @@ function PlayerArea:grab(count)
         if slot == nil then return end
         local die = table.remove(self.bag)
         if die == nil then return end
-        table.insert(self.dice_views, DieView(die, 0, 0, die.color or Color.new(180,180,180)))
-        slot:putDie(die, true)
+        local die_view = DieView(die, 0, 0, die.color or Color.new(180,180,180))
+        die_view.pos = self.bag_pos:clone()
+        die_view.sx, die_view.sy = 0.1, 0.1
+        die:roll()
+        table.insert(self.dice_views, die_view)
+        slot:putDie(die, false)
     end
 end
 
@@ -70,6 +81,10 @@ function PlayerArea:draw()
     local start_p = self.match:startingPlayer()
     self.mat:draw()
     self.turn_slots.view:draw(start_p == self.match.local_id, 'left')
+
+    for view in pairs(self.extra_views) do
+        view:draw()
+    end
 
     for i, die in ipairs(self.dice_views) do
         if die ~= self.picked_die then
@@ -85,6 +100,9 @@ end
 function PlayerArea:update(dt)
     for i, die in ipairs(self.dice_views) do
         die:update(dt)
+    end
+    for view in pairs(self.extra_views) do
+        view:update(dt)
     end
 end
 
@@ -120,7 +138,12 @@ function PlayerArea:destroyPlayedDice()
         if slot:getDie() then
             local die = slot:getDie()
             all_dice[die] = nil -- removing
-            die.view = nil -- destroying view
+            self.extra_views[die.view] = true
+            die.view:slideTo(self.grave_pos, false)
+            MAIN_TIMER:tween(0.4, die.view, {sx = 0.01, sy = 0.01}, 'out-quad', function()
+                self.extra_views[die.view] = nil
+                die.view:setObj(nil)
+            end)
             slot:removeDie()
             table.insert(self.grave, die)
         end
