@@ -4,7 +4,7 @@ local Archetypes = {}
 
 function Archetypes.getBaseBag(archetype, my_id)
     local bag = {}
-    if archetype == 'meele' then
+    if archetype == 'melee' then
         table.insert(bag, Die({"walk", "run and hit", "long walk"}, my_id))
         table.insert(bag, Die({"walk", "run and hit", "long walk"}, my_id))
         table.insert(bag, Die({"strong punch", "strong punch", "run and hit"}, my_id))

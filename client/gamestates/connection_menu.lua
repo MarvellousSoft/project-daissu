@@ -9,7 +9,7 @@ local argparse = require "common.extra_libs.argparse"
 local state = {}
 
 local box
-local chars = {"meele", "ranged"}
+local chars = {"melee", "ranged"}
 local chosen_char = 1
 local char_button
 local go_button
