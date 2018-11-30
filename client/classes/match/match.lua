@@ -62,6 +62,9 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
                                                          map_pos.y+map_h-ts_h),
 
                                         ts_w, ts_h, self.colors[3 - local_id])
+    --Make opponents turn slots invisible
+    self.turn_slots[3 - local_id]:setAlpha(0)
+
     self.number_of_turns = 1
 
     self.active_slot = false --Which slot is being played at the moment
@@ -241,6 +244,14 @@ end
 
 --Iterate for all other players and create dice for their corresponding actions
 function Match:createOpponentDice(player_actions)
+    --Make opponents turn slots visible
+    for i, ts in ipairs(self.turn_slots) do
+        if i ~= self.local_id then
+            ts:setTargetAlpha(255)
+        end
+    end
+
+    --Create dummy dice
     for i, actions in ipairs(player_actions) do
         if self.controllers[i].source == 'remote' then
             for j, action in ipairs(actions) do
@@ -271,6 +282,13 @@ function Match:removeOpponentDice()
             end
         end
     end
+
+    --Make opponents turn slots invisible
+    for i, ts in ipairs(self.turn_slots) do
+        if i ~= self.local_id then
+            ts:setTargetAlpha(0)
+        end
+    end
 end
 
 function Match:getLocalId()
@@ -283,6 +301,9 @@ end
 
 function Match:update(dt)
     self.player_area:update(dt)
+    for _, ts in ipairs(self.turn_slots) do
+        ts:update(dt)
+    end
 end
 
 function Match:mousemoved(...)

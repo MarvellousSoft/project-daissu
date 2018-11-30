@@ -40,7 +40,8 @@ end
 
 --CLASS FUNCTIONS--
 
-function DieSlotView:draw()
+function DieSlotView:draw(alpha)
+    alpha = alpha or 255
     local dieslot = self:getObj()
     local g = love.graphics
 
@@ -74,7 +75,7 @@ function DieSlotView:draw()
     end
 
     --Draw die slot
-    Color.set(Color.white())
+    love.graphics.setColor(255, 255, 255, alpha)
     local sw = self.w/image:getWidth()
     local sh = self.h/image:getHeight()
     g.draw(image, self.pos.x, self.pos.y, nil, sw, sh)

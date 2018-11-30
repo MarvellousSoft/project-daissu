@@ -37,26 +37,29 @@ function TurnSlotsView:init(obj, pos, w, h, color, player_num)
     --Current slot image
     self.current_action_image = IMG["current_action_"..color]
 
+    --Transparency for this object
+    self.alpha = 255
+    self.target_alpha = 255
 end
 
 function TurnSlotsView:draw(draw_starting_player, position)
     --Draw turn slots background
-    love.graphics.setColor(0, 0, 0)
+    love.graphics.setColor(0, 0, 0, self.alpha)
     local off = 8
     love.graphics.draw(self.image, self.pos.x+off, self.pos.y+off, nil,
                        self.iw, self.ih)
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(255, 255, 255, self.alpha)
     love.graphics.draw(self.image, self.pos.x, self.pos.y, nil,
                        self.iw, self.ih)
 
     --Draw each slot
     for i, slot in ipairs(self:getObj().slots) do
-        slot.view:draw()
+        slot.view:draw(self.alpha)
     end
 
     --Draw starting player icon, if needed
     if draw_starting_player then
-        love.graphics.setColor(255, 255, 255)
+        love.graphics.setColor(255, 255, 255, self.alpha)
         local image = self.starting_player_image
         local x, sx
         local gap_x, gap_y = 10, 15
@@ -102,6 +105,20 @@ function TurnSlotsView:getDice()
         end
     end
     return t
+end
+
+function TurnSlotsView:update(dt)
+    --Update transparency
+    self.alpha = self.alpha + (self.target_alpha - self.alpha)*dt
+end
+
+function TurnSlotsView:setAlpha(value)
+    self.alpha = value
+    self.target_alpha = value
+end
+
+function TurnSlotsView:setTargetAlpha(value)
+    self.target_alpha = value
 end
 
 return TurnSlotsView
