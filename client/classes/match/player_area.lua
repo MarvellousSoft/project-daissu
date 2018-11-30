@@ -27,7 +27,7 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
 
     self.dice = {}
     for i, die in ipairs(Archetypes.getBaseBag(archetype, match.local_id)) do
-        table.insert(self.dice, DieView(die, 0, 0, Color.green()))
+        table.insert(self.dice, DieView(die, 0, 0, die.color or Color.new(180,180,180)))
         self.mat.slots[i]:putDie(self.dice[i]:getObj(), true)
     end
 

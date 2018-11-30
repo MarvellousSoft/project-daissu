@@ -9,12 +9,13 @@ local Die = Class{
     __includes={ELEMENT}
 }
 
-function Die:init(sides, player_num)
+function Die:init(sides, player_num, color)
     ELEMENT.init(self)
     self.num_sides = #sides --Number of sides this die has
     self.sides = sides --Array of strings contaning what every side has
     self.current_side = 1
     self.player_num = player_num --What player this die belong to
+    self.color = color --Optional argument to give this die a color
     self.slot = nil
 end
 
