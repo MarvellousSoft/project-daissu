@@ -1,15 +1,16 @@
---HUMP STUFF
+--HUMP MODULES
 local Gamestate = require "common.extra_libs.hump.gamestate"
 local Timer = require "common.extra_libs.hump.timer"
 
---MY MODULES
+--OUR MODULES
 local Setup = require "setup"
 local ResManager = require "res_manager"
 
 --GAMESTATES
-local GS = {
-    GAME     = require "gamestates.game",     --Game Gamestate
-    CONN_MENU = require "gamestates.connection_menu"
+GS = {
+    GAME      = require "gamestates.game", --Game Gamestate
+    CONN_MENU = require "gamestates.connection_menu",
+    DIE_DESC  = require "gamestates.die_description"
 }
 
 -- Networking

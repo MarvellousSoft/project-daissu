@@ -34,6 +34,8 @@ function setup.config()
         L1       = {}, --Layer 1
         L2       = {}, --Layer 2
         L2upper  = {}, --Above layer 2
+        L3lower  = {}, --Below layer 3
+        L3       = {}, --Layer 3
         GUI      = {}  --Graphic User Interface (top layer, last to draw)
     }
     --Other Tables

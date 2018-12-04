@@ -23,6 +23,10 @@ function draw.allTables()
 
     CAM:detach() --Stop tracking camera
 
+    DrawTable(DRAW_TABLE.L3lower) --(blackscreen)
+
+    DrawTable(DRAW_TABLE.L3) --(die description)
+
     DrawTable(DRAW_TABLE.GUI)
 
 end

@@ -1,30 +1,19 @@
-local Color   = require "classes.color.color"
-local Die     = require "classes.die.die"
-local DieView = require "classes.die.die_view"
-
 --MODULE FOR THE GAMESTATE: GAME--
-local Class = require "common.extra_libs.hump.class"
-local Vector = require "common.extra_libs.hump.vector"
-local Util = require "util"
-local Draw = require "draw"
-local Drawable = require "classes.primitives.drawable"
+local Vector     = require "common.extra_libs.hump.vector"
+local Gamestate  = require "common.extra_libs.hump.gamestate"
+local Util       = require "util"
+local Draw       = require "draw"
+local Drawable   = require "classes.primitives.drawable"
 local Background = require "classes.background"
-local Match = require "classes.match.match"
-local Actions = require "classes.actions"
-
-local Client = require "classes.net.client"
+local Match      = require "classes.match.match"
+local Actions    = require "classes.actions"
+local Client     = require "classes.net.client"
 
 local state = {}
 
 --LOCAL VARIABLES--
 
 local switch --If gamestate should change to another one
-local _number_turns
-
---LOCAL FUNCTIONS--
-
-local die
-
 
 --STATE FUNCTIONS--
 
@@ -51,17 +40,11 @@ end
 function state:update(dt)
     match:update(dt)
 
-    if switch == "menu" then
-        --Gamestate.switch(GS.MENU)
-    end
-
-
     Util.updateTimers(dt)
 
     Util.updateDrawTable(dt)
 
     Util.destroyAll()
-
 end
 
 function state:draw()
@@ -73,6 +56,9 @@ end
 function state:keypressed(key, scancode, isrepeat)
     if key == "r" then
         Util.findId("my_die"):roll()
+    end
+    if key == "o" then
+        Gamestate.push(GS.DIE_DESC)
     end
     if key == 't' then
         match:playTurn(my_id, function()
