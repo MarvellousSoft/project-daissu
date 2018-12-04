@@ -44,7 +44,7 @@ function res.init()
     registry["mousemoved"] = love["mousemoved"] or __NULL__
     love["mousemoved"] = function(x, y, dx, dy, ...)
         x, y = love.mouse.getPosition() -- fixed
-        dx, dy = dx * res.scale(), dy * res.scale()
+        dx, dy = dx / res.scale(), dy / res.scale()
         return registry["mousemoved"](x, y, dx, dy, ...)
     end
     callbacks = {"touchpressed", "touchreleased", "touchmoved"}

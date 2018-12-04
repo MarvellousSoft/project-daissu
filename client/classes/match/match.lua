@@ -191,6 +191,7 @@ function Match:playTurn(local_id, callback)
     for i, die_slot in ipairs(self.turn_slots[local_id]:getObj().slots) do
         actions[i] = die_slot.die and die_slot.die:getCurrent() or 'none'
     end
+    self.player_area:actionsLocked()
     Client.send('actions locked', {i = local_id, actions = actions})
     Client.listenOnce('turn ready', function(all_actions)
         self:playTurnFromActions(all_actions, order, callback)

@@ -37,6 +37,7 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
     self:shuffleBag()
 
     self.picked_die = nil
+    self.picked_die_delta = nil
 end
 
 function PlayerArea:shuffleBag()
@@ -108,8 +109,8 @@ end
 
 function PlayerArea:mousemoved(x, y, dx, dy)
     if self.picked_die and self.match.state == 'choosing actions' then
-        self.picked_die.pos.x = self.picked_die.pos.x + dx
-        self.picked_die.pos.y = self.picked_die.pos.y + dy
+        self.picked_die.pos.x = x + self.picked_die_delta.x
+        self.picked_die.pos.y = y + self.picked_die_delta.y
     end
 end
 
@@ -119,6 +120,7 @@ function PlayerArea:mousepressed(x, y, but)
             if not die.is_moving and die:collidesPoint(x, y) then
                 if but == 1 then
                     self.picked_die = die
+                    self.picked_die_delta = die.pos - Vector(x, y)
                     die:handlePick(self)
                 elseif but == 2 then
                     die:handleRightClick(self)
@@ -182,6 +184,14 @@ function PlayerArea:allSlots()
         else
             return da[i]
         end
+    end
+end
+
+function PlayerArea:actionsLocked()
+    if self.picked_die then
+        local die = self.picked_die
+        self.picked_die = nil
+        die:handleUnpick(self)
     end
 end
 
