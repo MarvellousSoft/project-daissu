@@ -40,6 +40,28 @@ local function WalkCreator(distance)
         }
     end
 
+    if distance == 1 then
+        function Walk.getName()
+            return "Walk"
+        end
+        function Walk.getDescription()
+            return "Walk 1 space in any direction"
+        end
+        function Walk.getFlavor()
+            return "One step at a time is a good start."
+        end
+    elseif distance == 2 then
+        function Walk.getName()
+            return "Long Walk"
+        end
+        function Walk.getDescription()
+            return "Walk 2 spaces in any direction"
+        end
+        function Walk.getFlavor()
+            return "Two steps at a time is better."
+        end
+    end
+
     return Walk
 end
 

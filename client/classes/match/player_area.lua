@@ -120,7 +120,7 @@ function PlayerArea:mousepressed(x, y, but)
         for i, die in ipairs(self.dice_views) do
             if not die.is_moving and die:collidesPoint(x, y) then
                 if but == 3 or love.keyboard.isDown('lshift', 'rshift') then
-                    Gamestate.push(GS.DIE_DESC)
+                    Gamestate.push(GS.DIE_DESC, die)
                 elseif but == 1 and self.match.state == 'choosing actions' then
                     self.picked_die = die
                     self.picked_die_delta = die.pos - Vector(x, y)

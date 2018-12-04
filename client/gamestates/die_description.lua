@@ -1,9 +1,9 @@
---MODULE FOR THE GAMESTATE: GAME--
-local Vector      = require "common.extra_libs.hump.vector"
-local Gamestate   = require "common.extra_libs.hump.gamestate"
-local Util        = require "util"
-local Draw        = require "draw"
-local BlackScreen = require "classes.blackscreen"
+--MODULE FOR THE GAMESTATE: DIE DESCRIPTION--
+local Gamestate      = require "common.extra_libs.hump.gamestate"
+local Util           = require "util"
+local Draw           = require "draw"
+local BlackScreen    = require "classes.blackscreen"
+local DieFaces       = require "classes.die.die_faces"
 
 local state = {}
 
@@ -16,21 +16,20 @@ local switch --If gamestate should change to another one
 --STATE FUNCTIONS--
 
 local _blackscreen
+local _diefaces
 
-function state:enter(prev, die, current_side)
+function state:enter(prev, die)
     switch = false
     _blackscreen = BlackScreen()
     _blackscreen:register("L3lower")
-    print(die, current_side, "inside game dscr")
-    --DieDescription(die, current_side):register("L3", nil, "die_description")
+    _diefaces = DieFaces(die)
+    _diefaces:register("L3")
 end
 
 function state:leave()
-
     _blackscreen:kill()
-
+    _diefaces:kill()
 end
-
 
 function state:update(dt)
     if switch == "game" then
@@ -61,7 +60,9 @@ function state:mousemoved(...)
 end
 
 function state:mousepressed(...)
-    switch = "game"
+    if not _diefaces:mousepressed(...) then
+        switch = "game"
+    end
 end
 
 function state:mousereleased(...)

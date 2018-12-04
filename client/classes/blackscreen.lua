@@ -10,7 +10,7 @@ local BlackScreen = Class{
 
         self.alpha = 0
         self.speed = 500 --How fast to fadein/fadeout
-        local target_a = 200
+        local target_a = 220
         self:addTimer("enter", MAIN_TIMER, "tween", target_a/self.speed, self, {alpha = target_a}, "out-quad")
 
         self.closing = false --If this blackscreen is fading out

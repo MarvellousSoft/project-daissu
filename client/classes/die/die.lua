@@ -32,6 +32,11 @@ function Die:getSides()
     return self.sides
 end
 
+--Returns an action given its side number
+function Die:getSide(number)
+    return self.sides[number]
+end
+
 --Returns number of sides
 function Die:getNumSides()
     return self.num_sides

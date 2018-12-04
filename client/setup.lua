@@ -69,6 +69,7 @@ function setup.config()
         next_action_orange = new(path.."UI/current_action_orange.png"),
         next_action_grey = new(path.."UI/current_action_grey.png"),
         button = new(path.."UI/button.png"),
+        die_info = new(path.."UI/die_info.png"),
         --CHARACTERS
         player_orange  = new(path.."characters/player1.png"),
         player_purple = new(path.."characters/player2.png"),

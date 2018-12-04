@@ -46,4 +46,16 @@ function Shove.getInputHandler(controller, callback)
     }
 end
 
+function Shove.getName()
+    return "Shove"
+end
+
+function Shove.getDescription()
+    return "Push an adjacent enemy up to 2 spaces away"
+end
+
+function Shove.getFlavor()
+    return "to do"
+end
+
 return Shove

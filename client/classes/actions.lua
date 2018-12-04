@@ -40,6 +40,10 @@ local helpers = {
     hookshot = require "classes.actions.hookshot",
 }
 
+function Actions.getAction(action_name)
+    return helpers[action_name]
+end
+
 function Actions.executeAction(match, action, controller, callback)
     if helpers[action] and helpers[action].getInputHandler then
         controller:waitForInput(match, helpers[action].getInputHandler(controller, callback))
