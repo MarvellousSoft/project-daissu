@@ -1,6 +1,5 @@
 --MODULE FOR THE GAMESTATE: GAME--
 local Vector     = require "common.extra_libs.hump.vector"
-local Gamestate  = require "common.extra_libs.hump.gamestate"
 local Util       = require "util"
 local Draw       = require "draw"
 local Drawable   = require "classes.primitives.drawable"
@@ -56,9 +55,6 @@ end
 function state:keypressed(key, scancode, isrepeat)
     if key == "r" then
         Util.findId("my_die"):roll()
-    end
-    if key == "o" then
-        Gamestate.push(GS.DIE_DESC)
     end
     if key == 't' then
         match:playTurn(my_id, function()

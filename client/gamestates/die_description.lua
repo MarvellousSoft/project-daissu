@@ -21,6 +21,7 @@ function state:enter(prev, die, current_side)
     switch = false
     _blackscreen = BlackScreen()
     _blackscreen:register("L3lower")
+    print(die, current_side, "inside game dscr")
     --DieDescription(die, current_side):register("L3", nil, "die_description")
 end
 

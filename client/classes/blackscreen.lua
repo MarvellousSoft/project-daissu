@@ -9,7 +9,7 @@ local BlackScreen = Class{
         ELEMENT.init(self)
 
         self.alpha = 0
-        self.speed = 400 --How fast to fadein/fadeout
+        self.speed = 500 --How fast to fadein/fadeout
         local target_a = 200
         self:addTimer("enter", MAIN_TIMER, "tween", target_a/self.speed, self, {alpha = target_a}, "out-quad")
 

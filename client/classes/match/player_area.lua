@@ -1,11 +1,12 @@
-local Class = require "common.extra_libs.hump.class"
-local Vector = require "common.extra_libs.hump.vector"
-local TurnSlots = require "classes.turn_slots.turn_slots"
+local Class         = require "common.extra_libs.hump.class"
+local Vector        = require "common.extra_libs.hump.vector"
+local Gamestate     = require "common.extra_libs.hump.gamestate"
+local TurnSlots     = require "classes.turn_slots.turn_slots"
 local TurnSlotsView = require "classes.turn_slots.turn_slots_view"
-local Mat = require "classes.match.mat"
-local Archetypes = require "classes.archetypes"
-local DieView = require "classes.die.die_view"
-local Color = require "classes.color.color"
+local Mat           = require "classes.match.mat"
+local Archetypes    = require "classes.archetypes"
+local DieView       = require "classes.die.die_view"
+local Color         = require "classes.color.color"
 
 local PlayerArea = Class {}
 
@@ -115,14 +116,16 @@ function PlayerArea:mousemoved(x, y, dx, dy)
 end
 
 function PlayerArea:mousepressed(x, y, but)
-    if not self.picked_die and self.match.state == 'choosing actions' then
+    if not self.picked_die then
         for i, die in ipairs(self.dice_views) do
             if not die.is_moving and die:collidesPoint(x, y) then
-                if but == 1 then
+                if but == 3 or love.keyboard.isDown('lshift', 'rshift') then
+                    Gamestate.push(GS.DIE_DESC)
+                elseif but == 1 and self.match.state == 'choosing actions' then
                     self.picked_die = die
                     self.picked_die_delta = die.pos - Vector(x, y)
                     die:handlePick(self)
-                elseif but == 2 then
+                elseif but == 2 and self.match.state == 'choosing actions' then
                     die:handleRightClick(self)
                 end
                 return
