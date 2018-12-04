@@ -19,12 +19,17 @@ local switch --If gamestate should change to another one
 local my_id
 local match
 
-function state:enter(prev, local_player, char_type)
-    my_id = local_player
+function state:enter(prev, game_info, char_type)
+    my_id = game_info.local_id
 
     Background():register("BG", nil, "background")
 
-    match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, {{2, 2, local_player == 1 and 'local' or 'remote'}, {4, 4, local_player == 2 and 'local' or 'remote'}}, my_id, char_type)
+    local player_info = {}
+    for i = 1, game_info.player_count do
+        table.insert(player_info, {i, i, my_id == i and 'local' or 'remote'})
+    end
+
+    match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, player_info, my_id, char_type)
     match:start()
     MAIN_TIMER:after(1, function() match:startTurn() end)
 end

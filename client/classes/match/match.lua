@@ -37,9 +37,9 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     self.turn_slots = {}
 
     -- Assuming two players for now
-    assert(#players_info == 2)
+    assert(#players_info > 1)
 
-    self.colors = {"orange", "purple"} --Colors for each player
+    self.colors = {"orange", "purple", "orange", "purple", "orange", "purple"} --Colors for each player
 
     local player_info_h = 100
 
@@ -50,21 +50,21 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
 
     self.action_list = nil
 
-    self.controllers[1] = Controller(map, self.colors[1], unpack(players_info[1]))
-    self.controllers[2] = Controller(map, self.colors[2],unpack(players_info[2]))
-
     local ts_w = pa_w - 10
-    local ts_h = 90
-    self.turn_slots[local_id] = self.player_area.turn_slots.view
-    self.turn_slots[3 - local_id] = TurnSlotsView(
-                                        TurnSlots(6,3-local_id),
-                                                  Vector(map_pos.x + map_w + 5,
-                                                         map_pos.y+map_h-ts_h),
+    local ts_h, dy = 90, -90
+    for i, info in ipairs(players_info) do
+        local c = self.colors[i]
+        self.controllers[i] = Controller(map, c, unpack(info))
+        if i == local_id then
+            self.turn_slots[i] = self.player_area.turn_slots.view
+        else
+            self.turn_slots[i] = TurnSlotsView(TurnSlots(6, i), Vector(map_pos.x + map_w + 5, map_pos.y+map_h+ dy), ts_w, ts_h, c)
+            dy = dy - 140
+            self.turn_slots[i]:setAlpha(0)
+        end
+    end
 
-                                        ts_w, ts_h, self.colors[3 - local_id])
     --Make opponents turn slots invisible
-    self.turn_slots[3 - local_id]:setAlpha(0)
-
     self.number_of_turns = 1
 
     self.active_slot = false --Which slot is being played at the moment

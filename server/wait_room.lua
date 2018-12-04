@@ -62,6 +62,7 @@ function WaitRoom.init()
         local r = rooms[clients[client]]
         local all_ready = r:playerReady(client, is_ready)
         if clients[client] ~= 'none' and all_ready and r:atLeastTwoPlayers() then
+            rooms[clients[client]] = nil
             local cl_list = {}
             debug('Creating match for clients ')
             for client in pairs(r.players) do

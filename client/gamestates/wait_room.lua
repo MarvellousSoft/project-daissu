@@ -33,9 +33,9 @@ function state:enter(prev, options, char_type)
             end
         end
     end)
-    Client.listenOnce('start game', function(i)
+    Client.listenOnce('start game', function(info)
         assert(Client.removeCallback(cb))
-        Gamestate.switch(require "gamestates.game", i, char_type)
+        Gamestate.switch(require "gamestates.game", info, char_type)
     end)
 
     local accepted = {}
@@ -48,8 +48,6 @@ function state:enter(prev, options, char_type)
         room = options.room
         box:putString(room)
         Client.send('change room', room)
-        ready = true
-        Client.send('ready', ready)
     end
 
     room_button = Button(350, 300, 100, 100, "Change room", function()
@@ -63,6 +61,14 @@ function state:enter(prev, options, char_type)
         ready_button:setText(readyText())
         Client.send('ready', ready)
     end)
+
+    if options.auto_ready then
+        MAIN_TIMER:after(tonumber(options.auto_ready) or 0, function()
+            ready = true
+            ready_button:setText(readyText())
+            Client.send('ready', ready)
+        end)
+    end
 end
 
 function state:leave()

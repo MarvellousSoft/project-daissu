@@ -6,7 +6,10 @@ local Match = Class {}
 function Match:init(cl_list)
     self.cl_list = cl_list
     for i, cl in ipairs(self.cl_list) do
-        cl:send('start game', i)
+        cl:send('start game', {
+            local_id = i,
+            player_count = #cl_list
+        })
     end
     self.actions = {}
     self.lock_count = 0

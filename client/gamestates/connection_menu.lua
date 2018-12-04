@@ -24,6 +24,7 @@ local function getCmdOptions()
     parser:option("--host")
     parser:option("--char")
     parser:option("--room")
+    parser:option("--auto-ready")
     parser:flag("--auto-connect")
     return parser:parse()
 end
