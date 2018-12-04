@@ -44,4 +44,8 @@ function Client.removeCallback(callback)
     return client:removeCallback(callback)
 end
 
+function Client.getConnectId()
+    return client:getConnectId()
+end
+
 return Client

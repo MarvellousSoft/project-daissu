@@ -3,8 +3,8 @@ local Server = require "server"
 
 local Match = Class {}
 
-function Match:init(c1, c2)
-    self.cl_list = {c1, c2}
+function Match:init(cl_list)
+    self.cl_list = cl_list
     for i, cl in ipairs(self.cl_list) do
         cl:send('start game', i)
     end
@@ -48,10 +48,11 @@ function MatchManager.init()
     end)
 end
 
-function MatchManager.startMatch(c1, c2)
-    local m = Match(c1, c2)
-    match_map[c1] = m
-    match_map[c2] = m
+function MatchManager.startMatch(cl_list)
+    local m = Match(cl_list)
+    for _, cl in ipairs(cl_list) do
+        match_map[cl] = m
+    end
 end
 
 return MatchManager
