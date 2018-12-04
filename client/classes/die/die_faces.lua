@@ -147,7 +147,7 @@ function drawDieInfo(x, y, w, h, action, alpha)
     Color.setWithAlpha(Color.white(), alpha)
     g.draw(image, x, y, nil, sx, sy)
 
-    local border = 20
+    local border = 25
 
     --Draw action name
     local font = Font.get("regular", 35)
@@ -156,16 +156,14 @@ function drawDieInfo(x, y, w, h, action, alpha)
     Font.set(font)
     g.print(text, tx, ty)
 
-    local gap = ty + font:getHeight(text)
-
     --Draw action description centralized in the remaining space
     font = Font.get("regular", 20)
     text = action_module:getDescription()
-    local margin = 25
+    local margin = 30
     local limit = w - 2*margin
     _, lines = font:getWrap(text, limit)
     tx = x + margin
-    ty = y + h/2 - #lines*font:getHeight()/2
+    ty = y + h/2 - #lines*font:getHeight()/2 + border
     Font.set(font)
     g.printf(text, tx, ty, w - 2*margin, "center")
 
