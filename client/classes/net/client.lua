@@ -48,4 +48,10 @@ function Client.getConnectId()
     return client:getConnectId()
 end
 
+function Client.quit()
+    if client ~= nil then
+        client:disconnectNow()
+    end
+end
+
 return Client

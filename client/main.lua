@@ -41,3 +41,7 @@ function love.update(dt)
     Timer.update(dt)
     Client.update(dt)
 end
+
+function love.quit()
+    Client.quit()
+end
