@@ -51,7 +51,7 @@ function Shove.getName()
 end
 
 function Shove.getDescription()
-    return "Push an adjacent enemy up to 2 spaces away"
+    return "Push an adjacent enemy up to 2 spaces away, dealing 1 damage"
 end
 
 function Shove.getFlavor()
