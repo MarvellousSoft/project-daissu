@@ -39,12 +39,12 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     assert(#players_info > 1)
 
     self.colors = {  --Colors for each player
+        Color.new(133, 255, 86), --Chartoise green
+        Color.new(86, 195, 255), --Blue sky
+        Color.new(255, 86, 86),  --Rose red
+        Color.new(255, 104, 197),--Taffy pink
         Color.new(255, 182, 86), --Orange
         Color.new(201, 86, 255), --Purple
-        Color.new(255, 182, 86),
-        Color.new(201, 86, 255),
-        Color.new(255, 182, 86),
-        Color.new(201, 86, 255),
     }
 
     local player_info_h = 100
