@@ -66,6 +66,7 @@ function setup.config()
         next_action = new(path.."UI/current_action.png"),
         button = new(path.."UI/button.png"),
         button_pressed = new(path.."UI/button_pressed.png"),
+        button_locked = new(path.."UI/button_locked.png"),
         die_info = new(path.."UI/die_info.png"),
         --CHARACTERS
         player = new(path.."characters/player.png"),

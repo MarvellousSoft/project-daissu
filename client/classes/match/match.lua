@@ -15,6 +15,7 @@ local DieView = require "classes.die.die_view"
 local Color = require "classes.color.color"
 local PlayerArea = require "classes.match.player_area"
 local ActionList = require "classes.match.action_list"
+local Button = require "classes.button"
 
 local Client = require "classes.net.client"
 
@@ -78,6 +79,16 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
 
     self.action_input_handler = nil
 
+    self.lock_button = Button(200, 580, 100, 100, "Lock", function()
+        self:playTurn(self.local_id, function()
+            MAIN_TIMER:after(1.5, function()
+                self:startNewTurn()
+            end)
+        end)
+        self.lock_button:lock()
+    end)
+    self.lock_button:lock()
+
     self:register("L0", nil, "match")
 end
 
@@ -95,6 +106,8 @@ function Match:draw()
             turn_slots:draw(start_p == i, i == self.local_id and 'right' or 'left')
         end
     end
+    --Draw lock button
+    self.lock_button:draw()
 
     --Draw Action List
     if self.action_list then
@@ -108,9 +121,10 @@ function Match:start()
     self.state = 'waiting for turn'
 end
 
-function Match:startTurn()
+function Match:startNewTurn()
     assert(self.state == 'waiting for turn')
     self.state = 'choosing actions'
+    self.lock_button:unlock()
     self.player_area:grab(2)
 end
 
@@ -212,24 +226,6 @@ function Match:startingPlayer()
     end
 end
 
-function Match:mousepressed(x, y, but, ...)
-    self.player_area:mousepressed(x, y, but, ...)
-    if self.action_list then
-        self.action_list:mousepressed(x, y, but, ...)
-    end
-    for i, turnslot in ipairs(self.turn_slots) do
-        if i ~= self.local_id then
-            turnslot:mousepressed(x, y, but, ...)
-        end
-    end
-    if but ~= 1 then return end
-    local i, j = self.map_view:getTileOnPosition(Vector(x, y))
-    if i and self.action_input_handler and self.action_input_handler:accept(i, j) then
-        self.action_input_handler:finish(i, j)
-        self.action_input_handler = nil
-    end
-end
-
 function Match:createActionList(player_actions, order, size)
     local action_list = {}
     local player_list = {}
@@ -324,10 +320,33 @@ end
 
 function Match:mousemoved(...)
     self.player_area:mousemoved(...)
+    self.lock_button:mousemoved(...)
 end
 
-function Match:mousereleased(...)
-    self.player_area:mousereleased(...)
+function Match:mousepressed(x, y, but, ...)
+    self.player_area:mousepressed(x, y, but, ...)
+    if self.action_list then
+        self.action_list:mousepressed(x, y, but, ...)
+    end
+    for i, turnslot in ipairs(self.turn_slots) do
+        if i ~= self.local_id then
+            turnslot:mousepressed(x, y, but, ...)
+        end
+    end
+    if but ~= 1 then return end
+    self.lock_button:mousepressed(x, y, ...)
+    local i, j = self.map_view:getTileOnPosition(Vector(x, y))
+    if i and self.action_input_handler and self.action_input_handler:accept(i, j) then
+        self.action_input_handler:finish(i, j)
+        self.action_input_handler = nil
+    end
+end
+
+function Match:mousereleased(x, y, but, ...)
+    if but == 1 then
+        self.lock_button:mousereleased(x, y, but)
+    end
+    self.player_area:mousereleased(x, y, but, ...)
 end
 
 return Match

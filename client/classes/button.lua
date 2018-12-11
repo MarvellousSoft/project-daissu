@@ -23,6 +23,7 @@ function Button:init(x, y, w, h, text, func)
     self.text = text
     self.image = IMG.button
     self.image_pressed = IMG.button_pressed
+    self.image_locked = IMG.button_locked
     self.iw = w/self.image:getWidth()
     self.ih = w/self.image:getHeight()
 
@@ -65,7 +66,9 @@ function Button:draw()
         Color.set(Color.white())
     end
     local image
-    if self.pressed_down then
+    if self.locked then
+        image = self.image_locked
+    elseif self.pressed_down then
         image = self.image_pressed
     else
         image = self.image
@@ -90,12 +93,14 @@ function Button:draw()
 end
 
 function Button:mousepressed(x, y, button)
+    if self.locked then return end
     if self:collidesPoint(x,y) then
         self.pressed_down = true
     end
 end
 
 function Button:mousereleased(x, y, button)
+    if self.locked then return end
     if self.pressed_down and self:collidesPoint(x,y) then
         self.func()
     end
@@ -103,6 +108,7 @@ function Button:mousereleased(x, y, button)
 end
 
 function Button:mousemoved(x, y, dx, dy)
+    if self.locked then return end
     if self:collidesPoint(x,y) then
         self.mouse_over = true
     else
@@ -121,6 +127,7 @@ end
 
 function Button:lock()
     self.locked = true
+    self.mouse_over = false
 end
 
 function Button:unlock()

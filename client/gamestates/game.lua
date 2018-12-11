@@ -31,7 +31,7 @@ function state:enter(prev, game_info, char_type)
 
     match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, player_info, my_id, char_type)
     match:start()
-    MAIN_TIMER:after(1, function() match:startTurn() end)
+    MAIN_TIMER:after(1, function() match:startNewTurn() end)
 end
 
 function state:leave()
@@ -58,16 +58,6 @@ function state:draw()
 end
 
 function state:keypressed(key, scancode, isrepeat)
-    if key == "r" then
-        Util.findId("my_die"):roll()
-    end
-    if key == 't' then
-        match:playTurn(my_id, function()
-            MAIN_TIMER:after(1.5, function()
-                match:startTurn()
-            end)
-        end)
-    end
     if key == 'a' then
         local action = io.read()
         Actions.executeAction(match, action, match.controllers[1], function() print('done custom action') end)
