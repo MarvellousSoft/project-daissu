@@ -229,6 +229,11 @@ function Match:mousepressed(x, y, but, ...)
     if self.action_list then
         self.action_list:mousepressed(x, y, but, ...)
     end
+    for i, turnslot in ipairs(self.turn_slots) do
+        if i ~= self.local_id then
+            turnslot:mousepressed(x, y, but, ...)
+        end
+    end
     if but ~= 1 then return end
     local i, j = self.map_view:getTileOnPosition(Vector(x, y))
     if i and self.action_input_handler and self.action_input_handler:accept(i, j) then

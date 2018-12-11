@@ -4,6 +4,7 @@ local View        = require "classes.primitives.view"
 local Element     = require "classes.primitives.element"
 local DieSlotView = require "classes.die.die_slot_view"
 local DieHelper   = require "classes.die.helper"
+local Gamestate   = require "common.extra_libs.hump.gamestate"
 
 local TurnSlotsView = Class {
     __includes = {View, Element}
@@ -147,6 +148,18 @@ function TurnSlotsView:setInvisible()
     --Set all die slots invisible
     for i, slot in ipairs(self:getObj().slots) do
         slot.view:setInvisible(d, offset)
+    end
+end
+
+function TurnSlotsView:mousepressed(x, y, but)
+    for i, die in ipairs(self:getDice()) do
+        local die_view = die.view
+        if die_view:collidesPoint(x, y) and
+           die_view:getObj():getCurrent() ~= 'none' and
+           (but == 3 or love.keyboard.isDown('lshift', 'rshift'))
+        then
+            Gamestate.push(GS.DIE_DESC, die_view)
+        end
     end
 end
 
