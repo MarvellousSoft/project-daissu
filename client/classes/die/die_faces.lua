@@ -166,8 +166,6 @@ function drawDieInfo(x, y, w, h, action, alpha)
     ty = y + h/2 - #lines*font:getHeight()/2 + border
     Font.set(font)
     g.printf(text, tx, ty, w - 2*margin, "center")
-
-
 end
 
 --Checks if given point(x,y) collides with given rect(rx,ry,rw,rh)

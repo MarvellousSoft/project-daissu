@@ -5,6 +5,7 @@ local DieHelper = require "classes.die.helper"
 local Util      = require "util"
 local Die       = require "classes.die.die"
 local DieView   = require "classes.die.die_view"
+local Gamestate = require "common.extra_libs.hump.gamestate"
 
 local funcs = {}
 
@@ -84,6 +85,17 @@ end
 
 function ActionList:bump()
     self.current_action = self.current_action + 1
+end
+
+function ActionList:mousepressed(x, y, but)
+    for i, die in ipairs(self.dice) do
+        if die:collidesPoint(x, y) and
+           die:getObj():getCurrent() ~= 'none' and
+           (but == 3 or love.keyboard.isDown('lshift', 'rshift'))
+        then
+            Gamestate.push(GS.DIE_DESC, die)
+        end
+    end
 end
 
 return ActionList

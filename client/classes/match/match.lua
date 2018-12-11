@@ -226,6 +226,9 @@ end
 
 function Match:mousepressed(x, y, but, ...)
     self.player_area:mousepressed(x, y, but, ...)
+    if self.action_list then
+        self.action_list:mousepressed(x, y, but, ...)
+    end
     if but ~= 1 then return end
     local i, j = self.map_view:getTileOnPosition(Vector(x, y))
     if i and self.action_input_handler and self.action_input_handler:accept(i, j) then
@@ -264,7 +267,7 @@ function Match:createOpponentDice(player_actions)
                 wait(.3)
             end
         end
-        
+
         wait(.1)
 
         --Create dummy dice
