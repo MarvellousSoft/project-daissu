@@ -105,20 +105,23 @@ end
 
 function state:mousepressed(...)
     box:mousePressed(...)
-    char_button:mousepressed(...)
     go_button:mousepressed(...)
+    char_button:mousepressed(...)
+end
+
+function state:mousereleased(...)
+    char_button:mousereleased(...)
+    go_button:mousereleased(...)
 end
 
 function state:mousescroll(...)
     box:mouseScroll(...)
 end
 
-function state:mousereleased(...)
-    box:mouseReleased(...)
-end
-
 function state:mousemoved(...)
-    box:mouseMoved(...)
+    box:mousemoved(...)
+    char_button:mousemoved(...)
+    go_button:mousemoved(...)
 end
 
 --Return state functions

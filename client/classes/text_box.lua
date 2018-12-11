@@ -649,7 +649,7 @@ function TextBox:mousePressed(x, y, but, locked)
 
 end
 
-function TextBox:mouseReleased(x, y, but)
+function TextBox:mousereleased(x, y, but)
     if but == 1 then self.mouse_select = false end
 end
 
@@ -662,7 +662,7 @@ function TextBox:mouseScroll(x, y)
     self.dy = math.max(self.dy, -self.lines_on_screen + 1)
 end
 
-function TextBox:mouseMoved(x, y)
+function TextBox:mousemoved(x, y)
     local i, p, is_lineno = getCursorOnClick(self, x, y)
     if is_lineno then
         self.hover_breakpoint = i

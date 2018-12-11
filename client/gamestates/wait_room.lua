@@ -115,21 +115,25 @@ function state:textinput(...)
 end
 
 function state:mousepressed(...)
+    box:mousePressed(...)
     room_button:mousepressed(...)
     ready_button:mousepressed(...)
-    box:mousePressed(...)
+end
+
+function state:mousereleased(...)
+    box:mousereleased(...)
+    room_button:mousereleased(...)
+    ready_button:mousereleased(...)
 end
 
 function state:mousescroll(...)
     box:mouseScroll(...)
 end
 
-function state:mousereleased(...)
-    box:mouseReleased(...)
-end
-
 function state:mousemoved(...)
-    box:mouseMoved(...)
+    box:mousemoved(...)
+    room_button:mousemoved(...)
+    ready_button:mousemoved(...)
 end
 
 --Return state functions

@@ -22,6 +22,7 @@ function Button:init(x, y, w, h, text, func)
     self.h_gap = 2
     self.text = text
     self.image = IMG.button
+    self.image_pressed = IMG.button_pressed
     self.iw = w/self.image:getWidth()
     self.ih = w/self.image:getHeight()
 
@@ -29,8 +30,15 @@ function Button:init(x, y, w, h, text, func)
 
     self.func = func
 
+    self.locked = false
+
+    self.mouse_over = false
+    self.hover_color = Color.new(230,230,230)
+
+    self.pressed_down = false
+
     self.text_color = Color.black()
-    self.text_y_offset = 5
+    self.text_y_offset = -1.5
 
 end
 
@@ -51,23 +59,54 @@ function Button:draw()
     local lg = love.graphics
 
     --Draw bg
-    Color.set(Color.white())
-    lg.draw(self.image, self.pos.x, self.pos.y, nil, self.iw, self.ih)
+    if self.mouse_over then
+        Color.set(self.hover_color)
+    else
+        Color.set(Color.white())
+    end
+    local image
+    if self.pressed_down then
+        image = self.image_pressed
+    else
+        image = self.image
+    end
+    lg.draw(image, self.pos.x, self.pos.y, nil, self.iw, self.ih)
 
     --Draw text aligned to center of button
     Color.set(self.text_color)
     local font = self.font
     local tw = font:getWidth(self.text)
     local th = font:getHeight(self.text)
+    local offset
+    if self.pressed_down then
+        offset = -self.text_y_offset*self.ih
+    else
+        offset = self.text_y_offset*self.ih
+    end
     Font.set(font)
     lg.print(self.text,
              self.pos.x + self.w/2 - tw/2,
-             self.pos.y + self.h/2 - th/2 + self.text_y_offset)
+             self.pos.y + self.h/2 - th/2 + offset)
 end
 
 function Button:mousepressed(x, y, button)
     if self:collidesPoint(x,y) then
+        self.pressed_down = true
+    end
+end
+
+function Button:mousereleased(x, y, button)
+    if self.pressed_down and self:collidesPoint(x,y) then
         self.func()
+    end
+    self.pressed_down = false
+end
+
+function Button:mousemoved(x, y, dx, dy)
+    if self:collidesPoint(x,y) then
+        self.mouse_over = true
+    else
+        self.mouse_over = false
     end
 end
 
@@ -78,6 +117,14 @@ function Button:collidesPoint(x,y)
     local s = self
     return x >= s.pos.x and x <= s.pos.x + s.w and
            y >= s.pos.y and y <= s.pos.y + s.h
+end
+
+function Button:lock()
+    self.locked = true
+end
+
+function Button:unlock()
+    self.locked = false
 end
 
 return Button
