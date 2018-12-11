@@ -36,10 +36,16 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     self.controllers = {}
     self.turn_slots = {}
 
-    -- Assuming two players for now
     assert(#players_info > 1)
 
-    self.colors = {"orange", "purple", "orange", "purple", "orange", "purple"} --Colors for each player
+    self.colors = {  --Colors for each player
+        Color.new(255, 182, 86), --Orange
+        Color.new(201, 86, 255), --Purple
+        Color.new(255, 182, 86),
+        Color.new(201, 86, 255),
+        Color.new(255, 182, 86),
+        Color.new(201, 86, 255),
+    }
 
     local player_info_h = 100
 
@@ -196,24 +202,6 @@ function Match:playTurn(local_id, callback)
     Client.listenOnce('turn ready', function(all_actions)
         self:playTurnFromActions(all_actions, order, callback)
     end)
-end
-
---Return which slot has an active action being processed, if any
-function Match:getCurrentActiveSlot()
-    if self.active_slot then
-        return unpack(self.active_slot)
-    else
-        return false
-    end
-end
-
---Return the next slot which will be processed, if any
-function Match:getNextActiveSlot()
-    if self.next_active_slot then
-        return unpack(self.next_active_slot)
-    else
-        return false
-    end
 end
 
 function Match:startingPlayer()

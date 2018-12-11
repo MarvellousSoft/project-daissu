@@ -24,25 +24,26 @@ function ActionList:init(pos,actions,players)
 
     self.gap = 10 --Gap between actions and arrows
 
+    self.next_action_image = IMG.next_action
+
     self.dice = {}
     local die_w, die_h = DieHelper:getDimensions()
     die_h = die_h + DieHelper:getUnderside()
-    local image = IMG.next_action_grey
-    local dx = die_w + 2*self.gap + image:getWidth() --How far apart each action is
+    local dx = die_w + 2*self.gap + self.next_action_image:getWidth() --How far apart each action is
     for i, action in ipairs(actions) do
         local player = self.players[i]
         self.dice[i] = DieView(
                         Die({action}, player),
-                                self.pos.x + image:getWidth() + self.gap + (i-1) * dx,
-                                self.pos.y, Color[self.colors[player]]())
+                                self.pos.x + self.next_action_image:getWidth() + self.gap + (i-1) * dx,
+                                self.pos.y, self.colors[player])
     end
 
     --Y position for the arrows
     self.focused_arrow_scale = 1
-    self.focused_arrow_y = self.pos.y + die_h/2 - image:getHeight()/2
+    self.focused_arrow_y = self.pos.y + die_h/2 - self.next_action_image:getHeight()/2
     self.unfocused_arrow_scale = .8
-    self.unfocused_arrow_y = self.pos.y + die_h/2 - image:getHeight()*self.unfocused_arrow_scale/2
-    self.unfocused_offset = image:getWidth()*(self.focused_arrow_scale-self.unfocused_arrow_scale)
+    self.unfocused_arrow_y = self.pos.y + die_h/2 - self.next_action_image:getHeight()*self.unfocused_arrow_scale/2
+    self.unfocused_offset = self.next_action_image:getWidth()*(self.focused_arrow_scale-self.unfocused_arrow_scale)
 
     self.grey_color = Color.new(150,150,150) --For dice that already had their action done
 
@@ -51,20 +52,20 @@ end
 
 function ActionList:draw()
     local g = love.graphics
-    local dx = DieHelper.getDimensions() + 2 * self.gap + IMG.next_action_grey:getWidth() --How far apart each action is
+    local dx = DieHelper.getDimensions() + 2 * self.gap + self.next_action_image:getWidth() --How far apart each action is
     local x = self.pos.x
     local arrow_alpha, arrow_y
     for i,die in ipairs(self.dice) do
-        local image
+        local image_color
         local offset = self.unfocused_offset
         arrow_y = self.unfocused_arrow_y
         scale = self.unfocused_arrow_scale
         if i < self.current_action then
             die:setColor(self.grey_color)
-            image = IMG["next_action_grey"]
+            image_color = self.grey_color
             arrow_alpha = 150
         else
-            image = IMG["next_action_"..self.colors[self.players[i]]]
+            image_color = self.colors[self.players[i]]
             arrow_alpha = 160
             if i == self.current_action then
                 arrow_y = self.focused_arrow_y
@@ -74,11 +75,11 @@ function ActionList:draw()
             end
         end
         --Draw correspondent arrow for this action
-        g.setColor(255,255,255,arrow_alpha)
-        g.draw(image, x + offset, arrow_y, nil, scale)
+        Color.setWithAlpha(image_color, arrow_alpha)
+        g.draw(self.next_action_image, x + offset, arrow_y, nil, scale)
         --Draw die representing this action
         die:draw()
-        --Update arrou position
+        --Update arrow position
         x = x + dx
     end
 end

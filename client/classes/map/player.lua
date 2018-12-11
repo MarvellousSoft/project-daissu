@@ -1,4 +1,5 @@
 local Class = require "common.extra_libs.hump.class"
+local Color = require "classes.color.color"
 local Font  = require "font"
 
 --[[
@@ -9,7 +10,8 @@ local Player = Class {}
 function Player:init(color)
     self.health = 5
     self:resetAnimation()
-    self.image = IMG["player_"..color]
+    self.color = color
+    self.image = IMG.player
 
     self.font = Font.get("regular", 25)
     self.type = 'Player'
@@ -33,7 +35,7 @@ function Player:drawOnGrid(x, y, size)
     x, y = x + self.dx * size, y + self.dy * size
 
     --Draw player image
-    love.graphics.setColor(255, 255, 255)
+    Color.set(self.color)
     love.graphics.draw(self.image, ix, iy)
 
     --Draw health

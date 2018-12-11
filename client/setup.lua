@@ -57,23 +57,18 @@ function setup.config()
         maptile_broken = new(path.."tiles/maptile2.png"),
         --UI
         mat = new(path.."UI/mat.png"),
-        turn_slots_orange = new(path.."UI/turn_slots_orange.png"),
-        turn_slots_purple = new(path.."UI/turn_slots_purple.png"),
-        starting_player_purple = new(path.."UI/starting_player_purple.png"),
-        starting_player_orange = new(path.."UI/starting_player_orange.png"),
+        turn_slot = new(path.."UI/turn_slot.png"),
+        starting_player = new(path.."UI/starting_player.png"),
         die_slot_free = new(path.."UI/die_slot_free.png"),
         die_slot_over = new(path.."UI/die_slot_over.png"),
         die_slot_occupied = new(path.."UI/die_slot_occupied.png"),
         die_slot_wrong = new(path.."UI/die_slot_wrong.png"),
-        next_action_purple = new(path.."UI/current_action_purple.png"),
-        next_action_orange = new(path.."UI/current_action_orange.png"),
-        next_action_grey = new(path.."UI/current_action_grey.png"),
+        next_action = new(path.."UI/current_action.png"),
         button = new(path.."UI/button.png"),
         button_pressed = new(path.."UI/button_pressed.png"),
         die_info = new(path.."UI/die_info.png"),
         --CHARACTERS
-        player_orange  = new(path.."characters/player1.png"),
-        player_purple = new(path.."characters/player2.png"),
+        player = new(path.."characters/player.png"),
         --OTHER IMAGES
         background = new(path.."background.png")
 

@@ -1,4 +1,5 @@
 local Class       = require "common.extra_libs.hump.class"
+local Color       = require "classes.color.color"
 local Vector      = require "common.extra_libs.hump.vector"
 local View        = require "classes.primitives.view"
 local Element     = require "classes.primitives.element"
@@ -29,16 +30,18 @@ function TurnSlotsView:init(obj, pos, w, h, color, player_num)
     self.pos = pos
     self.w, self.h = w, h
 
+    self.color = color
+
     --Bg image
-    self.image = IMG["turn_slots_"..color]
+    self.image = IMG.turn_slot
     self.iw = self.w/self.image:getWidth()
     self.ih = self.h/self.image:getHeight()
 
     --Starting player image
-    self.starting_player_image = IMG["starting_player_"..color]
+    self.starting_player_image = IMG.starting_player
 
     --Current slot image
-    self.current_action_image = IMG["current_action_"..color]
+    self.current_action_image = IMG.current_action
 
     --Transparency for this object
     self.alpha = 255
@@ -47,11 +50,11 @@ end
 
 function TurnSlotsView:draw(draw_starting_player, position)
     --Draw turn slots background
-    love.graphics.setColor(0, 0, 0, self.alpha)
+    Color.setWithAlpha(Color.black(), self.alpha)
     local off = 8
     love.graphics.draw(self.image, self.pos.x+off, self.pos.y+off, nil,
                        self.iw, self.ih)
-    love.graphics.setColor(255, 255, 255, self.alpha)
+    Color.setWithAlpha(self.color, self.alpha)
     love.graphics.draw(self.image, self.pos.x, self.pos.y, nil,
                        self.iw, self.ih)
 
@@ -62,7 +65,7 @@ function TurnSlotsView:draw(draw_starting_player, position)
 
     --Draw starting player icon, if needed
     if draw_starting_player then
-        love.graphics.setColor(255, 255, 255, self.alpha)
+        Color.setWithAlpha(self.color, self.alpha)
         local image = self.starting_player_image
         local x, sx
         local gap_x, gap_y = 10, 15
@@ -78,26 +81,6 @@ function TurnSlotsView:draw(draw_starting_player, position)
         love.graphics.draw(image, x, self.pos.y - image:getHeight() - gap_y, nil, sx, 1)
     end
 end
-
---Given an index, draw an arrow above given slot
-function TurnSlotsView:drawCurrentAction(index, alpha)
-    local scale = alpha and 1 or 1.5
-    alpha = alpha or 255
-    local s_v = self:getObj().slots[index].view
-    local image = self.current_action_image
-    local x = s_v.pos.x + s_v.w/2 - image:getWidth()*scale/2
-    local gap, magnitude, max_offset = 5, 7, 5
-    local offset = math.sin(magnitude*love.timer.getTime())*max_offset
-    local y = s_v.pos.y - gap - image:getHeight()*scale - offset
-    love.graphics.setColor(255,255,255, alpha)
-    love.graphics.draw(image, x, y, nil, scale)
-end
-
---Given an index, draw an arrow above given slot to represent next action to be played
-function TurnSlotsView:drawNextAction(index)
-    self:drawCurrentAction(index, 150)
-end
-
 
 --Return all dice in its slots
 function TurnSlotsView:getDice()
