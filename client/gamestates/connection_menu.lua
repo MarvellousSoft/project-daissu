@@ -110,6 +110,7 @@ function state:mousepressed(...)
 end
 
 function state:mousereleased(...)
+    box:mousereleased(...)
     char_button:mousereleased(...)
     go_button:mousereleased(...)
 end
