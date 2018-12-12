@@ -33,7 +33,7 @@ function RunAndHit.getInputHandler(controller, callback)
     local pi, pj = controller:getPosition()
     return ActionInputHandler {
         accept = function(self, i, j)
-            return GridHelper.manhattanDistance(pi, pj, i, j) == 1
+            return GridHelper.manhattanDistance(pi, pj, i, j) == 1 and not controller.map:get(i, j):blocked()
         end,
         finish = function(self, i, j)
             return RunAndHit.showAction(controller, callback, i - pi, j - pj)
