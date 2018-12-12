@@ -16,6 +16,7 @@ local Color = require "classes.color.color"
 local PlayerArea = require "classes.match.player_area"
 local ActionList = require "classes.match.action_list"
 local Button = require "classes.button"
+local ScrollWindow = require "classes.ui.scroll_window"
 
 local Client = require "classes.net.client"
 
@@ -55,7 +56,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     local pa_w, pa_h = map_pos.x - 2 * margin, map_pos.y + map_h - pa_pos.y
     self.player_area = PlayerArea(pa_pos, pa_w, pa_h, self, self.colors[local_id], archetype)
 
-    self.action_list = nil
+    self.action_list_window = nil
 
     local ts_w = pa_w - 10
     local ts_h, dy = 90, -90
@@ -110,8 +111,8 @@ function Match:draw()
     self.lock_button:draw()
 
     --Draw Action List
-    if self.action_list then
-        self.action_list:draw()
+    if self.action_list_window then
+        self.action_list_window:draw()
     end
 
 end
@@ -168,11 +169,11 @@ local function playTurnRec(self, player_actions, order, player_i, action_i, size
     print('Action ' .. action_i .. ' for Player ' .. p_i .. ' = ' .. action)
     if action ~= 'none' then
         Actions.executeAction(self, action, self.controllers[p_i], function()
-            self.action_list:bump()
+            self.action_list_window.obj:bump()
             playTurnRec(self, player_actions, order, player_i + 1, action_i, size, callback)
         end)
     else
-        self.action_list:bump()
+        self.action_list_window.obj:bump()
         return playTurnRec(self, player_actions, order, player_i + 1, action_i, size, callback)
     end
 end
@@ -189,7 +190,7 @@ function Match:playTurnFromActions(player_actions, order, callback)
     playTurnRec(self, player_actions, order, 1, 1, size, function()
         self.state = 'waiting for turn'
         self.player_area:destroyPlayedDice()
-        self.action_list = nil
+        self.action_list_window = nil
         self:removeOpponentDice()
         if callback then callback() end
     end)
@@ -242,7 +243,7 @@ function Match:createActionList(player_actions, order, size)
             p_i = p_i + 1
         end
     end
-    self.action_list = ActionList(Vector(10, WIN_H - 80), action_list, player_list)
+    self.action_list_window = ScrollWindow(ActionList(Vector(10, WIN_H - 80), action_list, player_list), WIN_W - 20, 80)
 end
 
 --Iterate for all other players and create dice for their corresponding actions
@@ -321,12 +322,15 @@ end
 function Match:mousemoved(...)
     self.player_area:mousemoved(...)
     self.lock_button:mousemoved(...)
+    if self.action_list_window then
+        self.action_list_window:mousemoved(...)
+    end
 end
 
 function Match:mousepressed(x, y, but, ...)
     self.player_area:mousepressed(x, y, but, ...)
-    if self.action_list then
-        self.action_list:mousepressed(x, y, but, ...)
+    if self.action_list_window then
+        self.action_list_window:mousepressed(x, y, but, ...)
     end
     for i, turnslot in ipairs(self.turn_slots) do
         if i ~= self.local_id then
@@ -347,6 +351,9 @@ function Match:mousereleased(x, y, but, ...)
         self.lock_button:mousereleased(x, y, but)
     end
     self.player_area:mousereleased(x, y, but, ...)
+    if self.action_list_window then
+        self.action_list_window:mousereleased(x, y, but, ...)
+    end
 end
 
 return Match

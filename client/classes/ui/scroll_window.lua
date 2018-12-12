@@ -6,8 +6,8 @@ local bar_size = 10
 
 function ScrollWindow:init(obj, w, h)
     self.obj = obj
-    self.w = w or obj.w
-    self.h = h or obj.h
+    self.w = w or (obj.w + bar_size)
+    self.h = h or (obj.h + bar_size)
 
     -- how much the bar was horizontally scrolled
     self.scroll_x = 0
@@ -18,7 +18,7 @@ function ScrollWindow:init(obj, w, h)
 end
 
 function ScrollWindow:hasVerticalBar()
-    return self.w < self.obj.w + bar_size
+    return self.h < self.obj.h
 end
 
 function ScrollWindow:verticalBarBounds()
@@ -34,7 +34,7 @@ function ScrollWindow:maxScrollY()
 end
 
 function ScrollWindow:hasHorizontalBar()
-    return self.h < self.obj.h + bar_size
+    return self.w < self.obj.w
 end
 
 function ScrollWindow:horizontalBarBounds()
@@ -70,13 +70,13 @@ function ScrollWindow:draw()
 
     -- Horizontal Bar
     if self:hasHorizontalBar() then
-        love.graphics.setColor(255, 255, 255)
+        love.graphics.setColor(0, 0, 0)
         love.graphics.rectangle('fill', self:horizontalBarBounds())
     end
 
     -- Vertical bar
     if self:hasVerticalBar() then
-        love.graphics.setColor(255, 255, 255)
+        love.graphics.setColor(0, 0, 0)
         love.graphics.rectangle('fill', self:verticalBarBounds())
     end
 end
@@ -98,7 +98,6 @@ function ScrollWindow:mousepressed(x, y, but, ...)
 end
 
 function ScrollWindow:mousereleased(x, y, but, ...)
-    print('released')
     if but == 1 then self.grab = nil end
     if not self.obj.mousereleased or not Util.pointInRect(x, y, self.obj.pos.x, self.obj.pos.y, self.w - bar_size, self.h - bar_size) then return end
     local tx, ty = self:getActualTranslate()

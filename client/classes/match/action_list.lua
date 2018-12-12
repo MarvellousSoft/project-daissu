@@ -26,6 +26,9 @@ function ActionList:init(pos,actions,players)
 
     self.next_action_image = IMG.next_action
 
+    self.w = 0
+    self.h = 60
+
     self.dice = {}
     local die_w, die_h = DieHelper:getDimensions()
     die_h = die_h + DieHelper:getUnderside()
@@ -82,6 +85,7 @@ function ActionList:draw()
         --Update arrow position
         x = x + dx
     end
+    self.w = x - self.pos.x
 end
 
 function ActionList:bump()
