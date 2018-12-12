@@ -40,7 +40,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     local map = Map(rows, columns)
     local map_w = cell_size * columns
     local map_h = cell_size * rows
-    local map_pos = pos + Vector((w - map_w) / 2,(h - map_h) / 2)
+    local map_pos = pos + Vector((w - map_w) / 2,(h - map_h) / 3)
     self.map_view = MapView(map, map_pos, cell_size)
     self.controllers = {}
     self.turn_slots = {}
@@ -57,16 +57,21 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
         Color.new(201, 86, 255), --Purple
     }
 
-    local player_info_h = 100
     local margin = 5
-    local pa_pos = Vector(margin, player_info_h + margin)
-    local pa_w, pa_h = map_pos.x - 2 * margin, map_pos.y + map_h - pa_pos.y
+
+    --Turnslots dimensions
+    local ts_w = map_pos.x - 2 * margin - 10
+    local ts_h, dy = 90, -90
+
+    local player_info_h = 130
+
+    local pa_pos = Vector(margin, map_pos.y)
+    local mat_turnslot_gap = 10
+    local pa_w, pa_h = ts_w + 10, map_h + ts_h
     self.player_area = PlayerArea(pa_pos, pa_w, pa_h, self, self.colors[local_id], archetype)
 
     self.action_list_window = nil
 
-    local ts_w = pa_w - 10
-    local ts_h, dy = 90, -90
     for i, info in ipairs(players_info) do
         local c = self.colors[i]
         local pi, pj = unpack(self.starting_positions[n_players][i])
@@ -88,7 +93,11 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
 
     self.action_input_handler = nil
 
-    self.lock_button = Button(200, 580, 100, 100, "Lock", function()
+    local gap = 20
+    local bw, bh = 120, 7*ts_h/8
+    local bx = margin + ts_w + gap
+    local by = map_pos.y + map_h + ts_h/2 - bh/2 + 5
+    self.lock_button = Button(bx, by, bw, bh, "Lock", function()
         self:playTurn(self.local_id, function()
             MAIN_TIMER:after(1.5, function()
                 self:startNewTurn()

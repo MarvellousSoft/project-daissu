@@ -60,6 +60,7 @@ function setup.config()
         --UI
         mat = new(path.."UI/mat.png"),
         turn_slot = new(path.."UI/turn_slot.png"),
+        slot_number = new(path.."UI/slot_number.png"),
         starting_player = new(path.."UI/starting_player.png"),
         die_slot_free = new(path.."UI/die_slot_free.png"),
         die_slot_over = new(path.."UI/die_slot_over.png"),

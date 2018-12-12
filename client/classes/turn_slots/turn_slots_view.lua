@@ -5,6 +5,7 @@ local View        = require "classes.primitives.view"
 local Element     = require "classes.primitives.element"
 local DieSlotView = require "classes.die.die_slot_view"
 local DieHelper   = require "classes.die.helper"
+local Font        = require "font"
 local Gamestate   = require "common.extra_libs.hump.gamestate"
 
 local TurnSlotsView = Class {
@@ -40,8 +41,11 @@ function TurnSlotsView:init(obj, pos, w, h, color, player_num)
     --Starting player image
     self.starting_player_image = IMG.starting_player
 
-    --Current slot image
-    self.current_action_image = IMG.current_action
+    --Slot number
+    self.slot_number_image = IMG.slot_number
+    self.slot_number_image_w = self.slot_number_image:getWidth()
+    self.slot_number_image_h = self.slot_number_image:getHeight()
+    self.slot_number_font = Font.get("regular", 18)
 
     --Transparency for this object
     self.alpha = 255
@@ -49,18 +53,36 @@ function TurnSlotsView:init(obj, pos, w, h, color, player_num)
 end
 
 function TurnSlotsView:draw(draw_starting_player, position)
+    local g = love.graphics
+
     --Draw turn slots background
     Color.setWithAlpha(Color.black(), self.alpha)
     local off = 8
-    love.graphics.draw(self.image, self.pos.x+off, self.pos.y+off, nil,
+    g.draw(self.image, self.pos.x+off, self.pos.y+off, nil,
                        self.iw, self.ih)
     Color.setWithAlpha(self.color, self.alpha)
-    love.graphics.draw(self.image, self.pos.x, self.pos.y, nil,
+    g.draw(self.image, self.pos.x, self.pos.y, nil,
                        self.iw, self.ih)
 
-    --Draw each slot
+    --Draw each slot, with its number below
     for i, slot in ipairs(self:getObj().slots) do
-        slot.view:draw()
+        --Draw slot
+        local view = slot.view
+        view:draw()
+
+        --Draw correspondent number below
+        local x, y = view.pos.x, view.pos.y
+        x = x + view.w/2 - self.slot_number_image_w/2
+        y = y + view.h
+        Color.setWithAlpha(self.color, self.alpha)
+        g.draw(self.slot_number_image, x, y)
+
+        local font = self.slot_number_font
+        Color.setWithAlpha(Color.black(), self.alpha)
+        Font.set(font)
+        x = x + self.slot_number_image_w/2 - font:getWidth(i)/2
+        y = y + self.slot_number_image_h/2 - font:getHeight(i)/2
+        g.print(i, x, y)
     end
 
     --Draw starting player icon, if needed
@@ -78,7 +100,7 @@ function TurnSlotsView:draw(draw_starting_player, position)
         else
             error("Not a valid position: "..position)
         end
-        love.graphics.draw(image, x, self.pos.y - image:getHeight() - gap_y, nil, sx, 1)
+        g.draw(image, x, self.pos.y - image:getHeight() - gap_y, nil, sx, 1)
     end
 end
 

@@ -25,7 +25,7 @@ function Button:init(x, y, w, h, text, func)
     self.image_pressed = IMG.button_pressed
     self.image_locked = IMG.button_locked
     self.iw = w/self.image:getWidth()
-    self.ih = w/self.image:getHeight()
+    self.ih = h/self.image:getHeight()
 
     self:setText(text)
 
