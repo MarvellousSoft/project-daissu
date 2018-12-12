@@ -44,9 +44,9 @@ local helpers = {
 function Actions.init()
     for name, obj in pairs(helpers) do
         local base = 'actions/' .. name
-        obj.name = i18n(base .. "/name")
-        obj.desc = i18n(base .. "/desc")
-        obj.flavor = i18n(base .. "/flavor")
+        obj.getName = function() return i18n(base .. "/name") end
+        obj.getDescription = function() return  i18n(base .. "/desc") end
+        obj.getFlavor = function() return i18n(base .. "/flavor") end
     end
 end
 

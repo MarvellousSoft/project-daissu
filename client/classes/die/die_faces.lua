@@ -151,14 +151,14 @@ function drawDieInfo(x, y, w, h, action, alpha)
 
     --Draw action name
     local font = Font.get("regular", 35)
-    local text = action_module.name
+    local text = action_module:getName()
     local tx, ty = x + w/2 - font:getWidth(text)/2, y + border
     Font.set(font)
     g.print(text, tx, ty)
 
     --Draw action description centralized in the remaining space
     font = Font.get("regular", 20)
-    text = action_module.desc
+    text = action_module:getDescription()
     local margin = 30
     local limit = w - 2*margin
     _, lines = font:getWrap(text, limit)

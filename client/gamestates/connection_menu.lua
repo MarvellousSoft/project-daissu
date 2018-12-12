@@ -25,12 +25,17 @@ local function getCmdOptions()
     parser:option("--char")
     parser:option("--room")
     parser:option("--auto-ready")
+    parser:option("--lang")
     parser:flag("--auto-connect")
     return parser:parse()
 end
 
 function state:enter()
     local options = getCmdOptions()
+    if options.lang then
+        local i18n = require "i18n"
+        i18n.setLocale(options.lang)
+    end
 
     local accepted = {}
     for i = 1, 26 do
