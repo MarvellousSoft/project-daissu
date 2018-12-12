@@ -15,6 +15,7 @@ function ScrollWindow:init(obj, w, h)
     self.scroll_y = 0
     -- which scrollbar is grabbed
     self.grab = nil
+    self.grab_d = 0 -- used to adjust mouse position to the grabbed bar
 end
 
 function ScrollWindow:hasVerticalBar()
@@ -82,11 +83,32 @@ function ScrollWindow:draw()
 end
 
 function ScrollWindow:mousepressed(x, y, but, ...)
+    if not Util.pointInRect(x, y, self.obj.pos.x, self.obj.pos.y, self.w, self.h) then return end
     if but == 1 then
-        if self:hasHorizontalBar() and Util.pointInRect(x, y, self:horizontalBarBounds()) then
+        if self:hasHorizontalBar() and y >= self.obj.pos.y + self.h - bar_size then
             self.grab = 1
-        elseif self:hasVerticalBar() and Util.pointInRect(x, y, self:verticalBarBounds()) then
+            local xb, _, w = self:horizontalBarBounds()
+            if x < xb then
+                self.grab_d = 0
+                self.scroll_x = x - self.obj.pos.x
+            elseif x > xb + w then
+                self.grab_d = w
+                self.scroll_x = x - self.obj.pos.x - w
+            else
+                self.grab_d = x - xb
+            end
+        elseif self:hasVerticalBar() and x >= self.obj.pos.x + self.w - bar_size then
             self.grab = 2
+            local _, yb, _, h = self:verticalBarBounds()
+            if y < yb then
+                self.grab_d = 0
+                self.scroll_y = y - self.obj.pos.y
+            elseif y > yb + h then
+                self.grab_d = h
+                self.scroll_y = y - self.obj.pos.y - h
+            else
+                self.grab_d = y - yb
+            end
         else
             self.grab = nil
         end
@@ -116,9 +138,9 @@ end
 
 function ScrollWindow:mousemoved(x, y, dx, dy, ...)
     if self.grab == 1 then -- horizontal
-        self.scroll_x = clamp(x - self.obj.pos.x, 0, self:maxScrollX())
+        self.scroll_x = clamp(x - self.obj.pos.x - self.grab_d, 0, self:maxScrollX())
     elseif self.grab == 2 then -- vertical
-        self.scroll_y = clamp(y - self.obj.pos.y, 0, self:maxScrollY())
+        self.scroll_y = clamp(y - self.obj.pos.y - self.grab_d, 0, self:maxScrollY())
     end
 
     if not self.obj.mousemoved or not Util.pointInRect(x, y, self.obj.pos.x, self.obj.pos.y, self.w - bar_size, self.h - bar_size) then return end
