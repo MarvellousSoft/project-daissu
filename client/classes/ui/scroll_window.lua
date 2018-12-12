@@ -11,7 +11,7 @@ function ScrollWindow:init(obj, w, h)
 
     -- how much the bar was horizontally scrolled
     self.scroll_x = 0
-    -- how much the bar was horizontally vertically
+    -- how much the bar was vertically scrolled
     self.scroll_y = 0
     -- which scrollbar is grabbed
     self.grab = nil
