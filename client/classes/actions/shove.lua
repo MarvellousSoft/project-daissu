@@ -1,4 +1,3 @@
-local i18n = require "i18n"
 local Vector = require "common.extra_libs.hump.vector"
 local Timer = require "common.extra_libs.hump.timer"
 local FadingText = require "classes.fading_text"
