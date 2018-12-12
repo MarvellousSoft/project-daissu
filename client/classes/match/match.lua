@@ -21,7 +21,14 @@ local ScrollWindow = require "classes.ui.scroll_window"
 local Client = require "classes.net.client"
 
 local Match = Class {
-    __includes = {ELEMENT}
+    __includes = {ELEMENT},
+    starting_positions = {
+        {{2,2},{4,4}}, --2 players
+        {{2,2},{4,4},{2,4}}, --3 players
+        {{2,2},{4,4},{2,4},{4,2}}, --4 players
+        {{2,2},{4,4},{2,4},{4,2},{1,3}}, --5 players
+        {{2,2},{4,4},{2,4},{4,2},{1,3},{5,3}}, --6 players
+    }
 }
 
 function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id, archetype)
@@ -38,7 +45,9 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     self.controllers = {}
     self.turn_slots = {}
 
-    assert(#players_info > 1)
+    local n_players = #players_info
+    assert(n_players > 1)
+    assert(n_players <= 6)
 
     self.colors = {  --Colors for each player
         Color.new(133, 255, 86), --Chartoise green
@@ -50,7 +59,6 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     }
 
     local player_info_h = 100
-
     local margin = 5
     local pa_pos = Vector(margin, player_info_h + margin)
     local pa_w, pa_h = map_pos.x - 2 * margin, map_pos.y + map_h - pa_pos.y
@@ -62,7 +70,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     local ts_h, dy = 90, -90
     for i, info in ipairs(players_info) do
         local c = self.colors[i]
-        self.controllers[i] = Controller(map, c, unpack(info))
+        local pi, pj = unpack(self.starting_positions[n_players][i])
+        self.controllers[i] = Controller(map, c, pi, pj, info)
         if i == local_id then
             self.turn_slots[i] = self.player_area.turn_slots.view
         else
