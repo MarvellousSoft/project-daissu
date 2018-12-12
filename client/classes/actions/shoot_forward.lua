@@ -50,16 +50,4 @@ function ShootForward.getInputHandler(controller, callback)
     }
 end
 
-function ShootForward.getName()
-    return "Shoot"
-end
-
-function ShootForward.getDescription()
-    return "Shoot in straight line, dealing 1 damage to everything in the way"
-end
-
-function ShootForward.getFlavor()
-    return "to do"
-end
-
 return ShootForward

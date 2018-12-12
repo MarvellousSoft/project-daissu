@@ -1,3 +1,4 @@
+local i18n = require "i18n"
 local Vec = require "common.extra_libs.hump.vector-light"
 local Timer = require "common.extra_libs.hump.timer"
 --UTILITY FUNCTIONS FOR ACTION
@@ -39,6 +40,15 @@ local helpers = {
     ['long walk'] = (require "classes.actions.walk")(2),
     hookshot = require "classes.actions.hookshot",
 }
+
+function Actions.init()
+    for name, obj in pairs(helpers) do
+        local base = 'actions/' .. name
+        obj.name = i18n(base .. "/name")
+        obj.desc = i18n(base .. "/desc")
+        obj.flavor = i18n(base .. "/flavor")
+    end
+end
 
 function Actions.getAction(action_name)
     return helpers[action_name]

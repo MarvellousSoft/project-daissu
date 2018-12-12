@@ -1,3 +1,4 @@
+local i18n = require "i18n"
 local Vector = require "common.extra_libs.hump.vector"
 local Timer = require "common.extra_libs.hump.timer"
 local FadingText = require "classes.fading_text"
@@ -44,18 +45,6 @@ function Shove.getInputHandler(controller, callback)
             return Shove.showAction(controller, callback, i - pi, j - pj)
         end
     }
-end
-
-function Shove.getName()
-    return "Shove"
-end
-
-function Shove.getDescription()
-    return "Push an adjacent enemy up to 2 spaces away, dealing 1 damage"
-end
-
-function Shove.getFlavor()
-    return "to do"
 end
 
 return Shove

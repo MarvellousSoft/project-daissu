@@ -38,16 +38,4 @@ function Roundhouse.applyAction(controller)
     end
 end
 
-function Roundhouse.getName()
-    return "Roundhouse"
-end
-
-function Roundhouse.getDescription()
-    return "Deal 1 damage to every tile around you (including diagonals)"
-end
-
-function Roundhouse.getFlavor()
-    return "to do"
-end
-
 return Roundhouse

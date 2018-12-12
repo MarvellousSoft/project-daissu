@@ -70,16 +70,4 @@ function Hookshot.getInputHandler(controller, callback)
     }
 end
 
-function Hookshot.getName()
-    return "Hookshot"
-end
-
-function Hookshot.getDescription()
-    return "Shoot a hook in straight line. If it hits an obstacle, pulls you to it. If it hits an enemy, pulls it towards you, dealing 1 damage to it."
-end
-
-function Hookshot.getFlavor()
-    return "to do"
-end
-
 return Hookshot

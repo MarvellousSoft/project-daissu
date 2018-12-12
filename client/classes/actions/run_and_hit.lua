@@ -41,16 +41,4 @@ function RunAndHit.getInputHandler(controller, callback)
     }
 end
 
-function RunAndHit.getName()
-    return "Run and Hit"
-end
-
-function RunAndHit.getDescription()
-    return "Walk 1 space in any direction. Then, on the next tile in that direction deal 3 damage"
-end
-
-function RunAndHit.getFlavor()
-    return "to do"
-end
-
 return RunAndHit

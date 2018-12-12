@@ -64,16 +64,4 @@ function ExplosionShot.getInputHandler(controller, callback)
     }
 end
 
-function ExplosionShot.getName()
-    return "Explosion Shot"
-end
-
-function ExplosionShot.getDescription()
-    return "Shoot in straight line, exploding on the first thing it hits. It deals 2 damage on its center, and 1 damage around it"
-end
-
-function ExplosionShot.getFlavor()
-    return "to do"
-end
-
 return ExplosionShot

@@ -32,16 +32,4 @@ function StrongPunch.getInputHandler(controller, callback)
     }
 end
 
-function StrongPunch.getName()
-    return "Strong Punch"
-end
-
-function StrongPunch.getDescription()
-    return "Deal 2 damage to an adjacent space"
-end
-
-function StrongPunch.getFlavor()
-    return "to do"
-end
-
 return StrongPunch
