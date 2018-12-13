@@ -253,6 +253,16 @@ function DieView:collidesRect(x, y, w, h)
     return (x_r - x_l) * (y_r - y_l)
 end
 
+--Returns the die actual height (includes die underside)
+function DieView:getHeight()
+    return self.h + DieHelper.getUnderside()
+end
+
+--Returns the die actual width
+function DieView:getWidth()
+    return self.w
+end
+
 --UTILITY FUNCTIONS--
 
 return DieView

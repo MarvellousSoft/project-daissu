@@ -238,7 +238,7 @@ function Match:createActionList(player_actions, order, size)
             p_i = p_i + 1
         end
     end
-    self.action_list_window = ScrollWindow(ActionList(Vector(10, WIN_H - 140), action_list, player_list), WIN_W - 20, 80)
+    self.action_list_window = ScrollWindow(ActionList(Vector(10, WIN_H - 130), action_list, player_list, #action_list/size), WIN_W - 20, 110)
 end
 
 --Iterate for all other players and create dice for their corresponding actions

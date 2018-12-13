@@ -5,6 +5,7 @@ local DieHelper = require "classes.die.helper"
 local Util      = require "util"
 local Die       = require "classes.die.die"
 local DieView   = require "classes.die.die_view"
+local Font      = require "font"
 local Gamestate = require "common.extra_libs.hump.gamestate"
 
 local funcs = {}
@@ -15,12 +16,13 @@ local ActionList = Class{
     __includes={DRAWABLE},
 }
 
-function ActionList:init(pos,actions,players)
+function ActionList:init(pos, actions, players, number_players)
     self.pos = pos
 
     local match = Util.findId("match")
     self.colors = match:getColors()
     self.players = players
+    self.number_players = number_players
 
     self.gap = 10 --Gap between actions and arrows
 
@@ -47,6 +49,9 @@ function ActionList:init(pos,actions,players)
     self.unfocused_arrow_scale = .8
     self.unfocused_arrow_y = self.pos.y + die_h/2 - self.next_action_image:getHeight()*self.unfocused_arrow_scale/2
     self.unfocused_offset = self.next_action_image:getWidth()*(self.focused_arrow_scale-self.unfocused_arrow_scale)
+
+    self.slot_number_image = IMG.slot_number
+    self.slot_number_font = Font.get("regular", 18)
 
     self.grey_color = Color.new(150,150,150) --For dice that already had their action done
 
@@ -77,11 +82,26 @@ function ActionList:draw()
                 offset = math.sin(10*love.timer.getTime())*3
             end
         end
+
+        --Draw die representing this action
+        die:draw()
+
         --Draw correspondent arrow for this action
         Color.setWithAlpha(image_color, arrow_alpha)
         g.draw(self.next_action_image, x + offset, arrow_y, nil, scale)
-        --Draw die representing this action
-        die:draw()
+
+        --Draw number below die
+        local sn_x = die.pos.x + die:getWidth()/2 - self.slot_number_image:getWidth()/2
+        local sn_y = die.pos.y + die:getHeight() + 5
+        g.draw(self.slot_number_image, sn_x, sn_y)
+        local font = self.slot_number_font
+        Color.setWithAlpha(Color.black(), self.alpha)
+        Font.set(font)
+        local number = math.ceil(i/self.number_players)
+        local tx = sn_x + self.slot_number_image:getWidth()/2 - font:getWidth(number)/2
+        local ty = sn_y + self.slot_number_image:getHeight()/2 - font:getHeight(number)/2
+        g.print(number, tx, ty)
+
         --Update arrow position
         x = x + dx
     end
