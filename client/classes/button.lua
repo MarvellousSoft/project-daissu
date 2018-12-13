@@ -4,6 +4,7 @@ local DieSlot     = require "classes.die.die_slot"
 local DieSlotView = require "classes.die.die_slot_view"
 local Color       = require "classes.color.color"
 local Font        = require "font"
+local i18n        = require "i18n"
 
 local funcs = {}
 
@@ -13,21 +14,21 @@ local Button = Class{
     __includes={DRAWABLE}
 }
 
-function Button:init(x, y, w, h, text, func)
+function Button:init(x, y, w, h, text_label, func)
     DRAWABLE.init(self, x, y, Color.purple())
 
     self.w = w
     self.h = h
-    self.w_gap = 5
+    self.w_gap = 7
     self.h_gap = 2
-    self.text = text
     self.image = IMG.button
     self.image_pressed = IMG.button_pressed
     self.image_locked = IMG.button_locked
     self.iw = w/self.image:getWidth()
     self.ih = h/self.image:getHeight()
 
-    self:setText(text)
+    self.text = "dummy_text"
+    self:setText(text_label)
 
     self.func = func
 
@@ -43,7 +44,8 @@ function Button:init(x, y, w, h, text, func)
 
 end
 
-function Button:setText(text)
+function Button:setText(text_label)
+    local text = i18n("ui/button/"..text_label)
     --Get correct font size based on button size
     local i = 40
     repeat

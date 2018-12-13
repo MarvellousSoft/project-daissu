@@ -3,7 +3,6 @@ local Class       = require "common.extra_libs.hump.class"
 local Vector      = require "common.extra_libs.hump.vector"
 local DieSlot     = require "classes.die.die_slot"
 local DieSlotView = require "classes.die.die_slot_view"
-local Button      = require "classes.button"
 local Color       = require "classes.color.color"
 
 local funcs = {}

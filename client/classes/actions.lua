@@ -1,5 +1,5 @@
-local i18n = require "i18n"
-local Vec = require "common.extra_libs.hump.vector-light"
+local i18n  = require "i18n"
+local Vec   = require "common.extra_libs.hump.vector-light"
 local Timer = require "common.extra_libs.hump.timer"
 --UTILITY FUNCTIONS FOR ACTION
 

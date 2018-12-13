@@ -97,7 +97,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     local bw, bh = 120, 7*ts_h/8
     local bx = margin + ts_w + gap
     local by = map_pos.y + map_h + ts_h/2 - bh/2 + 5
-    self.lock_button = Button(bx, by, bw, bh, "Lock", function()
+    self.lock_button = Button(bx, by, bw, bh, "lock", function()
         self:playTurn(self.local_id, function()
             MAIN_TIMER:after(1.5, function()
                 self:startNewTurn()

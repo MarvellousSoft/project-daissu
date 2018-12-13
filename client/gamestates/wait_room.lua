@@ -1,10 +1,11 @@
-local TextBox = require "classes.text_box"
-local Font = require "font"
-local Color = require "classes.color.color"
+local TextBox   = require "classes.text_box"
+local Font      = require "font"
+local Color     = require "classes.color.color"
 local Gamestate = require "common.extra_libs.hump.gamestate"
-local Client = require "classes.net.client"
-local Button = require "classes.button"
-local Util = require "util"
+local Client    = require "classes.net.client"
+local Button    = require "classes.button"
+local Util      = require "util"
+local i18n      = require "i18n"
 
 local state = {}
 local box
@@ -15,7 +16,7 @@ local room_list = {}
 local ready = false
 
 local function readyText()
-    return ready and 'Not ready!' or 'Ready!'
+    return ready and 'not_ready_for_match' or 'ready_for_match'
 end
 
 function state:enter(prev, options, char_type)
@@ -50,13 +51,13 @@ function state:enter(prev, options, char_type)
         Client.send('change room', room)
     end
 
-    room_button = Button(350, 300, 100, 100, "Change room", function()
+    room_button = Button(250, 300, 200, 80, "change_room", function()
         if box.lines[1] == '' then return end
         room = box.lines[1]
         Client.send('change room', room)
     end)
 
-    ready_button = Button(350, 500, 60, 60, readyText(), function()
+    ready_button = Button(350, 500, 100, 60, readyText(), function()
         ready = not ready
         ready_button:setText(readyText())
         Client.send('ready', ready)
@@ -90,8 +91,9 @@ function state:draw()
 
     Color.set(Color.white())
     Font.set('regular', 20)
-    love.graphics.print('Your current room is ' .. room, 400, 600)
-    love.graphics.print('You are ' .. (ready and 'ready' or 'not ready'), 400, 630)
+    love.graphics.print(i18n("ui/text/current_room") .. room, 400, 600)
+    local label = ready and 'ready_status' or 'not_ready_status'
+    love.graphics.print(i18n("ui/text/"..label), 400, 630)
 
     Font.set('regular', 15)
     local i = 0

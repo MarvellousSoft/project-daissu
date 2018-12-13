@@ -59,11 +59,11 @@ function state:enter()
         end
     end
 
-    char_button = Button(400, 350, 60, 60, "Change", function()
+    char_button = Button(390, 350, 70, 70, "change_char", function()
         chosen_char = (chosen_char % #chars) + 1
     end)
 
-    go_button = Button(500, 450, 100, 100, "Go!", function()
+    go_button = Button(500, 450, 100, 100, "confirm_ip", function()
         connect_to_server(options, box.lines[1], chars[chosen_char])
     end)
 
