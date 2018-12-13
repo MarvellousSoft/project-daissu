@@ -6,18 +6,16 @@ local Client    = require "classes.net.client"
 local Button    = require "classes.button"
 local Util      = require "util"
 local i18n      = require "i18n"
+local suit      = require "extra_libs.suit"
 
 local state = {}
-local box
 local room
-local room_button
-local ready_button
 local room_list = {}
-local ready = false
+local larger_font
+local title_font
 
-local function readyText()
-    return ready and 'not_ready_for_match' or 'ready_for_match'
-end
+local room_input = { text = "" }
+local ready_checkbox = { text = "Ready", checked = false }
 
 function state:enter(prev, options, char_type)
     room = 'none'
@@ -26,9 +24,8 @@ function state:enter(prev, options, char_type)
         for _, r in ipairs(room_list) do
             for _, c in ipairs(r.clients) do
                 if c.id == Client.getConnectId() then
-                    ready = c.ready
+                    ready_checkbox.checked = c.ready
                     room = r.name
-                    ready_button:setText(readyText())
                     return
                 end
             end
@@ -39,103 +36,67 @@ function state:enter(prev, options, char_type)
         Gamestate.switch(require "gamestates.game", info, char_type)
     end)
 
-    local accepted = {}
-    for i = 33, 126 do
-        accepted[string.char(i)] = string.char(i)
-    end
-    box = TextBox(450, 300, 300, 30, 1, 1, false, Font.get('regular', 25), accepted, Color.convert(Color.new(10, 30, 10, 255, 'RGB')))
-    box:activate()
     if options.room then
         room = options.room
-        box:putString(room)
         Client.send('change room', room)
     end
 
-    room_button = Button(250, 300, 200, 80, "change_room", function()
-        if box.lines[1] == '' then return end
-        room = box.lines[1]
-        Client.send('change room', room)
-    end)
-
-    ready_button = Button(350, 500, 100, 60, readyText(), function()
-        ready = not ready
-        ready_button:setText(readyText())
-        Client.send('ready', ready)
-    end)
 
     if options.auto_ready then
         MAIN_TIMER:after(tonumber(options.auto_ready) or 0, function()
-            ready = true
-            ready_button:setText(readyText())
+            ready_checkbox.checked = true
             Client.send('ready', ready)
         end)
     end
+
+    larger_font = Font.get('regular', 28)
+    title_font = Font.get('regular', 50)
+    Font.set('regular', 20) -- default font for UI in this gamestate
 end
 
 function state:leave()
 end
 
 function state:update(dt)
-    box:update(dt)
-    Util.updateTimers(dt)
+    suit.Label('Wait Room', {font = title_font}, 0, 0, WIN_W, 100)
 
-    Util.updateDrawTable(dt)
+    suit.layout:reset((WIN_W - 400) / 2, 200, 10, 30)
 
-    Util.destroyAll()
-end
+    local input_sub = suit.Input(room_input, suit.layout:row(400, 50)).submitted
+    local change_click = suit.Button(i18n "ui/button/change_room", {id = 2}, suit.layout:cols{pos = {suit.layout:row()}, min_width = 400, {'fill', 50}, {200, 50}, {'fill', 50}}.cell(2)).hit
 
-function state:draw()
-    box:draw()
-    room_button:draw()
-    ready_button:draw()
+    if input_sub or change_click and room_input.text ~= '' then
+        room = room_input.text
+        Client.send('change room', room)
+    end
 
-    Color.set(Color.white())
-    Font.set('regular', 20)
-    love.graphics.print(i18n("ui/text/current_room") .. room, 400, 600)
-    local label = ready and 'ready_status' or 'not_ready_status'
-    love.graphics.print(i18n("ui/text/"..label), 400, 630)
+    if suit.Checkbox(ready_checkbox, suit.layout:row()).hit then
+        Client.send('ready', ready_checkbox.checked)
+    end
+    suit.Label("Current Room: " .. room, {font = larger_font}, suit.layout:row(400, 40))
 
-    Font.set('regular', 15)
-    local i = 0
+    -- Players list
+    suit.layout:reset(WIN_W - 350, 200)
+
     for _, room in ipairs(room_list) do
-        love.graphics.print(room.name .. ':', 1000, 300 + i * 20)
-        i = i + 1
+        suit.Label(room.name .. ':', {font = larger_font, align = 'left'}, suit.layout:row(330, 35))
         for _, cl in ipairs(room.clients) do
-            love.graphics.print(cl.id .. '  ' .. (cl.ready and 'x' or ''), 1000, 300 + i * 20)
-            i = i + 1
+            suit.Label(cl.id .. (cl.ready and ' x' or ''), {align = 'left'}, suit.layout:row(nil, 20))
         end
-        i = i + 2
+        suit.layout:row()
     end
 end
 
+function state:draw()
+    suit.draw()
+end
+
 function state:keypressed(...)
-    box:keyPressed(...)
+    suit.keypressed(...)
 end
 
 function state:textinput(...)
-    box:textInput(...)
-end
-
-function state:mousepressed(...)
-    box:mousePressed(...)
-    room_button:mousepressed(...)
-    ready_button:mousepressed(...)
-end
-
-function state:mousereleased(...)
-    box:mousereleased(...)
-    room_button:mousereleased(...)
-    ready_button:mousereleased(...)
-end
-
-function state:mousescroll(...)
-    box:mouseScroll(...)
-end
-
-function state:mousemoved(...)
-    box:mousemoved(...)
-    room_button:mousemoved(...)
-    ready_button:mousemoved(...)
+    suit.textinput(...)
 end
 
 --Return state functions

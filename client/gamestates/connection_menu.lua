@@ -49,7 +49,7 @@ function state:enter()
     end
 
     if options.auto_connect then
-        connect_to_server(options, box.lines[1], chars[chosen_char])
+        connect_to_server(options, host_input.text, chars[chosen_char])
     end
 
     Font.set('regular', 30)
