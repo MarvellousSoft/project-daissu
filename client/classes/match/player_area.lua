@@ -112,6 +112,7 @@ function PlayerArea:mousemoved(x, y, dx, dy)
     if self.picked_die and self.match.state == 'choosing actions' then
         self.picked_die.pos.x = x + self.picked_die_delta.x
         self.picked_die.pos.y = y + self.picked_die_delta.y
+        self:updateSlotHighlight(self.picked_die)
     end
 end
 
@@ -187,6 +188,21 @@ function PlayerArea:allSlots()
         else
             return da[i]
         end
+    end
+end
+
+--Looks at all die slots and checks if one is below given die
+function PlayerArea:updateSlotHighlight(die)
+    local best_col, best_slot = 0, nil
+    for slot in self:allSlots() do
+        slot.view.has_die_over = false
+        local col = die:collidesRect(slot.view.pos.x, slot.view.pos.y, slot.view.w, slot.view.h)
+        if col > best_col then
+            best_col, best_slot = col, slot
+        end
+    end
+    if best_col > 0 and best_slot ~= die:getObj().slot then
+        best_slot.view.has_die_over = true
     end
 end
 

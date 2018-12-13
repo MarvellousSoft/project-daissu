@@ -38,6 +38,7 @@ function DieView:init(die, x, y, color)
 
     self.previous_pos = Vector(x,y)
     self.picked = false --If player is dragging this object
+    self.is_moving = false --If this die is moving somewhere
 
     self.rolling = false --If die is rolling
     self.rolling_face = 1 --What face to show while rolling
@@ -103,8 +104,12 @@ end
 
 --Animation for the die to fade out and destroy itself
 function DieView:leave()
+    local dur = .3
+    self:removeTimer('change_position', MAIN_TIMER)
+    self:addTimer('change_position', MAIN_TIMER, "tween", dur, self.pos,
+                  {y = self.pos.y -10}, 'in-quad')
     self:removeTimer('change_visibility', MAIN_TIMER)
-    self:addTimer('change_visibility', MAIN_TIMER, "tween", 0.3, self,
+    self:addTimer('change_visibility', MAIN_TIMER, "tween", dur, self,
                   {alpha = 0}, 'in-quad',
                   function()
                     self:kill()
@@ -194,9 +199,11 @@ function DieView:handleUnpick(player_area)
 
         --Occupy current slot
         target_slot:putDie(die)
+        target_slot.view.has_die_over = false
         return
     else
         die.slot.view:centerDie()
+        die.slot.view.view.has_die_over = false
     end
 end
 
