@@ -144,6 +144,7 @@ function Match:startNewTurn()
     self.state = 'choosing actions'
     self.lock_button:unlock()
     self.player_area:grab(2)
+    self.player_area:refillRerolls()
 end
 
 -- This recursively plays each action in a turn

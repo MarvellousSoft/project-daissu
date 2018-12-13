@@ -7,6 +7,7 @@ local Mat           = require "classes.match.mat"
 local Archetypes    = require "classes.archetypes"
 local DieView       = require "classes.die.die_view"
 local Color         = require "classes.color.color"
+local Fonts         = require "font"
 
 local PlayerArea = Class {}
 
@@ -39,6 +40,9 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
 
     self.picked_die = nil
     self.picked_die_delta = nil
+
+    self.rerolls_available = 0
+    self.rerolls_font = Fonts.get('regular', 20)
 end
 
 function PlayerArea:shuffleBag()
@@ -79,10 +83,18 @@ function PlayerArea:grab(count)
     end
 end
 
+function PlayerArea:refillRerolls()
+    self.rerolls_available = 2
+end
+
 function PlayerArea:draw()
     local start_p = self.match:startingPlayer()
     self.mat:draw()
     self.turn_slots.view:draw(start_p == self.match.local_id, 'left')
+
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.setFont(self.rerolls_font)
+    love.graphics.print("Rerolls: " .. self.rerolls_available, self.mat.pos.x + 20, self.mat.pos.y + self.mat.h - self.rerolls_font:getHeight() - 10)
 
     for view in pairs(self.extra_views) do
         view:draw()
@@ -117,11 +129,15 @@ function PlayerArea:mousemoved(x, y, dx, dy)
 end
 
 function PlayerArea:mousepressed(x, y, but)
+    local ctrl = love.keyboard.isDown('lctrl', 'rctrl')
     if not self.picked_die then
         for i, die in ipairs(self.dice_views) do
-            if not die.is_moving and die:collidesPoint(x, y) then
+            if die:canInteract() and die:collidesPoint(x, y) then
                 if but == 3 or love.keyboard.isDown('lshift', 'rshift') then
                     Gamestate.push(GS.DIE_DESC, die)
+                elseif but == 1 and self.match.state == 'choosing actions' and ctrl and self.rerolls_available > 0 then
+                    self.rerolls_available = self.rerolls_available - 1
+                    die:getObj():roll()
                 elseif but == 1 and self.match.state == 'choosing actions' then
                     self.picked_die = die
                     self.picked_die_delta = die.pos - Vector(x, y)

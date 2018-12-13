@@ -161,7 +161,10 @@ function DieView:rollAnimation()
             end)
         end
     )
+end
 
+function DieView:canInteract()
+    return not self.is_moving and not self.rolling
 end
 
 function DieView:handlePick(player_area)
