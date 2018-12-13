@@ -160,30 +160,8 @@ local function playTurnRec(self, player_actions, order, player_i, action_i, size
     -- All actions of this index have been played
     if p_i == nil then return playTurnRec(self, player_actions, order, 1, action_i + 1, size, callback) end
 
-    --Set current active slot to draw indicator
-    self.active_slot = {p_i, action_i}
-    --Try to find next active slot, to help draw indicator
-    self.next_active_slot = false
-    local t_action_i = action_i
-    local t_player_i = player_i + 1
-    while t_action_i <= size do
-        local t_pi = order[t_player_i]
-        if t_pi == nil then
-            t_player_i = 1
-            t_action_i = t_action_i + 1
-        else
-            local action = player_actions[t_pi][t_action_i]
-            if action ~= 'none' then
-                self.next_active_slot = {t_pi, t_action_i}
-                break
-            else
-                t_player_i = t_player_i + 1
-            end
-        end
-    end
-
     local action = player_actions[p_i][action_i]
-    print('Action ' .. action_i .. ' for Player ' .. p_i .. ' = ' .. action)
+
     if action ~= 'none' then
         Actions.executeAction(self, action, self.controllers[p_i], function()
             self.action_list_window.obj:bump()
@@ -260,7 +238,7 @@ function Match:createActionList(player_actions, order, size)
             p_i = p_i + 1
         end
     end
-    self.action_list_window = ScrollWindow(ActionList(Vector(10, WIN_H - 80), action_list, player_list), WIN_W - 20, 80)
+    self.action_list_window = ScrollWindow(ActionList(Vector(10, WIN_H - 140), action_list, player_list), WIN_W - 20, 80)
 end
 
 --Iterate for all other players and create dice for their corresponding actions
