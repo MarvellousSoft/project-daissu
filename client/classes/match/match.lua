@@ -23,11 +23,11 @@ local Client = require "classes.net.client"
 local Match = Class {
     __includes = {ELEMENT},
     starting_positions = {
+        nil, -- 1 player
         {{2,2},{4,4}}, --2 players
-        {{2,2},{4,4},{2,4}}, --3 players
-        {{2,2},{4,4},{2,4},{4,2}}, --4 players
-        {{2,2},{4,4},{2,4},{4,2},{1,3}}, --5 players
-        {{2,2},{4,4},{2,4},{4,2},{1,3},{5,3}}, --6 players
+        {{1,1},{3,3},{5,5}}, --3 players
+        {{2,2},{4,4},{5,1},{1,5}}, --4 players
+        {{1,1},{2,3},{3,5},{4,2},{5,4}}, --5 players
     }
 }
 
@@ -47,12 +47,11 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
 
     local n_players = #players_info
     assert(n_players > 1)
-    assert(n_players <= 6)
+    assert(n_players <= 5)
 
     self.colors = {  --Colors for each player
         Color.new(133, 255, 86), --Chartoise green
         Color.new(86, 195, 255), --Blue sky
-        Color.new(255, 86, 86),  --Rose red
         Color.new(255, 104, 197),--Taffy pink
         Color.new(255, 182, 86), --Orange
         Color.new(201, 86, 255), --Purple
