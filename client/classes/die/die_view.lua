@@ -203,7 +203,6 @@ function DieView:handleUnpick(player_area)
         return
     else
         die.slot.view:centerDie()
-        die.slot.view.view.has_die_over = false
     end
 end
 
