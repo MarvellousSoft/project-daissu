@@ -68,7 +68,7 @@ function state:update(dt)
         suit.Label('IP:', {align = 'left'}, suit.layout:right(60, 50))
         connect = suit.Input(host_input, suit.layout:right(300, nil)).submitted
     suit.layout:pop()
-    if suit.Button(i18n "ui/button/change_char", suit.layout:down()).hit then
+    if suit.Button(i18n "ui/button/change_char", suit.layout:down(nil, 70)).hit then
         chosen_char = (chosen_char % #chars) + 1
     end
     suit.Label('Your character: ' .. chars[chosen_char], {id = 1}, suit.layout:down())
@@ -80,7 +80,6 @@ function state:update(dt)
 
     local hit = suit.Button(i18n "ui/button/confirm_ip", cols.cell(2)).hit
     if connect or hit then
-        print(connect, hit)
         connect_to_server(options, host_input.text, chars[chosen_char])
     end
 end

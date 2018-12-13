@@ -6,6 +6,7 @@ local Camera = require "common.extra_libs.hump.camera"
 local Timer = require "common.extra_libs.hump.timer"
 local I18nSetup = require "i18n.setup"
 local Actions = require "classes.actions"
+local SuitConfig = require "classes.suit_config"
 
 local setup = {}
 
@@ -91,6 +92,7 @@ function setup.config()
     --OTHER--
     I18nSetup.init()
     Actions.init() -- After i18n init
+    SuitConfig.init()
 end
 
 --Return functions
