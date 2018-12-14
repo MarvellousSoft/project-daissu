@@ -82,6 +82,8 @@ function state:update(dt)
     if connect or hit then
         connect_to_server(options, host_input.text, chars[chosen_char])
     end
+
+    Util.updateTimers(dt)
 end
 
 function state:draw()

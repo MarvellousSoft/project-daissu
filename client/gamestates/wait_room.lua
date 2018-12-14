@@ -15,7 +15,7 @@ local larger_font
 local title_font
 
 local room_input = { text = "" }
-local ready_checkbox = { text = "Ready", checked = false }
+local ready_checkbox = { checked = false }
 
 function state:enter(prev, options, char_type)
     room = 'none'
@@ -45,7 +45,7 @@ function state:enter(prev, options, char_type)
     if options.auto_ready then
         MAIN_TIMER:after(tonumber(options.auto_ready) or 0, function()
             ready_checkbox.checked = true
-            Client.send('ready', ready)
+            Client.send('ready', true)
         end)
     end
 
@@ -70,9 +70,13 @@ function state:update(dt)
         Client.send('change room', room)
     end
 
-    if suit.Checkbox(ready_checkbox, suit.layout:row()).hit then
-        Client.send('ready', ready_checkbox.checked)
-    end
+    suit.layout:push(suit.layout:row())
+        if suit.Checkbox(ready_checkbox, suit.layout:row(50, 50)).hit then
+            Client.send('ready', ready_checkbox.checked)
+        end
+        suit.Label("Ready", {align = 'left', font = larger_font}, suit.layout:col(100, 50))
+    suit.layout:pop()
+
     suit.Label("Current Room: " .. room, {font = larger_font}, suit.layout:row(400, 40))
 
     -- Players list
@@ -85,6 +89,8 @@ function state:update(dt)
         end
         suit.layout:row()
     end
+
+    Util.updateTimers(dt)
 end
 
 function state:draw()
