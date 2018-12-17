@@ -1,5 +1,6 @@
 local Class = require "common.extra_libs.hump.class"
-local View = require "classes.primitives.view"
+local View  = require "classes.primitives.view"
+local tiles = require("assets").images.tiles
 
 local MapView = Class {
     __includes = {View}
@@ -14,8 +15,8 @@ function MapView:init(obj, pos, cell_size)
     for i = 1, obj.rows do
         self.tiles[i] = {}
         for j = 1, obj.columns do
-            local image = ran() > .1 and IMG.maptile_regular or
-                                         IMG.maptile_broken
+            local image = ran() > .1 and tiles.maptile1 or
+                                         tiles.maptile2
             local sx = cell_size/image:getWidth()
             local sy = cell_size/image:getHeight()
             self.tiles[i][j] = {image = image, sx = sx, sy = sy}

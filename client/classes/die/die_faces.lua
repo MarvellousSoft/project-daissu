@@ -4,6 +4,7 @@ local Vector  = require "common.extra_libs.hump.vector"
 local Color   = require "classes.color.color"
 local Actions = require "classes.actions"
 local Font    = require "font"
+local UI      = require("assets").images.UI
 
 local funcs = {}
 
@@ -141,7 +142,7 @@ function drawDieInfo(x, y, w, h, action, alpha)
     local g = love.graphics
 
     --Draw bg
-    local image = IMG.die_info
+    local image = UI.die_info
     local sx = w/image:getWidth()
     local sy = h/image:getHeight()
     Color.setWithAlpha(Color.white(), alpha)

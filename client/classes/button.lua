@@ -5,6 +5,7 @@ local DieSlotView = require "classes.die.die_slot_view"
 local Color       = require "classes.color.color"
 local Font        = require "font"
 local i18n        = require "i18n"
+local UI          = require("assets").images.UI
 
 local funcs = {}
 
@@ -21,9 +22,9 @@ function Button:init(x, y, w, h, text_label, func)
     self.h = h
     self.w_gap = 7
     self.h_gap = 2
-    self.image = IMG.button
-    self.image_pressed = IMG.button_pressed
-    self.image_locked = IMG.button_locked
+    self.image = UI.button
+    self.image_pressed = UI.button_pressed
+    self.image_locked = UI.button_locked
     self.iw = w/self.image:getWidth()
     self.ih = h/self.image:getHeight()
 

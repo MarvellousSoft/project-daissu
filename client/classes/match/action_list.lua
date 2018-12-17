@@ -7,6 +7,7 @@ local Die       = require "classes.die.die"
 local DieView   = require "classes.die.die_view"
 local Font      = require "font"
 local Gamestate = require "common.extra_libs.hump.gamestate"
+local UI        = require("assets").images.UI
 
 local funcs = {}
 
@@ -26,7 +27,7 @@ function ActionList:init(pos, actions, players, number_players)
 
     self.gap = 10 --Gap between actions and arrows
 
-    self.next_action_image = IMG.next_action
+    self.next_action_image = UI.current_action
 
     self.w = 0
     self.h = 60
@@ -50,7 +51,7 @@ function ActionList:init(pos, actions, players, number_players)
     self.unfocused_arrow_y = self.pos.y + die_h/2 - self.next_action_image:getHeight()*self.unfocused_arrow_scale/2
     self.unfocused_offset = self.next_action_image:getWidth()*(self.focused_arrow_scale-self.unfocused_arrow_scale)
 
-    self.slot_number_image = IMG.slot_number
+    self.slot_number_image = UI.slot_number
     self.slot_number_font = Font.get("regular", 18)
 
     self.grey_color = Color.new(150,150,150) --For dice that already had their action done

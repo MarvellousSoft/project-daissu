@@ -7,6 +7,7 @@ local DieSlotView = require "classes.die.die_slot_view"
 local DieHelper   = require "classes.die.helper"
 local Font        = require "font"
 local Gamestate   = require "common.extra_libs.hump.gamestate"
+local UI          = require("assets").images.UI
 
 local TurnSlotsView = Class {
     __includes = {View, Element}
@@ -34,15 +35,15 @@ function TurnSlotsView:init(obj, pos, w, h, color, player_num)
     self.color = color
 
     --Bg image
-    self.image = IMG.turn_slot
+    self.image = UI.turn_slot
     self.iw = self.w/self.image:getWidth()
     self.ih = self.h/self.image:getHeight()
 
     --Starting player image
-    self.starting_player_image = IMG.starting_player
+    self.starting_player_image = UI.starting_player
 
     --Slot number
-    self.slot_number_image = IMG.slot_number
+    self.slot_number_image = UI.slot_number
     self.slot_number_image_w = self.slot_number_image:getWidth()
     self.slot_number_image_h = self.slot_number_image:getHeight()
     self.slot_number_font = Font.get("regular", 18)

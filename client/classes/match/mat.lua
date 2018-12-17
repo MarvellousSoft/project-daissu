@@ -4,6 +4,7 @@ local Vector      = require "common.extra_libs.hump.vector"
 local DieSlot     = require "classes.die.die_slot"
 local DieSlotView = require "classes.die.die_slot_view"
 local Color       = require "classes.color.color"
+local UI          = require("assets").images.UI
 
 local funcs = {}
 
@@ -27,7 +28,7 @@ function Mat:init(dice_n, pos, w, h, player_num)
         DieSlotView(self.slots[i], mid + v - Vector(dw / 2, dh / 2))
     end
 
-    self.image = IMG.mat
+    self.image = UI.mat
     self.img_sx = self.w/self.image:getWidth()
     self.img_sy = self.h/self.image:getHeight()
 end

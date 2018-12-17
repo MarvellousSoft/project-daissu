@@ -1,6 +1,7 @@
-local Class = require "common.extra_libs.hump.class"
-local Color = require "classes.color.color"
-local Font  = require "font"
+local Class  = require "common.extra_libs.hump.class"
+local Color  = require "classes.color.color"
+local Font   = require "font"
+local assets = require "assets"
 
 --[[
     This is a player drawn in the map
@@ -11,7 +12,7 @@ function Player:init(color)
     self.health = 5
     self:resetAnimation()
     self.color = color
-    self.image = IMG.player
+    self.image = assets.images.characters.player
 
     self.font = Font.get("regular", 25)
     self.type = 'Player'

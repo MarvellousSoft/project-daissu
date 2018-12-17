@@ -1,11 +1,12 @@
-local suit = require "extra_libs.suit"
+local suit   = require "extra_libs.suit"
+local UI = require("assets").images.UI
 
 local config = {}
 
 function config:init()
-    local image_pressed = IMG.button_pressed
-    local image_locked = IMG.button_locked
-    local default_image = IMG.button
+    local image_pressed = UI.button_pressed
+    local image_locked = UI.button_locked
+    local default_image = UI.button
     local iw, ih = default_image:getWidth(), default_image:getHeight()
     local text_y_offset = -1.5
 

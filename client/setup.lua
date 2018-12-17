@@ -51,34 +51,6 @@ function setup.config()
     --FONTS--
     Font.new("regular", "assets/fonts/fira-mono-regular.ttf")
 
-    --IMAGES--
-    local new = love.graphics.newImage
-    local path = "assets/images/"
-    IMG = { --Table containing all the images
-        --TILES
-        maptile_regular = new(path.."tiles/maptile1.png"),
-        maptile_broken = new(path.."tiles/maptile2.png"),
-        --UI
-        mat = new(path.."UI/mat.png"),
-        turn_slot = new(path.."UI/turn_slot.png"),
-        slot_number = new(path.."UI/slot_number.png"),
-        starting_player = new(path.."UI/starting_player.png"),
-        die_slot_free = new(path.."UI/die_slot_free.png"),
-        die_slot_over = new(path.."UI/die_slot_over.png"),
-        die_slot_occupied = new(path.."UI/die_slot_occupied.png"),
-        die_slot_wrong = new(path.."UI/die_slot_wrong.png"),
-        next_action = new(path.."UI/current_action.png"),
-        button = new(path.."UI/button.png"),
-        button_pressed = new(path.."UI/button_pressed.png"),
-        button_locked = new(path.."UI/button_locked.png"),
-        die_info = new(path.."UI/die_info.png"),
-        --CHARACTERS
-        player = new(path.."characters/player.png"),
-        --OTHER IMAGES
-        background = new(path.."background.png")
-
-    }
-
     --AUDIO--
     SFX = { --Table containing all the sound fx
     }

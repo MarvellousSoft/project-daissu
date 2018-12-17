@@ -5,6 +5,7 @@ local Color     = require "classes.color.color"
 local DieHelper = require "classes.die.helper"
 local Util      = require "util"
 local Vector    = require "common.extra_libs.hump.vector"
+local UI        = require("assets").images.UI
 
 local funcs = {}
 
@@ -28,10 +29,10 @@ function DieSlotView:init(die_slot, pos)
     self.has_die_over = false
 
     --Images
-    self.free_image = IMG.die_slot_free
-    self.has_dice_over_image = IMG.die_slot_over --If player is dragging a dice over this object
-    self.occupied_image = IMG.die_slot_occupied
-    self.wrong_image = IMG.die_slot_wrong --If player cant put his die on this slot
+    self.free_image = UI.die_slot_free
+    self.has_dice_over_image = UI.die_slot_over --If player is dragging a dice over this object
+    self.occupied_image = UI.die_slot_occupied
+    self.wrong_image = UI.die_slot_wrong --If player cant put his die on this slot
 
     self.alpha = 255
 end
