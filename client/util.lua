@@ -240,39 +240,5 @@ function util.destroyAll(mode)
 
 end
 
----------------------
---UTILITY FUNCTIONS--
----------------------
-
---Exit program
-function util.exit()
-
-    love.event.quit()
-
-end
-
---Toggle debug mode
-function util.toggleDebug()
-
-    DEBUG = not DEBUG
-    print("DEBUG is", DEBUG)
-
-end
-
---------------------
---GLOBAL FUNCTIONS--
---------------------
-
---Get any key that is pressed and checks for generic events
-function util.defaultKeyPressed(key)
-
-    if  key == 'escape' then
-        util.exit()
-    elseif key == 'f1' then
-        util.toggleDebug()
-    end
-
-end
-
 --Return functions
 return util
