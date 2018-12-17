@@ -40,12 +40,19 @@ local MatchManager = {}
 local match_map = {}
 
 function MatchManager.init()
+    local actions_locked_schema = {
+        i = 'number',
+        actions = {'array', 'string'}
+    }
     Server.on('actions locked', function(data, client)
+        if not Server.checkSchema(client, actions_locked_schema, data) then return end
         assert(match_map[client] ~= nil)
         match_map[client]:actionLocked(data.i, data.actions)
     end)
 
+    local action_input_schema = { 'number', 'number' }
     Server.on('action input', function(data, client)
+        if not Server.checkSchema(client, action_input_schema, data) then return end
         assert(match_map[client] ~= nil)
         match_map[client]:actionInput(data, client)
     end)

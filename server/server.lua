@@ -1,10 +1,9 @@
 local sock = require "common.extra_libs.sock"
+local validateType = require "type_validator"
 
 local Server = {}
 
 local server
-
-local client_list = {}
 
 function Server.init()
     assert(server == nil)
@@ -25,8 +24,13 @@ function Server.removeCallback(callback)
     server:removeCallback(callback)
 end
 
-function Server.clientIterator()
-    return ipairs(client_list)
+function Server.checkSchema(client, schema, data)
+    if not validateType(schema, data) then
+        -- document error numbers
+        client:disconnect(1)
+        return false
+    end
+    return true
 end
 
 return Server

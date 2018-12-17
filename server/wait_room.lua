@@ -48,7 +48,9 @@ function WaitRoom.init()
         sendData()
     end)
 
+    local change_room_schema = 'string'
     Server.on('change room', function(room, client)
+        if not Server.checkSchema(client, change_room_schema, room) then return end
         if clients[client] ~= room then
             debug('Client ', client , ' changing room to ', room)
             remClientFromRoom(client)
@@ -57,7 +59,9 @@ function WaitRoom.init()
         end
     end)
 
+    local ready_schema = 'boolean'
     Server.on('ready', function(is_ready, client)
+        if not Server.checkSchema(client, ready_schema, is_ready) then return end
         debug('Client', client, 'is ready', is_ready)
         local r = rooms[clients[client]]
         local all_ready = r:playerReady(client, is_ready)

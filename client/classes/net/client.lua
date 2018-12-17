@@ -13,6 +13,9 @@ function Client.start(server_ip)
     client:on('connect', function()
         print('Connected to server')
     end)
+    client:on('disconnect', function(code)
+        print('I was disconnected. Code = ' .. tostring(code))
+    end)
     client:connect()
 end
 
