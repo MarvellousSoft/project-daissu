@@ -1,10 +1,11 @@
 local Class = require "common.extra_libs.hump.class"
 local DRAWABLE = require "classes.primitives.drawable"
+local assets = require "assets"
 
 local Background = Class{
     __includes = {DRAWABLE},
     init = function(self)
-        self.image = IMG.background
+        self.image = assets.images.background
         self.sx = WIN_W/self.image:getWidth()
         self.sy = WIN_H/self.image:getHeight()
 
