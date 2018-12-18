@@ -88,7 +88,7 @@ function PlayerArea:refillRerolls()
 end
 
 function PlayerArea:draw()
-    local start_p = self.match:startingPlayer()
+    local start_p = self.match.match:startingPlayer()
     self.mat:draw()
     self.turn_slots.view:draw(start_p == self.match.local_id, 'left')
 
@@ -121,7 +121,8 @@ function PlayerArea:update(dt)
 end
 
 function PlayerArea:mousemoved(x, y, dx, dy)
-    if self.picked_die and self.match.state == 'choosing actions' then
+    local ok_state = self.match.state == 'choosing actions'
+    if self.picked_die and ok_state then
         self.picked_die.pos.x = x + self.picked_die_delta.x
         self.picked_die.pos.y = y + self.picked_die_delta.y
         self:updateSlotHighlight(self.picked_die)
@@ -129,20 +130,21 @@ function PlayerArea:mousemoved(x, y, dx, dy)
 end
 
 function PlayerArea:mousepressed(x, y, but)
+    local ok_state = self.match.state == 'choosing actions'
     local ctrl = love.keyboard.isDown('lctrl', 'rctrl')
     if not self.picked_die then
         for i, die in ipairs(self.dice_views) do
             if die:canInteract() and die:collidesPoint(x, y) then
                 if but == 3 or love.keyboard.isDown('lshift', 'rshift') then
                     Gamestate.push(GS.DIE_DESC, die)
-                elseif but == 1 and self.match.state == 'choosing actions' and ctrl and self.rerolls_available > 0 then
+                elseif but == 1 and ok_state and ctrl and self.rerolls_available > 0 then
                     self.rerolls_available = self.rerolls_available - 1
                     die:getObj():roll()
-                elseif but == 1 and self.match.state == 'choosing actions' then
+                elseif but == 1 and ok_state then
                     self.picked_die = die
                     self.picked_die_delta = die.pos - Vector(x, y)
                     die:handlePick(self)
-                elseif but == 2 and self.match.state == 'choosing actions' then
+                elseif but == 2 and ok_state then
                     die:handleRightClick(self)
                 end
                 return
@@ -231,7 +233,8 @@ function PlayerArea:actionsLocked()
 end
 
 function PlayerArea:mousereleased(x, y, but)
-    if self.picked_die and but == 1 and self.match.state == 'choosing actions' then
+    local ok_state = self.match.state == 'choosing actions'
+    if self.picked_die and but == 1 and ok_state then
         local die = self.picked_die
         self.picked_die = nil
         die:handleUnpick(self)

@@ -9,28 +9,26 @@ local Client = require "classes.net.client"
 local Controller = Class {}
 
 -- Start controller with a player on map on position pos
-function Controller:init(map, color, i, j, source)
+function Controller:init(map, player, source)
     self.map = map
     self.source = source
-    self.player = Player(color)
-    map:get(i, j):setObj(self.player)
+    self.player = player
 end
 
 function Controller:getPosition()
     return self.player.tile.i, self.player.tile.j
 end
 
-function Controller:waitForInput(match, input_handler)
+function Controller:waitForInput(match, input_handler, callback)
     if self.source == 'local' then
-        local old_func = input_handler.finish
         input_handler.finish = function(self, ...)
             Client.send('action input', {...})
-            old_func(self, ...)
+            callback(...)
         end
         match.action_input_handler = input_handler
     elseif self.source == 'remote' then
         Client.listenOnce('action input', function(data)
-            input_handler:finish(unpack(data))
+            callback(unpack(data))
         end)
     end
 end

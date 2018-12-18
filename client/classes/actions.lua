@@ -51,7 +51,20 @@ function Actions.init()
 end
 
 function Actions.getAction(action_name)
+    if not helpers[action_name] then
+        error('Unknown action ' .. tostring(action_name))
+    end
     return helpers[action_name]
+end
+
+function Actions.waitForInput(match, action, controller, callback)
+    local helper = Actions.getAction(action)
+    if helper.getInputHandler then
+        controller:waitForInput(match, helper.getInputHandler(controller), callback)
+    else
+        -- no input
+        callback()
+    end
 end
 
 function Actions.executeAction(match, action, controller, callback)

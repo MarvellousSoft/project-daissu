@@ -1,12 +1,12 @@
 --MODULE FOR THE GAMESTATE: GAME--
-local Vector     = require "common.extra_libs.hump.vector"
-local Util       = require "util"
-local Draw       = require "draw"
-local Drawable   = require "classes.primitives.drawable"
-local Background = require "classes.background"
-local Match      = require "classes.match.match"
-local Actions    = require "classes.actions"
-local Client     = require "classes.net.client"
+local Vector        = require "common.extra_libs.hump.vector"
+local Util          = require "util"
+local Draw          = require "draw"
+local Drawable      = require "classes.primitives.drawable"
+local Background    = require "classes.background"
+local MatchManager  = require "classes.match.match_manager"
+local Actions       = require "classes.actions"
+local Client        = require "classes.net.client"
 
 local state = {}
 
@@ -26,7 +26,7 @@ function state:enter(prev, game_info, char_type)
 
     local player_info = {}
 
-    match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, game_info.player_count, my_id, char_type)
+    match = MatchManager(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, game_info.player_count, my_id, char_type)
     match:start()
     MAIN_TIMER:after(1, function() match:startNewTurn() end)
 end
