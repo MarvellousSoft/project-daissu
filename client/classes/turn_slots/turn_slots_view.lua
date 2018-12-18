@@ -30,6 +30,7 @@ function TurnSlotsView:init(obj, pos, w, h, color, player_num)
     end
 
     self.pos = pos
+    self.ori_y = pos.y --Original y position
     self.w, self.h = w, h
 
     self.color = color
@@ -132,10 +133,10 @@ function TurnSlotsView:setVisible()
     self:removeTimer('change_visibility', MAIN_TIMER)
     self:addTimer('change_visibility', MAIN_TIMER, "tween", d, self,
                   {alpha = 255}, 'out-quad')
-    self.pos.y = self.pos.y - offset
+    self.pos.y = self.ori_y - offset
     self:removeTimer('change_offset', MAIN_TIMER)
     self:addTimer('change_offset', MAIN_TIMER, "tween", d, self.pos,
-                  {y = self.pos.y+offset}, 'out-quad')
+                  {y = self.ori_y}, 'out-quad')
     --Set all die slots visible
     for i, slot in ipairs(self:getObj().slots) do
         slot.view:setVisible(d, offset)
@@ -150,7 +151,7 @@ function TurnSlotsView:setInvisible()
                   {alpha = 0}, 'in-quad')
     self:removeTimer('change_offset', MAIN_TIMER)
     self:addTimer('change_offset', MAIN_TIMER, "tween", d, self.pos,
-                  {y = self.pos.y-offset}, 'in-quad')
+                  {y = self.ori_y-offset}, 'in-quad')
     --Set all die slots invisible
     for i, slot in ipairs(self:getObj().slots) do
         slot.view:setInvisible(d, offset)

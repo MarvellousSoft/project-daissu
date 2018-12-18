@@ -23,10 +23,7 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
     self.turn_slots = TurnSlots(6, match.local_id)
     TurnSlotsView(self.turn_slots, t_slots_pos, t_slot_w, t_slot_h, color)
 
-    self.mat = Mat(8, Vector(pos.x, pos.y), w - 10, h - t_slot_h - 20, local_id)
-
-    self.bag_pos = pos + Vector(30, 30)
-    self.grave_pos = pos + Vector(w - 30, 30)
+    self.mat = Mat(self, 8, Vector(pos.x, pos.y), w - 10, h - t_slot_h - 20, local_id)
 
     self.match = match
 
@@ -42,7 +39,6 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
     self.picked_die_delta = nil
 
     self.rerolls_available = 0
-    self.rerolls_font = Fonts.get('regular', 20)
 end
 
 function PlayerArea:shuffleBag()
@@ -75,7 +71,7 @@ function PlayerArea:grab(count)
         local die = table.remove(self.bag)
         if die == nil then return end
         local die_view = DieView(die, 0, 0, die.color or Color.new(180,180,180))
-        die_view.pos = self.bag_pos:clone()
+        die_view.pos = self.mat:getBagPosition()
         die_view.sx, die_view.sy = 0.1, 0.1
         die:roll()
         table.insert(self.dice_views, die_view)
@@ -91,10 +87,6 @@ function PlayerArea:draw()
     local start_p = self.match.match:startingPlayer()
     self.mat:draw()
     self.turn_slots.view:draw(start_p == self.match.local_id, 'left')
-
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.setFont(self.rerolls_font)
-    love.graphics.print("Rerolls: " .. self.rerolls_available, self.mat.pos.x + 20, self.mat.pos.y + self.mat.h - self.rerolls_font:getHeight() - 10)
 
     for view in pairs(self.extra_views) do
         view:draw()
@@ -163,7 +155,7 @@ function PlayerArea:destroyPlayedDice()
             local die = slot:getDie()
             all_dice[die] = nil -- removing
             self.extra_views[die.view] = true
-            die.view:slideTo(self.grave_pos, false)
+            die.view:slideTo(self.mat:getGravepoolPosition(), false)
             MAIN_TIMER:tween(0.4, die.view, {sx = 0.01, sy = 0.01}, 'out-quad', function()
                 self.extra_views[die.view] = nil
                 die.view:setObj(nil)
@@ -192,6 +184,10 @@ function PlayerArea:getAvailableMatSlot()
             return slot
         end
     end
+end
+
+function PlayerArea:getRerolls()
+    return self.rerolls_available
 end
 
 -- Iterator throught the DieSlotView in mat a turn_slots

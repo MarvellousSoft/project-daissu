@@ -59,10 +59,9 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_player
 
     local ts_w = pi_w
     local ts_h = 90 --Turn slot height
-    local mat_turnslot_gap = 10
 
     local pa_pos = Vector(margin, map_pos.y)
-    local pa_w, pa_h = pi_w, map_h + ts_h
+    local pa_w, pa_h = pi_w, map_h
 
     self.player_area = PlayerArea(pa_pos, pa_w, pa_h, self, self.colors[local_id], archetypes[local_id])
 
@@ -95,10 +94,10 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_player
 
     self.action_input_handler = nil
 
-    local gap = 20
-    local bw, bh = 120, 7*ts_h/8
-    local bx = margin + ts_w + gap
-    local by = map_pos.y + map_h + ts_h/2 - bh/2 + 5
+    local gap = 30 --Gap between player area and lock button
+    local bw, bh = 120, 65
+    local bx = margin + ts_w/2 - bw/2
+    local by = pa_pos.y + pa_h + gap
     self.lock_button = Button(bx, by, bw, bh, "lock", function()
         self:playTurn(self.local_id, function()
             MAIN_TIMER:after(1.5, function()

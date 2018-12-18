@@ -23,6 +23,7 @@ function DieSlotView:init(die_slot, pos)
     local w, h = DieHelper.getDimensions()
     self.w = w + 2 * DieSlotView.margin
     self.h = h + 2 * DieSlotView.margin + DieHelper.getUnderside()
+    self.ori_y = self.pos.y
     self.line_width = 5
 
     self.has_die_over = false
@@ -73,10 +74,10 @@ function DieSlotView:setVisible(d, offset)
     self:removeTimer('change_visibility', MAIN_TIMER)
     self:addTimer('change_visibility', MAIN_TIMER, "tween", d, self,
                   {alpha = 255}, 'out-quad')
-    self.pos.y = self.pos.y - offset
+    self.pos.y = self.ori_y - offset
     self:removeTimer('change_offset', MAIN_TIMER)
     self:addTimer('change_offset', MAIN_TIMER, "tween", d, self.pos,
-                  {y = self.pos.y+offset}, 'out-quad')
+                  {y = self.ori_y}, 'out-quad')
 end
 
 function DieSlotView:setInvisible(d, offset)
@@ -85,7 +86,7 @@ function DieSlotView:setInvisible(d, offset)
                   {alpha = 0}, 'in-quad')
     self:removeTimer('change_offset', MAIN_TIMER)
     self:addTimer('change_offset', MAIN_TIMER, "tween", d, self.pos,
-                  {y = self.pos.y-offset}, 'in-quad')
+                  {y = self.ori_y-offset}, 'in-quad')
 end
 
 
