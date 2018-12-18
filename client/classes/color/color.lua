@@ -53,13 +53,17 @@ end
 
 --Set color c as love drawing color
 function color_funcs.set(c)
-
-    if c.tp == "RGB" then
+    if type(c) == 'string' then
+        if Default == "RGB" then
+            Rgb.set(c)
+        elseif Default == "HSL" then
+            Hsl.set(c)
+        end
+    elseif c.tp == "RGB" then
         Rgb.set(c)
     elseif c.tp == "HSL" then
         Hsl.set(c)
     end
-
 end
 
 --Set color c as love drawing color, but use given alpha

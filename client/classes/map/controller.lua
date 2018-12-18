@@ -35,4 +35,8 @@ function Controller:waitForInput(match, input_handler)
     end
 end
 
+function Controller:getSource()
+    return self.source
+end
+
 return Controller

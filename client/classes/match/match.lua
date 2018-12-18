@@ -44,6 +44,7 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     self.map_view = MapView(map, map_pos, cell_size)
     self.controllers = {}
     self.turn_slots = {}
+    self.players_info = {}
 
     local n_players = #players_info
     assert(n_players > 1)
@@ -316,6 +317,18 @@ end
 function Match:update(dt)
     self.player_area:update(dt)
 end
+
+--Player Functions--
+
+function Match:getPlayerColor(id)
+    return self.colors[id]
+end
+
+function Match:getPlayerSource(id)
+    return self.controllers[id]:getSource()
+end
+
+--Mouse functions--
 
 function Match:mousemoved(...)
     self.player_area:mousemoved(...)
