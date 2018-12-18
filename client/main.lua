@@ -45,3 +45,9 @@ end
 function love.quit()
     Client.quit()
 end
+
+local default_err_handler = love.errhand
+function love.errhand(...)
+    Client.quit()
+    default_err_handler(...)
+end
