@@ -18,18 +18,17 @@ function Roundhouse.showAction(controller, callback)
         end
     end
     Timer.after(1, function()
-        Roundhouse.applyAction(controller)
         controller.player:resetAnimation()
         if callback then callback() end
     end)
 end
 
-function Roundhouse.applyAction(controller)
-    local pi, pj = controller:getPosition()
+function Roundhouse.applyAction(map, player)
+    local pi, pj = player.tile:getPosition()
     for di = -1, 1, 1 do
         for dj = -1, 1, 1 do
             if di ~= 0 or dj ~= 0 then
-                tile = controller.map:get(pi + di, pj + dj)
+                tile = map:get(pi + di, pj + dj)
                 if tile then
                     tile:applyDamage(1)
                 end

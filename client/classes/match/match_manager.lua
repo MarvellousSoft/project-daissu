@@ -24,13 +24,6 @@ local Client = require "classes.net.client"
 
 local MatchManager = Class {
     __includes = {ELEMENT},
-    starting_positions = {
-        nil, -- 1 player
-        {{2,2},{4,4}}, --2 players
-        {{1,1},{3,3},{5,5}}, --3 players
-        {{2,2},{4,4},{5,1},{1,5}}, --4 players
-        {{1,1},{2,3},{3,5},{4,2},{5,4}}, --5 players
-    }
 }
 
 function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_players, local_id, archetypes)
@@ -61,7 +54,6 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_player
     local pi_h = 120 --Player info height
     local pi_w = (w - map_w)/2 - 2*margin --Player info width
 
-    local map = Map(rows, columns)
     local map_pos = pos + Vector((w - map_w) / 2, margin + pi_h + margin)
     self.map_view = MapView(self.match.map, map_pos, cell_size)
 
@@ -86,7 +78,7 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_player
         local c = self.colors[i]
         -- XXX This field shouldn't be inside player
         self.match.players[i].color = c
-        self.controllers[i] = Controller(map, self.match.players[i], i == local_id and 'local' or 'remote')
+        self.controllers[i] = Controller(self.match.map, self.match.players[i], i == local_id and 'local' or 'remote')
         if i == local_id then
             self.players_info[i] = PlayerInfo(margin, original_y, ts_w, pi_h, i, archetypes[i])
             self.turn_slots[i] = self.player_area.turn_slots.view
@@ -164,7 +156,10 @@ end
 
 -- This recursively plays each action in a turn
 local function playTurnRec(self, co, callback, ...)
-    local data = co(...)
+    local ok, data = coroutine.resume(co, ...)
+    if not ok then
+        error(debug.traceback(co, data))
+    end
     -- turn is over
     if data == nil then
         self.state = self.match.state
@@ -176,15 +171,16 @@ local function playTurnRec(self, co, callback, ...)
         if callback then callback() end
         return
     elseif data.action ~= 'none' then
-        Actions.waitForInput(self, data.action, self.controller[data.player], function(...)
+        Actions.waitForInput(self, data.action, self.controllers[data.player], function(...)
             local varargs_wrap = {...}
-            Actions.getAction(data.action).showAction(self.controller[data.player], function()
+            Actions.getAction(data.action).showAction(self.controllers[data.player], function()
                 self.action_list_window.obj:bump()
                 playTurnRec(self, co, callback, unpack(varargs_wrap))
             end, ...)
         end)
     else
         self.action_list_window.obj:bump()
+        playTurnRec(self, co, callback)
     end
 end
 
@@ -197,7 +193,7 @@ function MatchManager:playTurnFromActions(player_actions, callback)
     local size = math.max(unpack(Util.map(player_actions, function(list) return #list end)))
     self:createActionList(player_actions, self.match:getOrder(), size)
 
-    local co = coroutine.wrap(self.match.playTurnFromActions)
+    local co = coroutine.create(self.match.playTurnFromActions)
     playTurnRec(self, co, callback, self.match, player_actions)
 end
 
@@ -343,7 +339,7 @@ function MatchManager:mousepressed(x, y, but, ...)
     self.lock_button:mousepressed(x, y, ...)
     local i, j = self.map_view:getTileOnPosition(Vector(x, y))
     if i and self.action_input_handler and self.action_input_handler:accept(i, j) then
-        self.action_input_handler:finish(i, j)
+        self.action_input_handler:chosen_input(i, j)
         self.action_input_handler = nil
     end
 end

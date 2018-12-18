@@ -11,7 +11,6 @@ local function WalkCreator(distance)
     function Walk.showAction(controller, callback, i, j)
         local tile = controller.map:get(i, j)
         local fun = function()
-            Walk.applyAction(controller, i, j)
             controller.player:resetAnimation()
             if callback then callback() end
         end
@@ -23,19 +22,16 @@ local function WalkCreator(distance)
         end
     end
 
-    function Walk.applyAction(controller, i, j)
-        local pi, pj = controller:getPosition()
-        GridHelper.moveObject(controller.map, pi, pj, i, j)
+    function Walk.applyAction(map, player, i, j)
+        local pi, pj = player.tile:getPosition()
+        GridHelper.moveObject(map, pi, pj, i, j)
     end
 
-    function Walk.getInputHandler(controller, callback)
+    function Walk.getInputHandler(controller)
         local pi, pj = controller:getPosition()
         return ActionInputHandler {
             accept = function(self, i, j)
                 return not Vec.eq(i, j, pi, pj) and GridHelper.manhattanDistance(i, j, pi, pj) <= distance and not controller.map:get(i, j):blocked()
-            end,
-            finish = function(self, i, j)
-                Walk.showAction(controller, callback, i, j)
             end,
         }
     end

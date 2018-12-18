@@ -25,6 +25,10 @@ function MapTile:setObj(obj)
     end
 end
 
+function MapTile:getPosition()
+    return self.i, self.j
+end
+
 function MapTile:blocked()
     return self.obj ~= nil
 end

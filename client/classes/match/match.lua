@@ -52,15 +52,19 @@ function Match:playTurnFromActions(player_actions)
     local order = self:getOrder()
     for j = 1, size do
         for i = 1, self.n_players do
-            if player_actions[i][j] ~= 'none' then
-                Actions.getAction(player_actions[i][j]).applyAction(
+            local p_i = order[i]
+            if player_actions[p_i][j] ~= 'none' then
+                local helper = Actions.getAction(player_actions[p_i][j])
+                helper.applyAction(
+                    self.map,
+                    self.players[p_i],
                     coroutine.yield {
                         player = i,
-                        action = player_actions[i][j]
+                        action = player_actions[p_i][j]
                     }
                 )
             else
-                coroutine.yield { player = i, action = 'none' }
+                coroutine.yield { player = p_i, action = 'none' }
             end
         end
     end

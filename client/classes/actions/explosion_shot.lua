@@ -24,18 +24,17 @@ function ExplosionShot.showAction(controller, callback, di, dj)
         end
     end
     Timer.after(1, function()
-        ExplosionShot.applyAction(controller, di, dj)
         controller.player:resetAnimation()
         if callback then callback() end
     end)
 end
 
-function ExplosionShot.applyAction(controller, di, dj)
-    local pi, pj = controller:getPosition()
-    local _, ti, tj = GridHelper.firstBlockedPos(controller.map, pi, pj, di, dj)
+function ExplosionShot.applyAction(map, player, di, dj)
+    local pi, pj = player.tile:getPosition()
+    local _, ti, tj = GridHelper.firstBlockedPos(map, pi, pj, di, dj)
     for di = -1, 1, 1 do
         for dj = -1, 1, 1 do
-            tile = controller.map:get(ti + di, tj + dj)
+            tile = map:get(ti + di, tj + dj)
             if tile then
                 local damage = (di == 0 and dj == 0) and 2 or 1
                 tile:applyDamage(damage)
@@ -44,14 +43,14 @@ function ExplosionShot.applyAction(controller, di, dj)
     end
 end
 
-function ExplosionShot.getInputHandler(controller, callback)
+function ExplosionShot.getInputHandler(controller)
     local pi, pj = controller:getPosition()
     return ActionInputHandler {
         accept = function(self, i, j)
             return GridHelper.manhattanDistance(pi, pj, i, j) == 1
         end,
-        finish = function(self, i, j)
-            ExplosionShot.showAction(controller, callback, i - pi, j - pj)
+        processInput = function(self, i, j)
+            return i - pi, j - pj
         end,
         hover_color = function(self, mi, mj, i, j)
             local _, ti, tj = GridHelper.firstBlockedPos(controller.map, pi, pj, mi - pi, mj - pj)

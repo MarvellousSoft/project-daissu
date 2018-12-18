@@ -6,13 +6,12 @@ local ActionInputHandler = require "classes.actions.action_input_handler"
 
 local Shove = {}
 
-function Shove.applyAction(controller, di, dj)
-    local pi, pj = controller:getPosition()
-    local tile = controller.player.tile:getCloseTile(controller.map, di, dj)
+function Shove.applyAction(map, player, di, dj)
+    local tile = player.tile:getCloseTile(map, di, dj)
     if not tile then return end
     tile:applyDamage(1)
     if tile.obj then
-        GridHelper.pushObject(controller.map, tile.i, tile.j, di, dj, 2)
+        GridHelper.pushObject(map, tile.i, tile.j, di, dj, 2)
     end
 end
 
@@ -24,7 +23,6 @@ function Shove.showAction(controller, callback, di, dj)
     local obj = tile and tile.obj
     local fun = function()
         if obj then obj:resetAnimation() end
-        Shove.applyAction(controller, di, dj)
         if callback then callback() end
     end
     if obj then

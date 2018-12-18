@@ -4,14 +4,14 @@ local Class = require "common.extra_libs.hump.class"
 local ActionInputHandler = Class {
     init = function(self, functions)
         if functions.accept then self.accept = functions.accept end
-        if functions.finish then self.finish = functions.finish end
+        if functions.processInput then self.processInput = functions.processInput end
         if functions.hover_color then self.hover_color = functions.hover_color end
     end,
     accept = function(self, i, j)
         return false
     end,
-    finish = function(self, i, j)
-        assert(self:accept(i, j))
+    processInput = function(self, ...)
+        return ...
     end,
     --[[
     Mouse is currently at tile mi, mj (an accepted tile)
