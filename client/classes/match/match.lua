@@ -17,6 +17,7 @@ local PlayerArea = require "classes.match.player_area"
 local ActionList = require "classes.match.action_list"
 local Button = require "classes.button"
 local ScrollWindow = require "classes.ui.scroll_window"
+local PlayerInfo = require "classes.match.player_info"
 
 local Client = require "classes.net.client"
 
@@ -31,12 +32,14 @@ local Match = Class {
     }
 }
 
-function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id, archetype)
+function Match:init(rows, columns, pos, cell_size, w, h, number_of_players, local_id, archetype)
     ELEMENT.init(self)
+    self:register("L0", nil, "match")
     self.state = 'not started'
     self.pos = pos
     self.w, self.h = w, h
     self.local_id = local_id
+    self.n_players = number_of_players
     local map = Map(rows, columns)
     local map_w = cell_size * columns
     local map_h = cell_size * rows
@@ -46,9 +49,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     self.turn_slots = {}
     self.players_info = {}
 
-    local n_players = #players_info
-    assert(n_players > 1)
-    assert(n_players <= 5)
+    assert(self.n_players > 1)
+    assert(self.n_players <= 5)
 
     self.colors = {  --Colors for each player
         Color.new(133, 255, 86), --Chartoise green
@@ -62,9 +64,8 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
 
     --Turnslots dimensions
     local ts_w = map_pos.x - 2 * margin - 10
-    local ts_h, dy = 90, -90
-
-    local player_info_h = 130
+    local ts_h = 90 --Turn slot height
+    local pi_h = 130 --PLayer info height
 
     local pa_pos = Vector(margin, map_pos.y)
     local mat_turnslot_gap = 10
@@ -73,15 +74,21 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
 
     self.action_list_window = nil
 
-    for i, info in ipairs(players_info) do
+    local opponents_x = map_pos.x + map_w + 5
+    local gap = 5
+    local dy = pi_h + ts_h + gap
+    local y = 5
+    for i = 1, self.n_players do
         local c = self.colors[i]
-        local pi, pj = unpack(self.starting_positions[n_players][i])
-        self.controllers[i] = Controller(map, c, pi, pj, info)
+        local pi, pj = unpack(self.starting_positions[self.n_players][i])
+        self.controllers[i] = Controller(map, c, pi, pj, i == self.local_id and 'local' or 'remote')
         if i == local_id then
             self.turn_slots[i] = self.player_area.turn_slots.view
+            self.players_info[i] = PlayerInfo(5, 5, ts_w, pi_h, i, 'melee')
         else
-            self.turn_slots[i] = TurnSlotsView(TurnSlots(6, i), Vector(map_pos.x + map_w + 5, map_pos.y+map_h+ dy), ts_w, ts_h, c)
-            dy = dy - 140
+            self.players_info[i] = PlayerInfo(opponents_x, y, ts_w, pi_h, i, 'melee')
+            self.turn_slots[i] = TurnSlotsView(TurnSlots(6, i), Vector(opponents_x, y + pi_h + gap), ts_w, ts_h, c)
+            y = y + dy
             self.turn_slots[i]:setAlpha(0)
         end
     end
@@ -108,12 +115,16 @@ function Match:init(rows, columns, pos, cell_size, w, h, players_info, local_id,
     end)
     self.lock_button:lock()
 
-    self:register("L0", nil, "match")
 end
 
 function Match:draw()
     --Draw grid
     self.map_view:draw(self)
+
+    --Draw players info
+    for i, player_info in ipairs(self.players_info) do
+        player_info:draw()
+    end
 
     --Draw Player area
     self.player_area:draw(start_p)

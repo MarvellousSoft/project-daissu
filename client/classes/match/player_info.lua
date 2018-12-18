@@ -1,7 +1,8 @@
+local POS       = require "classes.primitives.pos"
+local ELEMENT   = require "classes.primitives.element"
 local Color     = require "classes.color.color"
 local Class     = require "common.extra_libs.hump.class"
-local ELEMENT   = require "classes.primitives.element"
-local POS       = require "classes.primitives.pos"
+local Util      = require "util"
 
 local PlayerInfo = Class{
     __includes = {ELEMENT, POS},

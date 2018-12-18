@@ -25,11 +25,8 @@ function state:enter(prev, game_info, char_type)
     Background():register("BG", nil, "background")
 
     local player_info = {}
-    for i = 1, game_info.player_count do
-        table.insert(player_info, my_id == i and 'local' or 'remote')
-    end
 
-    match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, player_info, my_id, char_type)
+    match = Match(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, game_info.player_count, my_id, char_type)
     match:start()
     MAIN_TIMER:after(1, function() match:startNewTurn() end)
 end

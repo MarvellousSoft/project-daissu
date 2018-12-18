@@ -74,7 +74,7 @@ function rgb_funcs.copy(c1, c2)  c1.r, c1.g, c1.b, c1.a = c2.r, c2.g, c2.b, c2.a
 --Set the color used for drawing
 function rgb_funcs.set(c)
     if type(c) == "string" then
-        c = rgb[c]
+        c = rgb_funcs[c]()
     end
     love.graphics.setColor(c.r, c.g, c.b, c.a)
 end
