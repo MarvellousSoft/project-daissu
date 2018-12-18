@@ -1,6 +1,7 @@
-local Server = require "server"
+local Server       = require "server"
 local MatchManager = require "match_manager"
-local Room = require "room"
+local Room         = require "room"
+local log          = require "common.extra_libs.log"
 
 local WaitRoom = {}
 
@@ -24,11 +25,6 @@ local function remClientFromRoom(client)
     end
 end
 
-local function debug(...)
-    print(...)
-    io.flush()
-end
-
 local function sendData()
     local room_list = {}
     for name, room in pairs(rooms) do
@@ -44,7 +40,7 @@ function WaitRoom.init()
     rooms.none = Room()
 
     Server.on('connect', function(data, client)
-        debug('Client connected --', client)
+        log.info('Client connected --', client)
         addClientToRoom(client, 'none')
         sendData()
     end)
@@ -53,7 +49,7 @@ function WaitRoom.init()
     Server.on('change room', function(room, client)
         if not Server.checkSchema(client, change_room_schema, room) then return end
         if clients[client] ~= room then
-            debug('Client ', client , ' changing room to ', room)
+            log.trace('Client ', client , ' changing room to ', room)
             remClientFromRoom(client)
             addClientToRoom(client, room)
             sendData()
@@ -63,14 +59,14 @@ function WaitRoom.init()
     local ready_schema = {ready = 'boolean', archetype = 'string'}
     Server.on('ready', function(args, client)
         if not Server.checkSchema(client, ready_schema, args) then return end
-        debug('Client', client, 'is ready', args.ready)
-        debug('Client', client, 'is using archetype', args.archetype)
+        log.trace('Client', client, 'is ready', args.ready)
+        log.trace('Client', client, 'is using archetype', args.archetype)
         local r = rooms[clients[client]]
         local all_ready = r:updatePlayer(client, args)
         if clients[client] ~= 'none' and all_ready and r:atLeastTwoPlayers() then
             rooms[clients[client]] = nil
             local cl_list = {}
-            debug('Creating match for clients ')
+            log.trace('Creating match for clients ')
             for client, info in pairs(r.players) do
                 -- we don't need this information anymore
                 info.ready = nil
@@ -79,16 +75,16 @@ function WaitRoom.init()
                     info = info
                 })
                 clients[client] = nil
-                debug(client)
+                log.trace(client)
             end
-            debug('')
+            log.trace('')
             MatchManager.startMatch(cl_list)
         end
         sendData()
     end)
 
     Server.on('disconnect', function(data, client)
-        debug('Client disconnected --', client)
+        log.info('Client disconnected --', client)
         if clients[client] == nil then
             -- Client is no longer in wait room
         else

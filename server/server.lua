@@ -1,5 +1,6 @@
-local sock = require "common.extra_libs.sock"
+local sock         = require "common.extra_libs.sock"
 local validateType = require "type_validator"
+local log          = require "common.extra_libs.log"
 
 local Server = {}
 
@@ -9,7 +10,7 @@ function Server.init()
     assert(server == nil)
 
     server = sock.newServer("0.0.0.0", 47111)
-    print('Starting server at port 47111') io.flush()
+    log.info('Starting server at port 47111')
 end
 
 function Server.update()

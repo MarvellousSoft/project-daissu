@@ -1,4 +1,5 @@
 local Class = require "common.extra_libs.hump.class"
+local log   = require "common.extra_libs.log"
 
 local Room = Class {}
 
@@ -23,7 +24,10 @@ function Room:remPlayer(p)
 end
 
 function Room:updatePlayer(p, info)
-    if self.players[p] == nil then return false end
+    if self.players[p] == nil then
+        log.warn('Trying to update missing player')
+        return false
+    end
     self.players[p] = info
     if not info.ready then return false end
     for _, info in pairs(self.players) do

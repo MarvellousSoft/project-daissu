@@ -1,3 +1,4 @@
+local log = require "common.extra_libs.log"
 --MODULE WITH FONTS UTILITIES AND STUFF--
 
 local fonts_funcs = {}
@@ -38,7 +39,7 @@ function fonts_funcs.get(font_name, size, dont_store)
 
     --Leave function if font doesn't exist
     if not font_db then
-        if DEBUG then print("Tried to get inexistent font!") end
+        log.warn("Tried to get inexistent font!")
         return
     end
 
@@ -74,7 +75,7 @@ function fonts_funcs.set(font_name_or_font, size, dont_store)
 
         --Leave function if font doesn't exist
         if not font_db then
-            if DEBUG then print("Tried to set inexistent font!") end
+            log.warn("Tried to set inexistent font!")
             return
         end
 

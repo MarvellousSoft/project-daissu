@@ -1,5 +1,6 @@
 local Class = require "common.extra_libs.hump.class"
 local sock = require "common.extra_libs.sock"
+local log = require "common.extra_libs.log"
 
 local Client = {}
 
@@ -7,14 +8,14 @@ local client
 
 function Client.start(server_ip)
     assert(client == nil)
-    print('Will connect to ' .. server_ip)
+    log.trace('Will connect to ' .. server_ip)
 
     client = sock.newClient(server_ip, 47111)
     client:on('connect', function()
-        print('Connected to server')
+        log.info('Connected to server')
     end)
     client:on('disconnect', function(code)
-        print('I was disconnected. Code = ' .. tostring(code))
+        log.error('I was disconnected. Code = ' .. tostring(code))
     end)
     client:connect()
 end
