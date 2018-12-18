@@ -19,11 +19,11 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
     local map_w = map.cell_size * columns
     -- Taking margins into account
     local t_slot_w, t_slot_h = w - 10, 90
-    local t_slots_pos = Vector(pos.x + 5, pos.y + h - t_slot_h)
+    local t_slots_pos = Vector(pos.x, pos.y + h - t_slot_h)
     self.turn_slots = TurnSlots(6, match.local_id)
     TurnSlotsView(self.turn_slots, t_slots_pos, t_slot_w, t_slot_h, color)
 
-    self.mat = Mat(8, Vector(pos.x + 5, pos.y), w - 10, h - t_slot_h - 20, local_id)
+    self.mat = Mat(8, Vector(pos.x, pos.y), w - 10, h - t_slot_h - 20, local_id)
 
     self.bag_pos = pos + Vector(30, 30)
     self.grave_pos = pos + Vector(w - 30, 30)

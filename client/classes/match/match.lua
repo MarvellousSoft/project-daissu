@@ -40,11 +40,6 @@ function Match:init(rows, columns, pos, cell_size, w, h, number_of_players, loca
     self.w, self.h = w, h
     self.local_id = local_id
     self.n_players = number_of_players
-    local map = Map(rows, columns)
-    local map_w = cell_size * columns
-    local map_h = cell_size * rows
-    local map_pos = pos + Vector((w - map_w) / 2,(h - map_h) / 3)
-    self.map_view = MapView(map, map_pos, cell_size)
     self.controllers = {}
     self.turn_slots = {}
     self.players_info = {}
@@ -60,34 +55,45 @@ function Match:init(rows, columns, pos, cell_size, w, h, number_of_players, loca
         Color.new(201, 86, 255), --Purple
     }
 
-    local margin = 5
+    local margin = 25
 
-    --Turnslots dimensions
-    local ts_w = map_pos.x - 2 * margin - 10
+    local map_w = cell_size * columns
+    local map_h = cell_size * rows
+
+    local pi_h = 120 --Player info height
+    local pi_w = (w - map_w)/2 - 2*margin --Player info width
+
+    local map = Map(rows, columns)
+    local map_pos = pos + Vector((w - map_w) / 2, margin + pi_h + margin)
+    self.map_view = MapView(map, map_pos, cell_size)
+
+    local ts_w = pi_w
     local ts_h = 90 --Turn slot height
-    local pi_h = 130 --PLayer info height
+    local mat_turnslot_gap = 10
 
     local pa_pos = Vector(margin, map_pos.y)
-    local mat_turnslot_gap = 10
-    local pa_w, pa_h = ts_w + 10, map_h + ts_h
+    local pa_w, pa_h = pi_w, map_h + ts_h
+
     self.player_area = PlayerArea(pa_pos, pa_w, pa_h, self, self.colors[local_id], archetype)
 
     self.action_list_window = nil
 
-    local opponents_x = map_pos.x + map_w + 5
-    local gap = 5
-    local dy = pi_h + ts_h + gap
-    local y = 5
+    local opponents_x = w - pi_w - margin
+    local gap_1 = 5  --Between info and its slot
+    local gap_2 = 27 --Between slots and next player info
+    local dy = pi_h + ts_h + gap_1 + gap_2
+    local original_y = margin
+    local y = original_y
     for i = 1, self.n_players do
         local c = self.colors[i]
         local pi, pj = unpack(self.starting_positions[self.n_players][i])
         self.controllers[i] = Controller(map, c, pi, pj, i == self.local_id and 'local' or 'remote')
         if i == local_id then
             self.turn_slots[i] = self.player_area.turn_slots.view
-            self.players_info[i] = PlayerInfo(5, 5, ts_w, pi_h, i, 'melee')
+            self.players_info[i] = PlayerInfo(margin, original_y, ts_w, pi_h, i, 'melee')
         else
             self.players_info[i] = PlayerInfo(opponents_x, y, ts_w, pi_h, i, 'melee')
-            self.turn_slots[i] = TurnSlotsView(TurnSlots(6, i), Vector(opponents_x, y + pi_h + gap), ts_w, ts_h, c)
+            self.turn_slots[i] = TurnSlotsView(TurnSlots(6, i), Vector(opponents_x, y + pi_h + gap_1), ts_w, ts_h, c)
             y = y + dy
             self.turn_slots[i]:setAlpha(0)
         end
