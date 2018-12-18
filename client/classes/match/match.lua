@@ -59,7 +59,7 @@ function Match:playTurnFromActions(player_actions)
                     self.map,
                     self.players[p_i],
                     coroutine.yield {
-                        player = i,
+                        player = p_i,
                         action = player_actions[p_i][j]
                     }
                 )
