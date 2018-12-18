@@ -124,7 +124,6 @@ end
 
 function DieView:rollAnimation()
     if self.rolling then return end
-    self:getObj():roll()
     self.rolling = true
     local imgs = {}
     for i, img in ipairs(self.side_images) do imgs[img] = i end

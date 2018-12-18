@@ -24,4 +24,18 @@ function util.pointInRect(_x, _y, x, y, w, h)
     return not (_x < x or _x > x + w or _y < y or _y > y + h)
 end
 
+-- Works like coroutine.wrap but handles errors better (full stack trace)
+function util.wrap(f)
+    local co = coroutine.create(f)
+    local aux2
+    local function aux(ok, ...)
+        if not ok then error(debug.stacktrace(co, ...)) end
+        return ...
+    end
+    aux2 = function(...)
+        return aux(coroutine.resume(co, ...))
+    end
+    return aux2
+end
+
 return util

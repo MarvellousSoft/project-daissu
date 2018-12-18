@@ -8,6 +8,8 @@ local Archetypes    = require "classes.archetypes"
 local DieView       = require "classes.die.die_view"
 local Color         = require "classes.color.color"
 local Fonts         = require "font"
+local PlayerData    = require "classes.match.player_data"
+local Util          = require "common.util"
 
 local PlayerArea = Class {}
 
@@ -27,60 +29,13 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
 
     self.match = match
 
-    self.bag = Archetypes.getBaseBag(archetype, match.local_id)
+    self.player_data = PlayerData(archetype)
+
     self.dice_views = {}
-    self.grave = {}
-
     self.extra_views = {}
-
-    self:shuffleBag()
 
     self.picked_die = nil
     self.picked_die_delta = nil
-
-    self.rerolls_available = 0
-end
-
-function PlayerArea:shuffleBag()
-    local bag = self.bag
-    local n = #bag
-    for i = 1, n do
-        local j = love.math.random(i, n)
-        bag[i], bag[j] = bag[j], bag[i]
-    end
-end
-
--- In the future, this should probably have an animation,
--- and thus receive a callback to call when it ends
-function PlayerArea:shuffleGraveIntoBag()
-    assert(self.bag[1] == nil)
-    for i, die in ipairs(self.grave) do
-        table.insert(self.bag, die)
-    end
-    self.grave = {}
-    self:shuffleBag()
-end
-
-function PlayerArea:grab(count)
-    for i = 1, count do
-        if self.bag[1] == nil then
-            self:shuffleGraveIntoBag()
-        end
-        local slot = self:getAvailableMatSlot()
-        if slot == nil then return end
-        local die = table.remove(self.bag)
-        if die == nil then return end
-        local die_view = DieView(die, 0, 0)
-        die_view.pos = self.mat:getBagPosition()
-        die_view.sx, die_view.sy = 0.1, 0.1
-        die_view:rollAnimation()
-        table.insert(self.dice_views, die_view)
-        slot:putDie(die, false)
-    end
-end
-
-function PlayerArea:refillRerolls()
-    self.rerolls_available = 2
 end
 
 function PlayerArea:draw()
@@ -101,6 +56,26 @@ function PlayerArea:draw()
     if self.picked_die then
         self.picked_die:draw()
     end
+end
+
+function PlayerArea:grab(count)
+    local co = Util.wrap(function() self.player_data:grab(count) end)
+    while true do
+        local die = co()
+        if not die then break end
+        local slot = self:getAvailableMatSlot()
+        assert(slot)
+        local die_view = DieView(die, 0, 0)
+        die_view.pos = self.mat:getBagPosition()
+        die_view.sx, die_view.sy = 0.1, 0.1
+        die_view:rollAnimation()
+        table.insert(self.dice_views, die_view)
+        slot:putDie(die, false)
+    end
+end
+
+function PlayerArea:refillRerolls()
+    self.player_data:refillRerolls()
 end
 
 function PlayerArea:update(dt)
@@ -129,8 +104,8 @@ function PlayerArea:mousepressed(x, y, but)
             if die:canInteract() and die:collidesPoint(x, y) then
                 if but == 3 or love.keyboard.isDown('lshift', 'rshift') then
                     Gamestate.push(GS.DIE_DESC, die)
-                elseif but == 1 and ok_state and ctrl and self.rerolls_available > 0 then
-                    self.rerolls_available = self.rerolls_available - 1
+                elseif but == 1 and ok_state and ctrl and self.player_data:getRerolls() > 0 then
+                    self.player_data:reroll(die:getObj())
                     die:rollAnimation()
                 elseif but == 1 and ok_state then
                     self.picked_die = die
@@ -153,6 +128,7 @@ function PlayerArea:destroyPlayedDice()
     for i, slot in ipairs(self.turn_slots.slots) do
         if slot:getDie() then
             local die = slot:getDie()
+            self.player_data:sendDieToGrave(die)
             all_dice[die] = nil -- removing
             self.extra_views[die.view] = true
             die.view:slideTo(self.mat:getGravepoolPosition(), false)
@@ -161,7 +137,6 @@ function PlayerArea:destroyPlayedDice()
                 die.view:setObj(nil)
             end)
             slot:removeDie()
-            table.insert(self.grave, die)
         end
     end
     self.dice_views = {}
@@ -184,10 +159,6 @@ function PlayerArea:getAvailableMatSlot()
             return slot
         end
     end
-end
-
-function PlayerArea:getRerolls()
-    return self.rerolls_available
 end
 
 -- Iterator throught the DieSlotView in mat a turn_slots

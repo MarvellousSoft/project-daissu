@@ -111,7 +111,7 @@ function Mat:draw()
                        self.rerolls_img_sx, self.rerolls_img_sy)
     Font.set(self.rerolls_font)
     Color.set("black")
-    g.print(self.player_area:getRerolls(), self.rerolls_text_pos.x, self.rerolls_text_pos.y)
+    g.print(self.player_area.player_data:getRerolls(), self.rerolls_text_pos.x, self.rerolls_text_pos.y)
 
     --Draw grave
     Color.set("black")
