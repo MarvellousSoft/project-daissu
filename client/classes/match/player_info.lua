@@ -5,6 +5,7 @@ local Class     = require "common.extra_libs.hump.class"
 local Vector    = require "common.extra_libs.hump.vector"
 local Util      = require "util"
 local UI        = require("assets").images.UI
+local Archetype = require("assets").images.characters
 
 local PlayerInfo = Class{
     __includes = {ELEMENT, POS},
@@ -34,8 +35,11 @@ local PlayerInfo = Class{
         self.pt_ix = self.pt_w/self.pt_image:getWidth()  --Horizontal scale for image
         self.pt_iy = self.pt_h/self.pt_image:getHeight() --Vertical scale for image
         --Player image
-        self.player_image_w, self.player_image_h = 80, 80
-
+        self.pi_w, self.pi_h = 80, 80
+        self.pi_offset = 1
+        self.pi_image = Archetype[self.archetype]
+        self.pi_ix = self.pi_w/self.pi_image:getWidth()  --Horizontal scale for image
+        self.pi_iy = self.pi_h/self.pi_image:getHeight() --Vertical scale for image
 
         self.tp = "player_info"
     end
@@ -51,14 +55,31 @@ function PlayerInfo:draw()
     Color.set(self.color)
     g.draw(self.bg_image, self.pos.x, self.pos.y, nil, self.bg_ix, self.bg_iy)
 
-    --Draw portrait
-    Color.set(self.color)
+    --Draw portrait bg
+    local scale
     if self.flip then
-        offset = self.w - self.pt_margin - self.pt_w
+        offset = self.w - self.pt_margin
+        scale = -1
     else
         offset = self.pt_margin
+        scale = 1
     end
-    g.draw(self.pt_image, self.pos.x + offset, self.pos.y + self.h/2 - self.pt_h/2, nil, self.pt_ix, self.pt_iy)
+    Color.setWithAlpha(Color.black(),180)
+    local shadow = 8
+    g.draw(self.pt_image, self.pos.x + offset + shadow*scale, self.pos.y + self.h/2 - self.pt_h/2 + shadow, nil, self.pt_ix * scale, self.pt_iy)
+    Color.set(self.color)
+    g.draw(self.pt_image, self.pos.x + offset, self.pos.y + self.h/2 - self.pt_h/2, nil, self.pt_ix * scale, self.pt_iy)
+
+    --Draw portrait
+    if self.flip then
+        offset = self.w - self.pt_margin - self.pt_w/2 + self.pi_w/2 + self.pi_offset
+        scale = -1
+    else
+        offset = self.pt_margin + self.pi_offset + self.pt_w/2 - self.pi_w/2
+        scale = 1
+    end
+    Color.set("white")
+    g.draw(self.pi_image, self.pos.x + offset, self.pos.y + self.h/2 - self.pi_h/2, nil, self.pi_ix * scale, self.pi_iy)
 end
 
 return PlayerInfo
