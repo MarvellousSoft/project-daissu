@@ -34,7 +34,7 @@ function Mat:init(player_area, dice_n, pos, w, h, player_num)
     self.bag_img_sy = self.bag_h/self.bag_image:getHeight()
     self.bag_pos = Vector(pos.x + margin_x, pos.y + margin_y)
     --Rerolls
-    self.rerolls_pos = Vector(self.pos.x + self.w/2, self.pos.y + margin)
+    self.rerolls_pos = Vector(self.pos.x + self.w/2, self.pos.y + margin_y)
     self.rerolls_font = Font.get('regular', 20)
     --Gravepool
     self.grave_w, self.grave_h = 80, 80
@@ -93,10 +93,9 @@ function Mat:draw()
                        self.bag_img_sx, self.bag_img_sy)
 
     --Draw rerolls
-    self.rerolls_available = 0
     Font.set(self.rerolls_font)
     Color.set("black")
-    g.print(self.rerolls_available, self.rerolls_pos.x, self.rerolls_pos.y)
+    g.print(self.player_area:getRerolls(), self.rerolls_pos.x, self.rerolls_pos.y)
 
     --Draw grave
     Color.set("black")
