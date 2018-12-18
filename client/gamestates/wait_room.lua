@@ -13,11 +13,13 @@ local room
 local room_list = {}
 local larger_font
 local title_font
+local _char_type
 
 local room_input = { text = "" }
 local ready_checkbox = { checked = false }
 
 function state:enter(prev, options, char_type)
+    _char_type = char_type
     room = 'none'
     local cb = Client.on('client data', function(list)
         room_list = list
@@ -33,7 +35,7 @@ function state:enter(prev, options, char_type)
     end)
     Client.listenOnce('start game', function(info)
         assert(Client.removeCallback(cb))
-        Gamestate.switch(require "gamestates.game", info, char_type)
+        Gamestate.switch(require "gamestates.game", info)
     end)
 
     if options.room then
@@ -45,7 +47,7 @@ function state:enter(prev, options, char_type)
     if options.auto_ready then
         MAIN_TIMER:after(tonumber(options.auto_ready) or 0, function()
             ready_checkbox.checked = true
-            Client.send('ready', true)
+            Client.send('ready', {ready = true, archetype = _char_type})
         end)
     end
 
@@ -72,7 +74,7 @@ function state:update(dt)
 
     suit.layout:push(suit.layout:row())
         if suit.Checkbox(ready_checkbox, suit.layout:row(50, 50)).hit then
-            Client.send('ready', ready_checkbox.checked)
+            Client.send('ready', {ready = ready_checkbox.checked, archetype = _char_type})
         end
         suit.Label("Ready", {align = 'left', font = larger_font}, suit.layout:col(100, 50))
     suit.layout:pop()

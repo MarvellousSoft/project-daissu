@@ -59,12 +59,14 @@ function WaitRoom.init()
         end
     end)
 
-    local ready_schema = 'boolean'
-    Server.on('ready', function(is_ready, client)
-        if not Server.checkSchema(client, ready_schema, is_ready) then return end
-        debug('Client', client, 'is ready', is_ready)
+    local ready_schema = {ready = 'boolean', archetype = 'string'}
+    Server.on('ready', function(args, client)
+        if not Server.checkSchema(client, ready_schema, args) then return end
+        debug('Client', client, 'is ready', args.ready)
+        client.archetype = args.archetype
+        debug('Client', client, 'is using archetype', args.archetype)
         local r = rooms[clients[client]]
-        local all_ready = r:playerReady(client, is_ready)
+        local all_ready = r:playerReady(client, args.ready)
         if clients[client] ~= 'none' and all_ready and r:atLeastTwoPlayers() then
             rooms[clients[client]] = nil
             local cl_list = {}

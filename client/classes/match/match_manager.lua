@@ -33,7 +33,7 @@ local MatchManager = Class {
     }
 }
 
-function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_players, local_id, archetype)
+function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_players, local_id, archetypes)
     ELEMENT.init(self)
     self:register("L0", nil, "match")
     self.match = Match(rows, columns, number_of_players, 10)
@@ -72,7 +72,7 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_player
     local pa_pos = Vector(margin, map_pos.y)
     local pa_w, pa_h = pi_w, map_h + ts_h
 
-    self.player_area = PlayerArea(pa_pos, pa_w, pa_h, self, self.colors[local_id], archetype)
+    self.player_area = PlayerArea(pa_pos, pa_w, pa_h, self, self.colors[local_id], archetypes[local_id])
 
     self.action_list_window = nil
 
@@ -88,10 +88,10 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_player
         self.match.players[i].color = c
         self.controllers[i] = Controller(map, self.match.players[i], i == local_id and 'local' or 'remote')
         if i == local_id then
-            self.players_info[i] = PlayerInfo(margin, original_y, ts_w, pi_h, i, 'melee')
+            self.players_info[i] = PlayerInfo(margin, original_y, ts_w, pi_h, i, archetypes[i])
             self.turn_slots[i] = self.player_area.turn_slots.view
         else
-            self.players_info[i] = PlayerInfo(opponents_x, y, ts_w, pi_h, i, 'melee')
+            self.players_info[i] = PlayerInfo(opponents_x, y, ts_w, pi_h, i, archetypes[i])
             self.turn_slots[i] = TurnSlotsView(TurnSlots(6, i), Vector(opponents_x, y + pi_h + gap_1), ts_w, ts_h, c)
             y = y + dy
             self.turn_slots[i]:setAlpha(0)

@@ -8,23 +8,26 @@ end
 
 function Room:addPlayer(p)
     if self.players[p] ~= nil then return end
-    self.players[p] = 'not ready'
+    self.players[p] = {
+        status = 'not ready',
+        archetype = 'melee' --default
+    }
 end
 
 function Room:remPlayer(p)
     if self.players[p] == nil then return end
     self.players[p] = nil
-    for ps in pairs(self.players) do
-        self.players[ps] = 'not ready'
+    for _, player in pairs(self.players) do
+        player.status = 'not ready'
     end
 end
 
 function Room:playerReady(p, is_ready)
     if self.players[p] == nil then return false end
-    self.players[p] = is_ready and 'ready' or 'not ready'
+    self.players[p].status = is_ready and 'ready' or 'not ready'
     if not is_ready then return false end
-    for _, state in pairs(self.players) do
-        if state ~= 'ready' then
+    for _, player in pairs(self.players) do
+        if player.status ~= 'ready' then
             return false
         end
     end
@@ -32,8 +35,8 @@ function Room:playerReady(p, is_ready)
 end
 
 function Room:playerNotReady(p)
-    if self.players[p] == nil or self.players[p] == 'not ready' then return end
-    self.players[p] = 'not ready'
+    if self.players[p] == nil or self.players[p].status == 'not ready' then return end
+    self.players[p].status = 'not ready'
 end
 
 function Room:empty()
@@ -46,10 +49,11 @@ end
 
 function Room:getData(name)
     local cl_list = {}
-    for cl, state in pairs(self.players) do
+    for cl, player in pairs(self.players) do
         table.insert(cl_list, {
             id = cl:getConnectId(),
-            ready = (state == 'ready')
+            ready = (player.status == 'ready'),
+            archetype = player.archetype
         })
     end
     return {

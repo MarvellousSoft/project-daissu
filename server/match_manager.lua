@@ -8,7 +8,8 @@ function Match:init(cl_list)
     for i, cl in ipairs(self.cl_list) do
         cl:send('start game', {
             local_id = i,
-            player_count = #cl_list
+            player_count = #cl_list,
+            archetypes = self:getArchetypes()
         })
     end
     self.actions = {}
@@ -33,6 +34,14 @@ function Match:actionInput(data, client)
             cl:send('action input', data)
         end
     end
+end
+
+function Match:getArchetypes()
+    local archetypes = {}
+    for i, cl in ipairs(self.cl_list) do
+        table.insert(archetypes, cl.archetype)
+    end
+    return archetypes
 end
 
 local MatchManager = {}
