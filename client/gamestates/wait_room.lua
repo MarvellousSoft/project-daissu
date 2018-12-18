@@ -4,7 +4,7 @@ local Color     = require "classes.color.color"
 local Gamestate = require "common.extra_libs.hump.gamestate"
 local Client    = require "classes.net.client"
 local Button    = require "classes.button"
-local Util      = require "util"
+local Util      = require "steaming_util"
 local i18n      = require "i18n"
 local suit      = require "extra_libs.suit"
 

@@ -3,7 +3,7 @@ local ELEMENT   = require "classes.primitives.element"
 local Color     = require "classes.color.color"
 local Class     = require "common.extra_libs.hump.class"
 local Vector    = require "common.extra_libs.hump.vector"
-local Util      = require "util"
+local Util      = require "steaming_util"
 local UI        = require("assets").images.UI
 local Archetype = require("assets").images.characters
 

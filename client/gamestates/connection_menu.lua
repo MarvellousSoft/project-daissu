@@ -1,6 +1,6 @@
 local TextBox = require "classes.text_box"
 local Font = require "font"
-local Util = require "util"
+local Util = require "steaming_util"
 local Color = require "classes.color.color"
 local Button = require "classes.button"
 local Gamestate = require "common.extra_libs.hump.gamestate"

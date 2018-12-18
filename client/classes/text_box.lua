@@ -4,7 +4,7 @@ local Pos = require "classes.primitives.pos"
 local Clr = require "classes.primitives.clr"
 local Color = require "classes.color.color"
 local Timer = require "common.extra_libs.hump.timer"
-local Util = require "util"
+local Util = require "common.util"
 
 --[[ TEXT BOX -- How to use
 

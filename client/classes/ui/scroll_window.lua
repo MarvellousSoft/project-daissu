@@ -1,6 +1,6 @@
 local Class  = require "common.extra_libs.hump.class"
 local Vector = require "common.extra_libs.hump.vector"
-local Util   = require "util"
+local Util   = require "common.util"
 
 local ScrollWindow = Class {}
 

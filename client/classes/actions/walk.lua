@@ -1,7 +1,6 @@
 local Class = require "common.extra_libs.hump.class"
 local Timer = require "common.extra_libs.hump.timer"
 local Vec = require "common.extra_libs.hump.vector-light"
-local Util = require "util"
 local GridHelper = require "classes.map.grid_helper"
 local ActionInputHandler = require "classes.actions.action_input_handler"
 

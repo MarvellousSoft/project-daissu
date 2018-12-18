@@ -6,43 +6,6 @@ local util = {}
 --UTILITIES FUNCTIONS
 ---------------------
 
--- maps a vector through a function
-function util.map(vec, func)
-    local new = {}
-    for i, value in ipairs(vec) do
-        new[i] = func(value)
-    end
-    return new
-end
-
-function util.sign(x)
-    if x > 0 then
-        return 1
-    elseif x < 0 then
-        return -1
-    else
-        return 0
-    end
-end
-
---Counts how many entries are on table T
-function util.tableLen(T)
-  local count = 0
-
-  if not T then return count end
-  for _ in pairs(T) do count = count + 1 end
-
-  return count
-end
-
---Checks if a tale is empty (true if it doesn't exist)
-function util.tableEmpty(T)
-
-  if not T then return true end
-
-  return not next(T)
-end
-
 --Receives a table of timer handles T and a timer TIMER. Cancels every handle from the timer
 function util.clearTimerTable(T, TIMER)
 
@@ -52,34 +15,6 @@ function util.clearTimerTable(T, TIMER)
         TIMER.cancel(o)
     end
 
-end
-
-function util.pointInRect(_x, _y, x, y, w, h)
-    if not y then x, y, w, h = x.pos.x, x.pos.y, x.w, x.h end
-    return not (_x < x or _x > x + w or _y < y or _y > y + h)
-end
-
---Return a random element from a given table.
---You can give an optional table argument 'tp', so it only returns elements that share a type with the table strings
---Obs: if you provide a tp table, and there isn't any suitable element available, the program will be trapped here forever (FIX THIS SOMETIME)
-function util.randomElement(T, tp)
-    local e
-
-    while not e do
-        e = T[love.math.random(util.tableLen(T))] --Get random element
-
-        --If tp table isn't empty, compare
-        if not util.tableEmpty(tp) then
-            for i, k in pairs(tp) do
-                if k == e.tp then
-                    return e
-                end
-            end
-            e = nil
-        end
-    end
-
-    return e
 end
 
 --------------

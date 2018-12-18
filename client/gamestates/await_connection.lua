@@ -2,7 +2,7 @@ local Font = require "font"
 local Color = require "classes.color.color"
 local Gamestate = require "common.extra_libs.hump.gamestate"
 local Client = require "classes.net.client"
-local Util = require "util"
+local Util = require "steaming_util"
 
 local state = {}
 

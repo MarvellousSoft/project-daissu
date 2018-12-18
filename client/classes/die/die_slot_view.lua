@@ -3,7 +3,6 @@ local VIEW      = require "classes.primitives.view"
 local Class     = require "common.extra_libs.hump.class"
 local Color     = require "classes.color.color"
 local DieHelper = require "classes.die.helper"
-local Util      = require "util"
 local Vector    = require "common.extra_libs.hump.vector"
 local UI        = require("assets").images.UI
 
@@ -48,8 +47,6 @@ end
 function DieSlotView:draw()
     local dieslot = self:getObj()
     local g = love.graphics
-
-    local dice = Util.findSubtype("die_view")
 
     --Get proper image
     local image

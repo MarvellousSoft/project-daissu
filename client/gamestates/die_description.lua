@@ -1,6 +1,6 @@
 --MODULE FOR THE GAMESTATE: DIE DESCRIPTION--
 local Gamestate      = require "common.extra_libs.hump.gamestate"
-local Util           = require "util"
+local Util           = require "steaming_util"
 local Draw           = require "draw"
 local BlackScreen    = require "classes.blackscreen"
 local DieFaces       = require "classes.die.die_faces"

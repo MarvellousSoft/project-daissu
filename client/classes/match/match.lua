@@ -1,7 +1,7 @@
 local Class   = require "common.extra_libs.hump.class"
 local Map     = require "classes.map.map"
 local Player  = require "classes.map.player"
-local Util    = require "util"
+local Util    = require "common.util"
 local Actions = require "classes.actions"
 
 local Match = Class {}

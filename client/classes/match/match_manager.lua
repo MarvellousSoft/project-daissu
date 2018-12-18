@@ -2,7 +2,7 @@ local ELEMENT = require "classes.primitives.element"
 local Class = require "common.extra_libs.hump.class"
 
 local Vector = require "common.extra_libs.hump.vector"
-local Util = require "util"
+local Util = require "common.util"
 local Map = require "classes.map.map"
 local MapView = require "classes.map.map_view"
 local Controller = require "classes.map.controller"

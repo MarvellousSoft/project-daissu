@@ -1,7 +1,6 @@
 local Vector = require "common.extra_libs.hump.vector"
 local Vec = require "common.extra_libs.hump.vector-light"
 local Timer = require "common.extra_libs.hump.timer"
-local Util = require "util"
 local GridHelper = require "classes.map.grid_helper"
 local FadingText = require "classes.fading_text"
 

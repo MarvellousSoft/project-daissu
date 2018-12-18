@@ -4,9 +4,10 @@ local Room = require "room"
 
 local WaitRoom = {}
 
+-- Map: Client -> Room Name
 local clients = {}
+-- Map: Room Name -> Room Obj
 local rooms = {}
-local room_size = {}
 
 local function addClientToRoom(client, room)
     rooms[room] = rooms[room] or Room()
@@ -63,16 +64,20 @@ function WaitRoom.init()
     Server.on('ready', function(args, client)
         if not Server.checkSchema(client, ready_schema, args) then return end
         debug('Client', client, 'is ready', args.ready)
-        client.archetype = args.archetype
         debug('Client', client, 'is using archetype', args.archetype)
         local r = rooms[clients[client]]
-        local all_ready = r:playerReady(client, args.ready)
+        local all_ready = r:updatePlayer(client, args)
         if clients[client] ~= 'none' and all_ready and r:atLeastTwoPlayers() then
             rooms[clients[client]] = nil
             local cl_list = {}
             debug('Creating match for clients ')
-            for client in pairs(r.players) do
-                table.insert(cl_list, client)
+            for client, info in pairs(r.players) do
+                -- we don't need this information anymore
+                info.ready = nil
+                table.insert(cl_list, {
+                    client = client,
+                    info = info
+                })
                 clients[client] = nil
                 debug(client)
             end

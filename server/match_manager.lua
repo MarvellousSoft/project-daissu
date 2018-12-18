@@ -1,15 +1,17 @@
 local Class = require "common.extra_libs.hump.class"
 local Server = require "server"
+local Util = require "common.util"
 
 local Match = Class {}
 
 function Match:init(cl_list)
-    self.cl_list = cl_list
+    self.cl_list = Util.map(cl_list, function(c) return c.client end)
+    local archetypes = Util.map(cl_list, function(c) return c.info.archetype end)
     for i, cl in ipairs(self.cl_list) do
         cl:send('start game', {
             local_id = i,
             player_count = #cl_list,
-            archetypes = self:getArchetypes()
+            archetypes = archetypes
         })
     end
     self.actions = {}
@@ -34,14 +36,6 @@ function Match:actionInput(data, client)
             cl:send('action input', data)
         end
     end
-end
-
-function Match:getArchetypes()
-    local archetypes = {}
-    for i, cl in ipairs(self.cl_list) do
-        table.insert(archetypes, cl.archetype)
-    end
-    return archetypes
 end
 
 local MatchManager = {}
@@ -70,7 +64,7 @@ end
 function MatchManager.startMatch(cl_list)
     local m = Match(cl_list)
     for _, cl in ipairs(cl_list) do
-        match_map[cl] = m
+        match_map[cl.client] = m
     end
 end
 

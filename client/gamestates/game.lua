@@ -1,6 +1,6 @@
 --MODULE FOR THE GAMESTATE: GAME--
 local Vector        = require "common.extra_libs.hump.vector"
-local Util          = require "util"
+local Util          = require "steaming_util"
 local Draw          = require "draw"
 local Drawable      = require "classes.primitives.drawable"
 local Background    = require "classes.background"

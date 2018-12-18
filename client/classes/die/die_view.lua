@@ -6,7 +6,6 @@ local Color     = require "classes.color.color"
 local Actions   = require "classes.actions"
 local DieHelper = require "classes.die.helper"
 local Font      = require "font"
-local Util      = require "util"
 
 local funcs = {}
 
