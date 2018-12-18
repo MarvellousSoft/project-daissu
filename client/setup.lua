@@ -20,6 +20,8 @@ function setup.config()
     --RANDOM SEED--
     love.math.setRandomSeed( os.time() )
 
+    love.keyboard.setKeyRepeat(true)
+
     --TIMERS--
     MAIN_TIMER = Timer.new()  --General Timer
 
