@@ -252,7 +252,7 @@ function MatchManager:createOpponentDice(player_actions)
                     if action ~= "none" then
                         local slot = self.turn_slots[i]:getObj():getSlot(j)
                         local slotv = slot.view
-                        local diev = DieView(Die({action}, i), slotv.pos.x, slotv.pos.y-50, Color.new(150,150,150))
+                        local diev = DieView(Die({action}, 'fake'), slotv.pos.x, slotv.pos.y-50)
                         diev:register("L2", "die_view")
                         diev:enter()
                         local die = diev:getObj()

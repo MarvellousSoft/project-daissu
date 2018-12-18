@@ -19,19 +19,26 @@ local DieView = Class{
     __includes = {DRAWABLE, VIEW}
 }
 
+local default_color_for_types = {
+    attack   = Color.red(),
+    movement = Color.green(),
+    utility  = Color.yellow(),
+    fake     = Color.new(150, 150, 150)
+}
+
 function DieView:init(die, x, y, color)
-    DRAWABLE.init(self, x, y, color, nil,nil,nil)
-    VIEW.init(self,die)
+    DRAWABLE.init(self, x, y, nil, nil, nil, nil)
+    VIEW.init(self, die)
 
     self.w, self.h = DieHelper.getDimensions()
     self.sx, self.sy = 1, 1
 
     --Color for die border
-    self:setColor(color)
+    self:setColor(color or default_color_for_types[die.type])
 
     --Loads up icon for every side
     self.side_images = {}
-    for i,side in ipairs(die:getSides()) do
+    for i, side in ipairs(die:getSides()) do
         self.side_images[i] = Actions.actionImage(side)
     end
 
@@ -117,6 +124,7 @@ end
 
 function DieView:rollAnimation()
     if self.rolling then return end
+    self:getObj():roll()
     self.rolling = true
     local imgs = {}
     for i, img in ipairs(self.side_images) do imgs[img] = i end

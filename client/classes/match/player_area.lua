@@ -70,10 +70,10 @@ function PlayerArea:grab(count)
         if slot == nil then return end
         local die = table.remove(self.bag)
         if die == nil then return end
-        local die_view = DieView(die, 0, 0, die.color or Color.new(180,180,180))
+        local die_view = DieView(die, 0, 0)
         die_view.pos = self.mat:getBagPosition()
         die_view.sx, die_view.sy = 0.1, 0.1
-        die:roll()
+        die_view:rollAnimation()
         table.insert(self.dice_views, die_view)
         slot:putDie(die, false)
     end
@@ -131,7 +131,7 @@ function PlayerArea:mousepressed(x, y, but)
                     Gamestate.push(GS.DIE_DESC, die)
                 elseif but == 1 and ok_state and ctrl and self.rerolls_available > 0 then
                     self.rerolls_available = self.rerolls_available - 1
-                    die:getObj():roll()
+                    die:rollAnimation()
                 elseif but == 1 and ok_state then
                     self.picked_die = die
                     self.picked_die_delta = die.pos - Vector(x, y)

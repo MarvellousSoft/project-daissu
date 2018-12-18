@@ -39,7 +39,7 @@ function ActionList:init(pos, actions, players, number_players)
     for i, action in ipairs(actions) do
         local player = self.players[i]
         self.dice[i] = DieView(
-                        Die({action}, player),
+                        Die({action}, 'fake'),
                                 self.pos.x + self.next_action_image:getWidth() + self.gap + (i-1) * dx,
                                 self.pos.y, self.colors[player])
     end
