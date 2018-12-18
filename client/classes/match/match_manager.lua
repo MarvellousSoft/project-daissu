@@ -122,11 +122,10 @@ function MatchManager:draw()
     --Draw Player area
     self.player_area:draw(start_p)
 
-    --Draw turn slots
-    local start_p = self.match:startingPlayer()
+    --Draw opponents turn slots
     for i, turn_slots in ipairs(self.turn_slots) do
         if i ~= self.local_id then
-            turn_slots:draw(start_p == i, i == self.local_id and 'right' or 'left')
+            turn_slots:draw()
         end
     end
     --Draw lock button
@@ -312,6 +311,14 @@ end
 
 function MatchManager:getPlayerSource(id)
     return self.controllers[id]:getSource()
+end
+
+function MatchManager:getPlayerOrder(id)
+    local order = self.match:getOrder()
+    for i = 1, #order do
+        if order[i] == id then return i end
+    end
+    return error("Failed to find player order for player "..id)
 end
 
 --Mouse functions--

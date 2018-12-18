@@ -4,6 +4,7 @@ local Color     = require "classes.color.color"
 local Class     = require "common.extra_libs.hump.class"
 local Vector    = require "common.extra_libs.hump.vector"
 local Util      = require "steaming_util"
+local Font      = require "font"
 local UI        = require("assets").images.UI
 local Archetype = require("assets").images.characters
 
@@ -16,6 +17,7 @@ local PlayerInfo = Class{
         self.w, self.h = w, h
 
         self.archetype = archetype
+        self.player_id = player_id
 
         local match = Util.findId("match")
         assert(match, "Couldn't access match")
@@ -40,6 +42,14 @@ local PlayerInfo = Class{
         self.pi_image = Archetype[self.archetype]
         self.pi_ix = self.pi_w/self.pi_image:getWidth()  --Horizontal scale for image
         self.pi_iy = self.pi_h/self.pi_image:getHeight() --Vertical scale for image
+
+        --Player order
+        self.po_margin = 10
+        self.po_w, self.po_h = 80, 80
+        self.po_image = UI.player_order
+        self.po_ix = self.po_w/self.po_image:getWidth()  --Horizontal scale for image
+        self.po_iy = self.po_h/self.po_image:getHeight() --Vertical scale for image
+        self.po_font = Font.get('regular', 30)
 
         self.tp = "player_info"
     end
@@ -80,6 +90,25 @@ function PlayerInfo:draw()
     end
     Color.set("white")
     g.draw(self.pi_image, self.pos.x + offset, self.pos.y + self.h/2 - self.pi_h/2, nil, self.pi_ix * scale, self.pi_iy)
+
+    --Draw player order
+    if self.flip then
+        offset = self.po_margin
+    else
+        offset = self.w - self.po_margin - self.po_w
+    end
+    Color.set(self.color)
+    local x, y = self.pos.x + offset, self.pos.y + self.h/2 - self.po_h/2
+    g.draw(self.po_image, x, y, nil, self.po_ix, self.po_iy)
+    local match = Util.findId("match")
+    if match then
+        local order = match:getPlayerOrder(self.player_id)
+        local tw = self.po_font:getWidth(order)
+        local th = self.po_font:getHeight(order)
+        Color.set("black")
+        Font.set(self.po_font)
+        g.print(order, x + self.po_w/2 - tw/2, y + self.po_h/2 - th/2)
+    end
 end
 
 return PlayerInfo

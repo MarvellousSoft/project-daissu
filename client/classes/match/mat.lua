@@ -34,11 +34,12 @@ function Mat:init(player_area, dice_n, pos, w, h, player_num)
     self.bag_img_sy = self.bag_h/self.bag_image:getHeight()
     self.bag_pos = Vector(pos.x + margin_x, pos.y + margin_y)
     --Rerolls
-    self.rerolls_w, self.rerolls_h = 60, 60
+    self.rerolls_w, self.rerolls_h = 70, 70
     self.rerolls_image = UI.rerolls
     self.rerolls_img_sx = self.rerolls_w/self.rerolls_image:getWidth()
     self.rerolls_img_sy = self.rerolls_h/self.rerolls_image:getHeight()
-    self.rerolls_pos = Vector(self.pos.x + self.w/2 - self.rerolls_w/2, self.pos.y + margin_y)
+    self.rerolls_pos = Vector(self.pos.x + self.w/2 - self.rerolls_w/2,
+                              self.pos.y + header_h/2 - self.rerolls_h/2)
     self.rerolls_font = Font.get('regular', 20)
     local tw = self.rerolls_font:getWidth("0")
     local th = self.rerolls_font:getHeight("0")

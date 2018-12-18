@@ -40,9 +40,6 @@ function TurnSlotsView:init(obj, pos, w, h, color, player_num)
     self.iw = self.w/self.image:getWidth()
     self.ih = self.h/self.image:getHeight()
 
-    --Starting player image
-    self.starting_player_image = UI.starting_player
-
     --Slot number
     self.slot_number_image = UI.slot_number
     self.slot_number_image_w = self.slot_number_image:getWidth()
@@ -54,7 +51,7 @@ function TurnSlotsView:init(obj, pos, w, h, color, player_num)
 
 end
 
-function TurnSlotsView:draw(draw_starting_player, position)
+function TurnSlotsView:draw()
     local g = love.graphics
 
     --Draw turn slots background
@@ -87,23 +84,6 @@ function TurnSlotsView:draw(draw_starting_player, position)
         g.print(i, x, y)
     end
 
-    --Draw starting player icon, if needed
-    if draw_starting_player then
-        Color.setWithAlpha(self.color, self.alpha)
-        local image = self.starting_player_image
-        local x, sx
-        local gap_x, gap_y = 10, 15
-        if position == 'left' then
-            x = self.pos.x + gap_x
-            sx = 1
-        elseif position == 'right' then
-            x = self.pos.x + self.w - gap_x
-            sx = -1
-        else
-            error("Not a valid position: "..position)
-        end
-        g.draw(image, x, self.pos.y - image:getHeight() - gap_y, nil, sx, 1)
-    end
 end
 
 --Return all dice in its slots
