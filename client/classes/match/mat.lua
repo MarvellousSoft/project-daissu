@@ -34,8 +34,16 @@ function Mat:init(player_area, dice_n, pos, w, h, player_num)
     self.bag_img_sy = self.bag_h/self.bag_image:getHeight()
     self.bag_pos = Vector(pos.x + margin_x, pos.y + margin_y)
     --Rerolls
-    self.rerolls_pos = Vector(self.pos.x + self.w/2, self.pos.y + margin_y)
+    self.rerolls_w, self.rerolls_h = 60, 60
+    self.rerolls_image = UI.rerolls
+    self.rerolls_img_sx = self.rerolls_w/self.rerolls_image:getWidth()
+    self.rerolls_img_sy = self.rerolls_h/self.rerolls_image:getHeight()
+    self.rerolls_pos = Vector(self.pos.x + self.w/2 - self.rerolls_w/2, self.pos.y + margin_y)
     self.rerolls_font = Font.get('regular', 20)
+    local tw = self.rerolls_font:getWidth("0")
+    local th = self.rerolls_font:getHeight("0")
+    self.rerolls_text_pos = Vector(self.rerolls_pos.x + self.rerolls_w/2 - tw/2,
+                                   self.rerolls_pos.y + self.rerolls_h/2 - th/2)
     --Gravepool
     self.grave_w, self.grave_h = 80, 80
     self.grave_image = UI.gravepool
@@ -93,9 +101,16 @@ function Mat:draw()
                        self.bag_img_sx, self.bag_img_sy)
 
     --Draw rerolls
+    Color.set("black")
+    local off = 2
+    g.draw(self.rerolls_image, self.rerolls_pos.x + off, self.rerolls_pos.y + off, nil,
+                       self.rerolls_img_sx, self.rerolls_img_sy)
+    Color.set("white")
+    g.draw(self.rerolls_image, self.rerolls_pos.x, self.rerolls_pos.y, nil,
+                       self.rerolls_img_sx, self.rerolls_img_sy)
     Font.set(self.rerolls_font)
     Color.set("black")
-    g.print(self.player_area:getRerolls(), self.rerolls_pos.x, self.rerolls_pos.y)
+    g.print(self.player_area:getRerolls(), self.rerolls_text_pos.x, self.rerolls_text_pos.y)
 
     --Draw grave
     Color.set("black")
@@ -126,12 +141,12 @@ end
 
 --Returns center position of bag
 function Mat:getBagPosition()
-    return Vector(self.bag_pos.x + self.bag_image:getWidth()*self.bag_img_sy/2, self.bag_pos.y)
+    return Vector(self.bag_pos.x + self.bag_w/2, self.bag_pos.y)
 end
 
 --Returns center position of gravepool
 function Mat:getGravepoolPosition()
-    return Vector(self.grave_pos.x + self.grave_image:getWidth()*self.grave_img_sy/2, self.grave_pos.y)
+    return Vector(self.grave_pos.x + self.grave_w/2, self.grave_pos.y)
 end
 
 return Mat
