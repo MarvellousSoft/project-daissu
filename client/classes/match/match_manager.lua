@@ -154,10 +154,7 @@ end
 
 -- This recursively plays each action in a turn
 local function playTurnRec(self, co, callback, ...)
-    local ok, data = coroutine.resume(co, ...)
-    if not ok then
-        error(debug.traceback(co, data))
-    end
+    local data = co(...)
     -- turn is over
     if data == nil then
         self.state = self.match.state
@@ -191,7 +188,7 @@ function MatchManager:playTurnFromActions(player_actions, callback)
     local size = math.max(unpack(Util.map(player_actions, function(list) return #list end)))
     self:createActionList(player_actions, self.match:getOrder(), size)
 
-    local co = coroutine.create(self.match.playTurnFromActions)
+    local co = Util.wrap(self.match.playTurnFromActions)
     playTurnRec(self, co, callback, self.match, player_actions)
 end
 
