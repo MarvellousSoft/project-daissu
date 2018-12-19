@@ -63,7 +63,7 @@ end
 --CLASS FUNCTIONS--
 
 function DieView:draw()
-    local die = self:getObj()
+    local die = self:getModel()
 
     local g = love.graphics
     --Draw die bg
@@ -134,7 +134,7 @@ function DieView:rollAnimation()
     local face_i = 1
     for img, i in pairs(imgs) do
         table.insert(diff_imgs, i)
-        if self.side_images[i] == self.side_images[self.obj:getCurrentNum()] then
+        if self.side_images[i] == self.side_images[self.model:getCurrentNum()] then
             face_i = #diff_imgs
         end
     end
@@ -184,7 +184,7 @@ function DieView:handleUnpick(player_area)
     self:removeTimer('growing', MAIN_TIMER)
     self.sx, self.sy = 1.3, 1.3
     self:addTimer('growing', MAIN_TIMER, "tween", 0.5, self, {sx = 1, sy = 1}, 'out-elastic')
-    local die = self:getObj()
+    local die = self:getModel()
     local best_col, best_slot = 0, nil
     for slot in player_area:allSlots() do
         local col = self:collidesRect(slot.view.pos.x, slot.view.pos.y, slot.view.w, slot.view.h)
@@ -235,7 +235,7 @@ end
 --Mouse functions
 
 function DieView:handleRightClick(player_area)
-    local die = self:getObj()
+    local die = self:getModel()
     local slot
     --From turn slot go to dice area slot
     if die.slot.type == "turn" then

@@ -116,7 +116,7 @@ end
 function ActionList:mousepressed(x, y, but)
     for i, die in ipairs(self.dice) do
         if die:collidesPoint(x, y) and
-           die:getObj():getCurrent() ~= 'none' and
+           die:getModel():getCurrent() ~= 'none' and
            (but == 3 or love.keyboard.isDown('lshift', 'rshift'))
         then
             Gamestate.push(GS.DIE_DESC, die)

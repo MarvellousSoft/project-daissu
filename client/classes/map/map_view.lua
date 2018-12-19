@@ -28,7 +28,7 @@ function MapView:init(obj, pos, cell_size)
 end
 
 function MapView:draw(match)
-    local m, g = self:getObj(), love.graphics
+    local m, g = self:getModel(), love.graphics
     local x, y, size = self.pos.x, self.pos.y, self.cell_size
     local rows, columns = m.rows, m.columns
 
@@ -70,7 +70,7 @@ end
 function MapView:getTileOnPosition(pos)
     local i = math.floor((pos.y - self.pos.y) / self.cell_size) + 1
     local j = math.floor((pos.x - self.pos.x) / self.cell_size) + 1
-    if i < 1 or i > self:getObj().rows or j < 1 or j > self:getObj().columns then
+    if i < 1 or i > self:getModel().rows or j < 1 or j > self:getModel().columns then
         return nil, nil
     else
         return i, j

@@ -196,7 +196,7 @@ function MatchManager:playTurn(local_id, callback)
     assert(self.state == self.match.state)
     self.state = 'actions locked'
     local actions = {}
-    for i, die_slot in ipairs(self.turn_slots[local_id]:getObj().slots) do
+    for i, die_slot in ipairs(self.turn_slots[local_id]:getModel().slots) do
         actions[i] = die_slot.die and die_slot.die:getCurrent() or 'none'
     end
     self.player_area:actionsLocked()
@@ -246,12 +246,12 @@ function MatchManager:createOpponentDice(player_actions)
             if self.controllers[i].source == 'remote' then
                 for j, action in ipairs(actions) do
                     if action ~= "none" then
-                        local slot = self.turn_slots[i]:getObj():getSlot(j)
+                        local slot = self.turn_slots[i]:getModel():getSlot(j)
                         local slotv = slot.view
                         local diev = DieView(Die({action}, 'fake'), slotv.pos.x, slotv.pos.y-50)
                         diev:register("L2", "die_view")
                         diev:enter()
-                        local die = diev:getObj()
+                        local die = diev:getModel()
                         slot:putDie(die)
                         wait(.1)
                     end
@@ -265,7 +265,7 @@ function MatchManager:removeOpponentDice()
     MAIN_TIMER:script(function(wait)
         for i, controller in ipairs(self.controllers) do
             if controller.source == "remote" then
-                turn_slot = self.turn_slots[i]:getObj()
+                turn_slot = self.turn_slots[i]:getModel()
                 for j = 1, turn_slot:getSize() do
                     local die_slot = turn_slot:getSlot(j)
                     local die = die_slot:getDie()

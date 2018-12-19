@@ -27,8 +27,8 @@ function DieFaces:init(die)
     ELEMENT.init(self)
 
     self.die = die
-    self.die_sides = die:getObj():getNumSides()
-    self.focused_side = die:getObj():getCurrentNum()
+    self.die_sides = die:getModel():getNumSides()
+    self.focused_side = die:getModel():getCurrentNum()
 
     self.info_w = 400
     self.info_h = 300
@@ -55,7 +55,7 @@ function DieFaces:draw()
     --Draw selected die info
     local x = (WIN_W - self.info_w)/2
     local y = self.pos.y - self.info_gap - self.info_h
-    local action = self.die:getObj():getSide(self.focused_side)
+    local action = self.die:getModel():getSide(self.focused_side)
     drawDieInfo(x, y, self.info_w, self.info_h, action, self.alpha)
 
     --Draw all sides for die

@@ -64,7 +64,7 @@ function TurnSlotsView:draw()
                        self.iw, self.ih)
 
     --Draw each slot, with its number below
-    for i, slot in ipairs(self:getObj().slots) do
+    for i, slot in ipairs(self:getModel().slots) do
         --Draw slot
         local view = slot.view
         view:draw()
@@ -89,7 +89,7 @@ end
 --Return all dice in its slots
 function TurnSlotsView:getDice()
     local t = {}
-    for i, slot in ipairs(self:getObj().slots) do
+    for i, slot in ipairs(self:getModel().slots) do
         if slot:getDie() then
             table.insert(t,slot:getDie())
         end
@@ -101,7 +101,7 @@ function TurnSlotsView:setAlpha(value)
     --Set this turn slot alpha
     self.alpha = value
     --Set all die slots alpha
-    for i, slot in ipairs(self:getObj().slots) do
+    for i, slot in ipairs(self:getModel().slots) do
         slot.view:setAlpha(value)
     end
 end
@@ -118,7 +118,7 @@ function TurnSlotsView:setVisible()
     self:addTimer('change_offset', MAIN_TIMER, "tween", d, self.pos,
                   {y = self.ori_y}, 'out-quad')
     --Set all die slots visible
-    for i, slot in ipairs(self:getObj().slots) do
+    for i, slot in ipairs(self:getModel().slots) do
         slot.view:setVisible(d, offset)
     end
 end
@@ -133,7 +133,7 @@ function TurnSlotsView:setInvisible()
     self:addTimer('change_offset', MAIN_TIMER, "tween", d, self.pos,
                   {y = self.ori_y-offset}, 'in-quad')
     --Set all die slots invisible
-    for i, slot in ipairs(self:getObj().slots) do
+    for i, slot in ipairs(self:getModel().slots) do
         slot.view:setInvisible(d, offset)
     end
 end
@@ -142,7 +142,7 @@ function TurnSlotsView:mousepressed(x, y, but)
     for i, die in ipairs(self:getDice()) do
         local die_view = die.view
         if die_view:collidesPoint(x, y) and
-           die_view:getObj():getCurrent() ~= 'none' and
+           die_view:getModel():getCurrent() ~= 'none' and
            (but == 3 or love.keyboard.isDown('lshift', 'rshift'))
         then
             Gamestate.push(GS.DIE_DESC, die_view)

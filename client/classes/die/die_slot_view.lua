@@ -38,7 +38,7 @@ function DieSlotView:init(die_slot, pos)
 end
 
 function DieSlotView:centerDie(snap)
-    local die = self:getObj().die
+    local die = self:getModel().die
     assert(die ~= nil)
     die.view:slideTo(self.pos + Vector(self.margin, self.margin), snap)
 end
@@ -46,7 +46,7 @@ end
 --CLASS FUNCTIONS--
 
 function DieSlotView:draw()
-    local dieslot = self:getObj()
+    local dieslot = self:getModel()
     local g = love.graphics
 
     --Get proper image

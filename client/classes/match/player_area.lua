@@ -15,8 +15,8 @@ local PlayerArea = Class {}
 
 function PlayerArea:init(pos, w, h, match, color, archetype)
     local map = match.map_view
-    local columns = map:getObj().columns
-    local rows = map:getObj().rows
+    local columns = map:getModel().columns
+    local rows = map:getModel().rows
     local map_h = map.cell_size * rows
     local map_w = map.cell_size * columns
     -- Taking margins into account
@@ -106,7 +106,7 @@ function PlayerArea:mousepressed(x, y, but)
                     Gamestate.push(GS.DIE_DESC, die)
                 elseif but == 1 and ok_state and ctrl and self.player_data:getRerolls() > 0 then
                     die:rollAnimation()
-                    self.player_data:reroll(die:getObj())
+                    self.player_data:reroll(die:getModel())
                 elseif but == 1 and ok_state then
                     self.picked_die = die
                     self.picked_die_delta = die.pos - Vector(x, y)
@@ -123,7 +123,7 @@ end
 function PlayerArea:destroyPlayedDice()
     local all_dice = {}
     for i, die_view in ipairs(self.dice_views) do
-        all_dice[die_view:getObj()] = true
+        all_dice[die_view:getModel()] = true
     end
     for i, slot in ipairs(self.turn_slots.slots) do
         if slot:getDie() then
@@ -134,7 +134,7 @@ function PlayerArea:destroyPlayedDice()
             die.view:slideTo(self.mat:getGravepoolPosition(), false)
             MAIN_TIMER:tween(0.4, die.view, {sx = 0.01, sy = 0.01}, 'out-quad', function()
                 self.extra_views[die.view] = nil
-                die.view:setObj(nil)
+                die.view:setModel(nil)
             end)
             slot:removeDie()
         end
@@ -186,7 +186,7 @@ function PlayerArea:updateSlotHighlight(die)
             best_col, best_slot = col, slot
         end
     end
-    if best_col > 0 and best_slot ~= die:getObj().slot then
+    if best_col > 0 and best_slot ~= die:getModel().slot then
         best_slot.view.has_die_over = true
     end
 end
