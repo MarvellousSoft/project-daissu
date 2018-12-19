@@ -25,14 +25,18 @@ function Server.removeCallback(callback)
     server:removeCallback(callback)
 end
 
+function Server.kick(client)
+    log.warn('Kicking client', client)
+    -- document error numbers
+    client:disconnect(1)
+end
+
 function Server.checkSchema(client, schema, data)
     if not validateType(schema, data) then
-        -- document error numbers
-        client:disconnect(1)
+        Server.kick(client)
         return false
     end
     return true
 end
 
 return Server
-

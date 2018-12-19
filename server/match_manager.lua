@@ -1,6 +1,7 @@
-local Class = require "common.extra_libs.hump.class"
+local Class  = require "common.extra_libs.hump.class"
 local Server = require "server"
-local Util = require "common.util"
+local Util   = require "common.util"
+local log    = require "common.extra_libs.log"
 
 local Match = Class {}
 
@@ -43,20 +44,25 @@ local MatchManager = {}
 local match_map = {}
 
 function MatchManager.init()
+    local function assertMatch(client)
+        if match_map[client] == nil then
+            Server.kick(client)
+        end
+        return match_map[client] ~= nil
+    end
+
     local actions_locked_schema = {
         i = 'number',
         actions = {'array', 'string'}
     }
     Server.on('actions locked', function(data, client)
-        if not Server.checkSchema(client, actions_locked_schema, data) then return end
-        assert(match_map[client] ~= nil)
+        if not Server.checkSchema(client, actions_locked_schema, data) or not assertMatch(client) then return end
         match_map[client]:actionLocked(data.i, data.actions)
     end)
 
     local action_input_schema = { 'number', 'number' }
     Server.on('action input', function(data, client)
-        if not Server.checkSchema(client, action_input_schema, data) then return end
-        assert(match_map[client] ~= nil)
+        if not Server.checkSchema(client, action_input_schema, data) or not assertMatch(client) then return end
         match_map[client]:actionInput(data, client)
     end)
 end
