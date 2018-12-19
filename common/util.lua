@@ -9,6 +9,7 @@ function util.map(vec, func)
     return new
 end
 
+-- Sign of a number
 function util.sign(x)
     if x > 0 then
         return 1
@@ -19,6 +20,9 @@ function util.sign(x)
     end
 end
 
+-- Is the point in the rectangle?
+-- The point is given by two numbers
+-- The rectangle may be given by four numbers of by a table
 function util.pointInRect(_x, _y, x, y, w, h)
     if not y then x, y, w, h = x.pos.x, x.pos.y, x.w, x.h end
     return not (_x < x or _x > x + w or _y < y or _y > y + h)
@@ -36,6 +40,15 @@ function util.wrap(f)
         return aux(coroutine.resume(co, ...))
     end
     return aux2
+end
+
+-- shuffles array
+function util.shuffle(vec)
+    local n = #vec
+    for i = 1, n do
+        local j = love.math.random(i, n)
+        vec[i], vec[j] = vec[j], vec[i]
+    end
 end
 
 return util

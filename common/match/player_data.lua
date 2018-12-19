@@ -1,5 +1,6 @@
 local Class      = require "common.extra_libs.hump.class"
 local Archetypes = require "classes.archetypes"
+local Util       = require "common.util"
 
 local PlayerData = Class {}
 
@@ -14,13 +15,7 @@ function PlayerData:init(archetype)
 end
 
 function PlayerData:shuffleBag()
-    local bag = self.bag
-    local n = #bag
-    for i = 1, n do
-        local j = love.math.random(i, n)
-        bag[i], bag[j] = bag[j], bag[i]
-    end
-    self.rerolls_available = 0
+    Util.shuffle(self.bag)
 end
 
 function PlayerData:shuffleGraveIntoBag()
