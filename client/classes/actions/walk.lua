@@ -1,7 +1,7 @@
 local Class = require "common.extra_libs.hump.class"
 local Timer = require "common.extra_libs.hump.timer"
 local Vec = require "common.extra_libs.hump.vector-light"
-local GridHelper = require "classes.map.grid_helper"
+local GridHelper = require "common.map.grid_helper"
 local ActionInputHandler = require "classes.actions.action_input_handler"
 
 local function WalkCreator(distance)
