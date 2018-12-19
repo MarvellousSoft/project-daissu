@@ -1,25 +1,27 @@
-local Class = require "common.extra_libs.hump.class"
-local View  = require "classes.primitives.view"
-local tiles = require("assets").images.tiles
+local Class       = require "common.extra_libs.hump.class"
+local View        = require "classes.primitives.view"
+local MapTileView = require "classes.map.map_tile_view"
+local tiles       = require("assets").images.tiles
 
 local MapView = Class {
-    __includes = {View}
+    __includes = View
 }
 
-function MapView:init(obj, pos, cell_size)
-    View.init(self, obj)
+function MapView:init(model, pos, cell_size)
+    View.init(self, model)
 
     --Determine tile image and rotation for each map pos
-    local ran = love.math.random
+    local rand = love.math.random
     self.tiles = {}
-    for i = 1, obj.rows do
+    for i = 1, model.rows do
         self.tiles[i] = {}
-        for j = 1, obj.columns do
-            local image = ran() > .1 and tiles.maptile1 or
+        for j = 1, model.columns do
+            local image = rand() > .1 and tiles.maptile1 or
                                          tiles.maptile2
             local sx = cell_size/image:getWidth()
             local sy = cell_size/image:getHeight()
             self.tiles[i][j] = {image = image, sx = sx, sy = sy}
+            MapTileView(model.grid[i][j])
         end
     end
 
@@ -62,7 +64,7 @@ function MapView:draw(match)
 
     for i = 1, rows do
         for j = 1, columns do
-            m.grid[i][j]:drawOnGrid(match, x + (j - 1) * size, y + (i - 1) * size, size)
+            m.grid[i][j].view:drawOnGrid(match, x + (j - 1) * size, y + (i - 1) * size, size)
         end
     end
 end
