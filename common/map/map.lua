@@ -1,5 +1,5 @@
 local Class = require "common.extra_libs.hump.class"
-local MapTile = require "classes.map.map_tile"
+local MapTile = require "common.map.map_tile"
 
 local Map = Class {}
 

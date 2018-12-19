@@ -8,7 +8,7 @@ local Archetypes    = require "classes.archetypes"
 local DieView       = require "classes.die.die_view"
 local Color         = require "classes.color.color"
 local Fonts         = require "font"
-local PlayerData    = require "classes.match.player_data"
+local PlayerData    = require "common.match.player_data"
 local Util          = require "common.util"
 
 local PlayerArea = Class {}
@@ -39,7 +39,7 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
 end
 
 function PlayerArea:draw()
-    local start_p = self.match.match:startingPlayer()
+    local start_p = self.match.logic:startingPlayer()
     self.mat:draw()
     self.turn_slots.view:draw(start_p == self.match.local_id, 'left')
 

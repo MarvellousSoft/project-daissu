@@ -16,7 +16,7 @@ local ActionList    = require "classes.match.action_list"
 local Button        = require "classes.button"
 local ScrollWindow  = require "classes.ui.scroll_window"
 local PlayerInfo    = require "classes.match.player_info"
-local Match         = require "classes.match.match"
+local BoardLogic    = require "common.match.board_logic"
 local PlayerView    = require "classes.map.player_view"
 
 local Client = require "classes.net.client"
@@ -28,8 +28,8 @@ local MatchManager = Class {
 function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_players, local_id, archetypes)
     ELEMENT.init(self)
     self:register("L0", nil, "match")
-    self.match = Match(rows, columns, number_of_players, 10)
-    self.state = self.match.state
+    self.logic = BoardLogic(rows, columns, number_of_players, 10)
+    self.state = self.logic.state
     self.pos = pos
     self.w, self.h = w, h
     self.local_id = local_id
@@ -54,7 +54,7 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_player
     local pi_w = (w - map_w)/2 - 2*margin --Player info width
 
     local map_pos = pos + Vector((w - map_w) / 2, margin + pi_h + margin)
-    self.map_view = MapView(self.match.map, map_pos, cell_size)
+    self.map_view = MapView(self.logic.map, map_pos, cell_size)
 
     local ts_w = pi_w
     local ts_h = 90 --Turn slot height
@@ -74,8 +74,8 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_player
     local y = original_y
     for i = 1, number_of_players do
         local c = self.colors[i]
-        PlayerView(self.match.players[i], c)
-        self.controllers[i] = Controller(self.match.map, self.match.players[i].view, i == local_id and 'local' or 'remote')
+        PlayerView(self.logic.players[i], c)
+        self.controllers[i] = Controller(self.logic.map, self.logic.players[i].view, i == local_id and 'local' or 'remote')
         if i == local_id then
             self.players_info[i] = PlayerInfo(margin, original_y, ts_w, pi_h, i, archetypes[i])
             self.turn_slots[i] = self.player_area.turn_slots.view
@@ -137,13 +137,13 @@ function MatchManager:draw()
 end
 
 function MatchManager:start()
-    self.match:start()
-    self.state = self.match.state
+    self.logic:start()
+    self.state = self.logic.state
 end
 
 function MatchManager:startNewTurn()
-    self.match:startNewTurn()
-    self.state = self.match.state
+    self.logic:startNewTurn()
+    self.state = self.logic.state
     self.lock_button:unlock()
     self.player_area:grab(2)
     self.player_area:refillRerolls()
@@ -155,7 +155,7 @@ local function playTurnRec(self, co, callback, ...)
     local data = co(...)
     -- turn is over
     if data == nil then
-        self.state = self.match.state
+        self.state = self.logic.state
         self.player_area:destroyPlayedDice()
         self:removeOpponentDice()
         self.active_slot = false
@@ -184,14 +184,14 @@ function MatchManager:playTurnFromActions(player_actions, callback)
     self.state = 'playing turn'
     self:createOpponentDice(player_actions)
     local size = math.max(unpack(Util.map(player_actions, function(list) return #list end)))
-    self:createActionList(player_actions, self.match:getOrder(), size)
+    self:createActionList(player_actions, self.logic:getOrder(), size)
 
-    local co = Util.wrap(self.match.playTurnFromActions)
-    playTurnRec(self, co, callback, self.match, player_actions)
+    local co = Util.wrap(self.logic.playTurnFromActions)
+    playTurnRec(self, co, callback, self.logic, player_actions)
 end
 
 function MatchManager:playTurn(local_id, callback)
-    assert(self.state == self.match.state)
+    assert(self.state == self.logic.state)
     self.state = 'actions locked'
     local actions = {}
     for i, die_slot in ipairs(self.turn_slots[local_id]:getModel().slots) do
@@ -309,7 +309,7 @@ function MatchManager:getPlayerSource(id)
 end
 
 function MatchManager:getPlayerOrder(id)
-    local order = self.match:getOrder()
+    local order = self.logic:getOrder()
     for i = 1, #order do
         if order[i] == id then return i end
     end

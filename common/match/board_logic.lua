@@ -1,10 +1,12 @@
 local Class   = require "common.extra_libs.hump.class"
-local Map     = require "classes.map.map"
-local Player  = require "classes.map.player"
+local Map     = require "common.map.map"
+local Player  = require "common.map.player"
 local Util    = require "common.util"
-local Actions = require "classes.actions"
+-- XXX common should not import anything from client
+-- Here we don't use anything harmful, but still
+local Actions = require "client.classes.actions"
 
-local Match = Class {}
+local BoardLogic = Class {}
 
 local starting_positions = {
     nil,                             -- 1 player
@@ -14,7 +16,7 @@ local starting_positions = {
     {{1,1},{2,3},{3,5},{4,2},{5,4}}, -- 5 players
 }
 
-function Match:init(rows, columns, number_of_players, seed)
+function BoardLogic:init(rows, columns, number_of_players, seed)
     self.state = 'not started'
     self.rng = love.math.newRandomGenerator(seed)
     self.n_players = number_of_players
@@ -32,12 +34,12 @@ function Match:init(rows, columns, number_of_players, seed)
     self.n_turns = 1
 end
 
-function Match:start()
+function BoardLogic:start()
     assert(self.state == 'not started')
     self.state = 'waiting for turn'
 end
 
-function Match:startNewTurn()
+function BoardLogic:startNewTurn()
     assert(self.state == 'waiting for turn')
     self.state = 'choosing actions'
 end
@@ -45,7 +47,7 @@ end
 -- player_actions is a list of lists, the i-th with the actions of the i-th player
 -- This yields when an action is executed, this way you can get the input and show the animation
 -- When it is resumed, it actually executes the action (using the return parameters)
-function Match:playTurnFromActions(player_actions)
+function BoardLogic:playTurnFromActions(player_actions)
     assert(self.state == 'choosing actions')
     self.state = 'playing turn'
     local size = math.max(unpack(Util.map(player_actions, function(list) return #list end)))
@@ -72,11 +74,11 @@ function Match:playTurnFromActions(player_actions)
     self.state = 'waiting for turn'
 end
 
-function Match:startingPlayer()
+function BoardLogic:startingPlayer()
     return ((self.n_turns - 1) % self.n_players) + 1
 end
 
-function Match:getOrder()
+function BoardLogic:getOrder()
     local st = self:startingPlayer()
     local order = {}
     for i = 1, self.n_players do
@@ -85,4 +87,4 @@ function Match:getOrder()
     return order
 end
 
-return Match
+return BoardLogic
