@@ -105,8 +105,8 @@ function PlayerArea:mousepressed(x, y, but)
                 if but == 3 or love.keyboard.isDown('lshift', 'rshift') then
                     Gamestate.push(GS.DIE_DESC, die)
                 elseif but == 1 and ok_state and ctrl and self.player_data:getRerolls() > 0 then
-                    self.player_data:reroll(die:getObj())
                     die:rollAnimation()
+                    self.player_data:reroll(die:getObj())
                 elseif but == 1 and ok_state then
                     self.picked_die = die
                     self.picked_die_delta = die.pos - Vector(x, y)

@@ -41,6 +41,7 @@ function PlayerData:grab(count)
         local die = table.remove(self.bag)
         table.insert(self.mat, die)
         coroutine.yield(die)
+        die:roll()
     end
 end
 

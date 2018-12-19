@@ -1,9 +1,6 @@
 local Class = require "common.extra_libs.hump.class"
-local Element = require "classes.primitives.element"
 
-local View = Class {
-    __includes = {Element}
-}
+local View = Class {}
 
 function View:init(obj)
     self:setObj(obj)

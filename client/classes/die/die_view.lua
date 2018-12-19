@@ -122,6 +122,7 @@ function DieView:leave()
                   end)
 end
 
+-- You should run this before calling roll() on the dice
 function DieView:rollAnimation()
     if self.rolling then return end
     self.rolling = true
