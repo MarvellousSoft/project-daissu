@@ -31,7 +31,7 @@ function MapTileView:drawOnGrid(match, x, y, size)
         end
     end
     if self.model.obj ~= nil then
-        self.model.obj:drawOnGrid(x, y, size)
+        self.model.obj.view:drawOnGrid(x, y, size)
     end
 end
 

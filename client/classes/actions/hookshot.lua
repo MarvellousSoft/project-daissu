@@ -11,7 +11,7 @@ local Hookshot = {}
 local function whatIsPulledWhere(map, player, di, dj)
     local pi, pj = player.tile:getPosition()
     local tile, ti, tj = GridHelper.firstBlockedPos(map, pi, pj, di, dj)
-    if tile ~= nil and tile:blocked() and tile.obj.type ~= 'Player' then
+    if tile ~= nil and tile:blocked() and tile.obj.tile_type ~= 'Player' then
         ti, tj = ti - di, tj - dj
         tile = tile:getCloseTile(map, -di, -dj)
     end
@@ -23,13 +23,13 @@ local function whatIsPulledWhere(map, player, di, dj)
 end
 
 function Hookshot.showAction(controller, callback, di, dj)
-    local obj, ni, nj = whatIsPulledWhere(controller.map, controller.player, di, dj)
-    if obj ~= controller.player then
+    local obj, ni, nj = whatIsPulledWhere(controller.map, controller.player.model, di, dj)
+    if obj ~= controller.player.model then
         local map_view = controller.map.view
         FadingText(map_view.pos + Vector(nj - 1, ni - 1) * map_view.cell_size, "-1", 1)
     end
-    Timer.tween(0.5, obj, {dx = nj - obj.tile.j, dy = ni - obj.tile.i}, 'in-out-quad', function()
-        obj:resetAnimation()
+    Timer.tween(0.5, obj.view, {dx = nj - obj.tile.j, dy = ni - obj.tile.i}, 'in-out-quad', function()
+        obj.view:resetAnimation()
         if callback then callback() end
     end)
 end
@@ -58,7 +58,7 @@ function Hookshot.getInputHandler(controller)
             return GridHelper.directionFromTiles(pi, pj, i, j)
         end,
         hover_color = function(self, mi, mj, i, j)
-            local obj, ti, tj = whatIsPulledWhere(controller.map, controller.player, Vec.sub(mi, mj, pi, pj))
+            local obj, ti, tj = whatIsPulledWhere(controller.map, controller.player.model, Vec.sub(mi, mj, pi, pj))
             if Vec.eq(ti, tj, i, j) then
                 return Color.green()
             elseif Vec.eq(i, j, obj.tile.i, obj.tile.j) then

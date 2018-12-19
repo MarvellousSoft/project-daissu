@@ -1,24 +1,23 @@
-local ELEMENT = require "classes.primitives.element"
-local Class = require "common.extra_libs.hump.class"
-
-local Vector = require "common.extra_libs.hump.vector"
-local Util = require "common.util"
-local Map = require "classes.map.map"
-local MapView = require "classes.map.map_view"
-local Controller = require "classes.map.controller"
-local DieHelper = require "classes.die.helper"
-local TurnSlots = require "classes.turn_slots.turn_slots"
+local ELEMENT       = require "classes.primitives.element"
+local Class         = require "common.extra_libs.hump.class"
+local Vector        = require "common.extra_libs.hump.vector"
+local Util          = require "common.util"
+local MapView       = require "classes.map.map_view"
+local Controller    = require "classes.map.controller"
+local DieHelper     = require "classes.die.helper"
+local TurnSlots     = require "classes.turn_slots.turn_slots"
 local TurnSlotsView = require "classes.turn_slots.turn_slots_view"
-local Actions = require "classes.actions"
-local Die = require "classes.die.die"
-local DieView = require "classes.die.die_view"
-local Color = require "classes.color.color"
-local PlayerArea = require "classes.match.player_area"
-local ActionList = require "classes.match.action_list"
-local Button = require "classes.button"
-local ScrollWindow = require "classes.ui.scroll_window"
-local PlayerInfo = require "classes.match.player_info"
-local Match = require "classes.match.match"
+local Actions       = require "classes.actions"
+local Die           = require "classes.die.die"
+local DieView       = require "classes.die.die_view"
+local Color         = require "classes.color.color"
+local PlayerArea    = require "classes.match.player_area"
+local ActionList    = require "classes.match.action_list"
+local Button        = require "classes.button"
+local ScrollWindow  = require "classes.ui.scroll_window"
+local PlayerInfo    = require "classes.match.player_info"
+local Match         = require "classes.match.match"
+local PlayerView    = require "classes.map.player_view"
 
 local Client = require "classes.net.client"
 
@@ -75,9 +74,8 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_player
     local y = original_y
     for i = 1, number_of_players do
         local c = self.colors[i]
-        -- XXX This field shouldn't be inside player
-        self.match.players[i].color = c
-        self.controllers[i] = Controller(self.match.map, self.match.players[i], i == local_id and 'local' or 'remote')
+        PlayerView(self.match.players[i], c)
+        self.controllers[i] = Controller(self.match.map, self.match.players[i].view, i == local_id and 'local' or 'remote')
         if i == local_id then
             self.players_info[i] = PlayerInfo(margin, original_y, ts_w, pi_h, i, archetypes[i])
             self.turn_slots[i] = self.player_area.turn_slots.view

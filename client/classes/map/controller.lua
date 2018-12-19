@@ -1,5 +1,4 @@
 local Class = require "common.extra_libs.hump.class"
-local Player = require "classes.map.player"
 local Client = require "classes.net.client"
 
 --[[
@@ -16,7 +15,7 @@ function Controller:init(map, player, source)
 end
 
 function Controller:getPosition()
-    return self.player.tile.i, self.player.tile.j
+    return self.player.model.tile:getPosition()
 end
 
 function Controller:waitForInput(match, input_handler, callback)

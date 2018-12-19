@@ -19,14 +19,14 @@ function Shove.showAction(controller, callback, di, dj)
     local pi, pj = controller:getPosition()
     local map_view = controller.map.view
     FadingText(map_view.pos + Vector(pj + dj - 1, pi + di - 1) * map_view.cell_size, "-1", 0.5)
-    local tile = controller.player.tile:getCloseTile(controller.map, di, dj)
+    local tile = controller.player.model.tile:getCloseTile(controller.map, di, dj)
     local obj = tile and tile.obj
     local fun = function()
-        if obj then obj:resetAnimation() end
+        if obj then obj.view:resetAnimation() end
         if callback then callback() end
     end
     if obj then
-        Timer.tween(0.5, obj, {dx = dj * 2, dy = di * 2}, 'in-out-quad', fun)
+        Timer.tween(0.5, obj.view, {dx = dj * 2, dy = di * 2}, 'in-out-quad', fun)
     else
         Timer.after(0.5, fun)
     end
