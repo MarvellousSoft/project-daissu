@@ -39,7 +39,7 @@ function Shove.getInputHandler(controller, callback)
             return GridHelper.manhattanDistance(pi, pj, i, j) == 1
         end,
         processInput = function(self, i, j)
-            return Shove.showAction(controller, callback, i - pi, j - pj)
+            return i - pi, j - pj
         end
     }
 end
