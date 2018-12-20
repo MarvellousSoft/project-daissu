@@ -44,9 +44,10 @@ local PlayerInfo = Class{
         self.pi_iy = self.pi_h/self.pi_image:getHeight() --Vertical scale for image
 
         --Icons
-        self.icons_left_margin = 10 --Distance between portrait and first icon
-        self.icons_margin = 40 --Distance between each icon
+        self.icons_left_margin = 20 --Distance between portrait and first icon
+        self.icons_margin = 28 --Distance between each icon
         self.icons_right_margin = 35 --Distance between last icon and player order
+        self.icons_font = Font.get("regular", 20) --Font for number below each icon
         --Inver margins if its flipped
         if self.flip then
             self.icons_left_margin, self.icons_right_margin = self.icons_right_margin, self.icons_left_margin
@@ -56,14 +57,17 @@ local PlayerInfo = Class{
         self.pb_image = UI.bag_icon
         self.pb_ix = self.icons_w/self.pb_image:getWidth()  --Horizontal scale for image
         self.pb_iy = self.icons_h/self.pb_image:getHeight() --Vertical scale for image
+        self.pb_value = 6
         --Player Mat
         self.pm_image = UI.mat_icon
         self.pm_ix = self.icons_w/self.pm_image:getWidth()  --Horizontal scale for image
         self.pm_iy = self.icons_h/self.pm_image:getHeight() --Vertical scale for image
+        self.pm_value = 6
         --Player Grave
         self.pg_image = UI.grave_icon
         self.pg_ix = self.icons_w/self.pg_image:getWidth()  --Horizontal scale for image
         self.pg_iy = self.icons_h/self.pg_image:getHeight() --Vertical scale for image
+        self.pg_value = 6
 
         --Player order
         self.po_w, self.po_h = 50, 70
@@ -112,10 +116,15 @@ function PlayerInfo:draw()
 
     --Draw icons
     x = x + scale*(self.pt_w + self.icons_left_margin + self.icons_w/2) - self.icons_w/2
-    local y = self.pos.y + self.h/2 - self.icons_h/2
+    Font.set(self.icons_font)
+    local y = self.pos.y + self.h/2 - self.icons_h/2 - self.icons_font:getHeight()/2
     for _, icon in ipairs(order) do
         Color.set("white")
         g.draw(self[icon..'_image'], x, y, nil, self[icon..'_ix'], self[icon..'_iy'])
+        Color.set("black")
+        local value = self[icon..'_value']
+        local tx = self.icons_font:getWidth(value)
+        g.print(value, x + self.icons_w/2 - tx/2, y + self.icons_h + 5)
         x = x + scale*(self.icons_w + self.icons_margin)
     end
 
