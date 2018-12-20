@@ -16,20 +16,38 @@ local function assertMatch(client)
     return match_map[client] ~= nil
 end
 
+local function safeCall(client, f)
+    local ok, err = pcall(f)
+    if not ok then
+        log.warn(err)
+        Server.kick(client)
+    end
+end
+
 function MatchManager.init()
 
     local actions_locked_schema = { 'array', 'number' }
     Server.on('actions locked', function(data, client)
         if not Server.checkSchema(client, actions_locked_schema, data) or not assertMatch(client) then return end
-        if not pcall(match_map[client].actionsLocked, match_map[client], client, data) then
-            Server.kick(client)
-        end
+        safeCall(client, function()
+            match_map[client]:actionsLocked(client, data)
+        end)
     end)
 
     local action_input_schema = { 'number', 'number' }
     Server.on('action input', function(data, client)
         if not Server.checkSchema(client, action_input_schema, data) or not assertMatch(client) then return end
-        match_map[client]:actionInput(client, data)
+        safeCall(client, function()
+            match_map[client]:actionInput(client, data)
+        end)
+    end)
+
+    local reroll_schema = 'number'
+    Server.on('reroll', function(data, client)
+        if not Server.checkSchema(client, reroll_schema, data) or not assertMatch(client) then return end
+        safeCall(client, function()
+            match_map[client]:reroll(client, data)
+        end)
     end)
 end
 

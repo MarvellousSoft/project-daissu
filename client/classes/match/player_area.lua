@@ -10,6 +10,7 @@ local Color         = require "classes.color.color"
 local Fonts         = require "font"
 local PlayerData    = require "common.match.player_data"
 local Util          = require "common.util"
+local Client        = require "classes.net.client"
 
 local PlayerArea = Class {}
 
@@ -113,6 +114,7 @@ function PlayerArea:mousepressed(x, y, but)
                 if but == 3 or love.keyboard.isDown('lshift', 'rshift') then
                     Gamestate.push(GS.DIE_DESC, die)
                 elseif but == 1 and ok_state and ctrl and self.player_data:getRerolls() > 0 then
+                    Client.send('reroll', die:getModel().id)
                     die:rollAnimation()
                     self.player_data:reroll(die:getModel())
                 elseif but == 1 and ok_state then

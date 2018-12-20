@@ -12,6 +12,7 @@ local function newTurn(self)
     self.logic:startNewTurn()
     for _, p in ipairs(self.players) do
         Util.exhaust(function() return p.data:grab(2) end)
+        p.data:refillRerolls()
     end
 end
 
@@ -78,7 +79,6 @@ function Match:actionsLocked(client, actions)
         log.warn('Client sent invalid action.')
         return Server.kick(client)
     end
-    self.lock_count = self.lock_count + 1
     -- id -> die
     actions = idsToDice(p, actions)
     for _, d in ipairs(actions) do
@@ -87,6 +87,7 @@ function Match:actionsLocked(client, actions)
         end
     end
     self.actions[p.i] = diceToActions(p, actions)
+    self.lock_count = self.lock_count + 1
     if self.lock_count == #self.players then
         local actions = self.actions
         self.lock_count = 0
@@ -112,6 +113,15 @@ function Match:actionInput(client, data)
     self.waiting_for_input = nil
     -- continue turn
     self:getInputForAction(self.turn_co(unpack(data)))
+end
+
+function Match:reroll(client, id)
+    local p = self.player_from_client[client]
+    if not p or self.logic.state ~= 'choosing actions' or self.actions[p.i] then
+        log.warn('Client sent invalid action.')
+        return Server.kick(client)
+    end
+    p.data:reroll(p.data:getByIdFromMat(id))
 end
 
 return Match
