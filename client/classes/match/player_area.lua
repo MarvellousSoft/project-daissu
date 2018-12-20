@@ -13,7 +13,7 @@ local Util          = require "common.util"
 
 local PlayerArea = Class {}
 
-function PlayerArea:init(pos, w, h, match, color, archetype)
+function PlayerArea:init(pos, w, h, match, color, archetype, seed)
     local map = match.map_view
     local columns = map:getModel().columns
     local rows = map:getModel().rows
@@ -29,7 +29,7 @@ function PlayerArea:init(pos, w, h, match, color, archetype)
 
     self.match = match
 
-    self.player_data = PlayerData(archetype)
+    self.player_data = PlayerData(archetype, seed)
 
     self.dice_views = {}
     self.extra_views = {}

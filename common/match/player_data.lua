@@ -4,7 +4,8 @@ local Util       = require "common.util"
 
 local PlayerData = Class {}
 
-function PlayerData:init(archetype)
+function PlayerData:init(archetype, seed)
+    self.rng = Util.getRNG(seed)
     self.bag = Archetypes.getBaseBag(archetype)
     self.grave = {}
     self.mat = {}
@@ -15,14 +16,12 @@ function PlayerData:init(archetype)
 end
 
 function PlayerData:shuffleBag()
-    Util.shuffle(self.bag)
+    Util.shuffle(self.bag, self.rng)
 end
 
 function PlayerData:shuffleGraveIntoBag()
     assert(self.bag[1] == nil)
-    for i, die in ipairs(self.grave) do
-        table.insert(self.bag, die)
-    end
+    self.bag = grave
     self.grave = {}
     self:shuffleBag()
 end
@@ -53,7 +52,7 @@ end
 function PlayerData:reroll(die)
     assert(self.rerolls_available > 0)
     self.rerolls_available = self.rerolls_available - 1
-    die:roll()
+    die:roll(self.rng)
 end
 
 function PlayerData:sendDieToGrave(die)

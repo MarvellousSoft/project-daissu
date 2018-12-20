@@ -26,7 +26,7 @@ function state:enter(prev, game_info)
 
     local player_info = {}
 
-    match = MatchManager(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, game_info.player_count, my_id, game_info.archetypes)
+    match = MatchManager(5, 5, Vector(0, 0), 72, WIN_W, WIN_H, game_info)
     match:start()
     MAIN_TIMER:after(1, function() match:startNewTurn() end)
 end

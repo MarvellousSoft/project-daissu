@@ -47,13 +47,21 @@ function util.wrap(f)
     return aux2
 end
 
--- shuffles array
-function util.shuffle(vec)
+-- shuffles array with option RNG
+function util.shuffle(vec, rng)
+    rng = rng or love.math.random
     local n = #vec
     for i = 1, n do
-        local j = love.math.random(i, n)
+        local j = rng(i, n)
         vec[i], vec[j] = vec[j], vec[i]
     end
+end
+
+-- Get a function that works like math.random
+-- But without "outside interference"
+function util.getRNG(seed)
+    local rng = love.math.newRandomGenerator(seed)
+    return function(...) return rng:random(...) end
 end
 
 return util

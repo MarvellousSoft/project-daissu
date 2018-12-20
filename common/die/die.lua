@@ -42,8 +42,9 @@ function Die:getNumSides()
 end
 
 --Randomize current up side and returns the result
-function Die:roll()
-    self.current_side = love.math.random(1, self.num_sides)
+function Die:roll(rng)
+    rng = rng or love.math.random
+    self.current_side = rng(1, self.num_sides)
     return self.current_side
 end
 

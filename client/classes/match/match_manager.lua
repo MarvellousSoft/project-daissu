@@ -25,10 +25,16 @@ local MatchManager = Class {
     __includes = {ELEMENT},
 }
 
-function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_players, local_id, archetypes)
+function MatchManager:init(rows, columns, pos, cell_size, w, h, game_info)
+    -- Data used from game_info
+    local local_id = game_info.local_id
+    local player_count = game_info.player_count
+    local archetypes = game_info.archetypes
+    local seed = game_info.seed
+    ---
     ELEMENT.init(self)
     self:register("L0", nil, "match")
-    self.logic = BoardLogic(rows, columns, number_of_players)
+    self.logic = BoardLogic(rows, columns, player_count)
     self.state = self.logic.state
     self.pos = pos
     self.w, self.h = w, h
@@ -62,7 +68,7 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_player
     local pa_pos = Vector(margin, map_pos.y)
     local pa_w, pa_h = pi_w, map_h
 
-    self.player_area = PlayerArea(pa_pos, pa_w, pa_h, self, self.colors[local_id], archetypes[local_id])
+    self.player_area = PlayerArea(pa_pos, pa_w, pa_h, self, self.colors[local_id], archetypes[local_id], seed)
 
     self.action_list_window = nil
 
@@ -72,7 +78,7 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_player
     local dy = pi_h + ts_h + gap_1 + gap_2
     local original_y = margin
     local y = original_y
-    for i = 1, number_of_players do
+    for i = 1, player_count do
         local c = self.colors[i]
         PlayerView(self.logic.players[i], c)
         self.controllers[i] = Controller(self.logic.map, self.logic.players[i].view, i == local_id and 'local' or 'remote')

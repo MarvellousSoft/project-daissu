@@ -21,7 +21,8 @@ function Match:init(cl_list)
         cl:send('start game', {
             local_id = i,
             player_count = #cl_list,
-            archetypes = archetypes
+            archetypes = archetypes,
+            seed = love.math.random(0, 2 ^ 32 - 1)
         })
     end
     self.actions = {}
