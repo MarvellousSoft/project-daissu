@@ -20,4 +20,9 @@ function ActionsModel.applyAction(action_name, ...)
     end
 end
 
+-- possibly improve this
+function ActionsModel.needsInput(action_name)
+    return action_name ~= 'roundhouse'
+end
+
 return ActionsModel

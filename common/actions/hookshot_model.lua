@@ -2,7 +2,7 @@ local GridHelper = require "common.map.grid_helper"
 
 local Hookshot = {}
 
-local function whatIsPulledWhere(map, player, di, dj)
+function whatIsPulledWhere(map, player, di, dj)
     local pi, pj = player.tile:getPosition()
     local tile, ti, tj = GridHelper.firstBlockedPos(map, pi, pj, di, dj)
     if tile ~= nil and tile:blocked() and tile.obj.tile_type ~= 'Player' then
@@ -16,6 +16,8 @@ local function whatIsPulledWhere(map, player, di, dj)
     end
 end
 
+Hookshot.whatIsPulledWhere = whatIsPulledWhere
+
 function Hookshot.applyAction(map, player, di, dj)
     local obj, ni, nj = whatIsPulledWhere(map, player, di, dj)
     GridHelper.moveObject(map, obj.tile.i, obj.tile.j, ni, nj)
@@ -24,4 +26,4 @@ function Hookshot.applyAction(map, player, di, dj)
     end
 end
 
-return Hookshot, whatIsPulledWhere
+return Hookshot

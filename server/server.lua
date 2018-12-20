@@ -33,6 +33,7 @@ end
 
 function Server.checkSchema(client, schema, data)
     if not validateType(schema, data) then
+        log.warn('Schema check failed.')
         Server.kick(client)
         return false
     end

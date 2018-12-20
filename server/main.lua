@@ -8,12 +8,12 @@ function love.load()
     assert = function(cond, ...)
         if not cond then
             if select('#', ...) > 0 then log.fatal(...) end
-            log.fatal(debug.stacktrace(nil, 'Assertion Failed.', 2))
+            log.fatal(debug.traceback('Assertion Failed.', 2))
         end
     end
     error = function(...)
         if select('#', ...) > 0 then log.fatal(...) end
-        log.fatal(debug.stacktrace(nil, 'Error.', 2))
+        log.fatal(debug.traceback('Error.', 2))
     end
     --
     log.outfile = "server.log"

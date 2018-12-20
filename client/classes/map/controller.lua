@@ -21,13 +21,13 @@ end
 function Controller:waitForInput(match, input_handler, callback)
     if self.source == 'local' then
         input_handler.chosen_input = function(self, ...)
-            Client.send('action input', {...})
+            Client.send('action input', {input_handler:processInput(...)})
             callback(input_handler:processInput(...))
         end
         match.action_input_handler = input_handler
     elseif self.source == 'remote' then
         Client.listenOnce('action input', function(data)
-            callback(input_handler:processInput(unpack(data)))
+            callback(unpack(data))
         end)
     end
 end

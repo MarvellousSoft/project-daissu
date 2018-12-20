@@ -6,7 +6,7 @@ local GridHelper = require "common.map.grid_helper"
 local ActionInputHandler = require "classes.actions.action_input_handler"
 local FadingText = require "classes.fading_text"
 
-local whatIsPulledWhere = select(2, require "common.actions.hookshot_model")
+local whatIsPulledWhere = require("common.actions.hookshot_model").whatIsPulledWhere
 
 local Hookshot = {}
 

@@ -1,3 +1,5 @@
+local log = require "common.extra_libs.log"
+
 local util = {}
 
 -- maps a vector through a function
@@ -33,7 +35,10 @@ function util.wrap(f)
     local co = coroutine.create(f)
     local aux2
     local function aux(ok, ...)
-        if not ok then error(debug.stacktrace(co, ...)) end
+        if not ok then
+            log.fatal(...)
+            error(debug.traceback(co))
+        end
         return ...
     end
     aux2 = function(...)

@@ -11,6 +11,7 @@ local match_map = {}
 function MatchManager.init()
     local function assertMatch(client)
         if match_map[client] == nil then
+            log.warn('Client not on any match.')
             Server.kick(client)
         end
         return match_map[client] ~= nil
@@ -19,7 +20,7 @@ function MatchManager.init()
     local actions_locked_schema = { 'array', 'string' }
     Server.on('actions locked', function(data, client)
         if not Server.checkSchema(client, actions_locked_schema, data) or not assertMatch(client) then return end
-        match_map[client]:actionLocked(client, data)
+        match_map[client]:actionsLocked(client, data)
     end)
 
     local action_input_schema = { 'number', 'number' }
