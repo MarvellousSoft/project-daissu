@@ -6,12 +6,11 @@ local ScrollWindow = Class {}
 
 local bar_size = 18
 
-function ScrollWindow:init(obj, w, h)
+function ScrollWindow:init(obj, x, y, w, h)
     self.obj = obj
     self.w = w or (obj.w + bar_size)
     self.h = h or (obj.h + bar_size)
-
-    self.offset = Vector(0,0)
+    self.pos = Vector(x, y)
 
     -- how much the bar was horizontally scrolled
     self.scroll_x = 0
@@ -27,10 +26,9 @@ function ScrollWindow:hasVerticalBar()
 end
 
 function ScrollWindow:verticalBarBounds()
-    local ox, oy = self.offset.x, self.offset.y
     return
-        self.obj.pos.x + ox + self.w - bar_size, -- x
-        self.obj.pos.y + oy + self.scroll_y,     -- y
+        self.pos.x + self.w - bar_size, -- x
+        self.pos.y + self.scroll_y,     -- y
         bar_size,                           -- width
         (self.h / (self.obj.h + bar_size)) * self.h      -- height
 end
@@ -44,10 +42,9 @@ function ScrollWindow:hasHorizontalBar()
 end
 
 function ScrollWindow:horizontalBarBounds()
-    local ox, oy = self.offset.x, self.offset.y
     return
-        self.obj.pos.x + ox + self.scroll_x,     -- x
-        self.obj.pos.y + oy + self.h - bar_size, -- y
+        self.pos.x + self.scroll_x,     -- x
+        self.pos.y + self.h - bar_size, -- y
         (self.w / (self.obj.w + bar_size)) * self.w,     -- width
         bar_size                            -- height
 end
@@ -64,15 +61,9 @@ function ScrollWindow:getActualTranslate()
         (self.scroll_y / self:maxScrollY()) * (self.obj.h + bar_size - self.h)
 end
 
-function ScrollWindow:setOffset(x,y)
-    self.offset.x = x
-    self.offset.y = y
-end
-
 function ScrollWindow:draw()
     local prev = {love.graphics.getScissor()}
-    local ox, oy = self.offset.x, self.offset.y
-    love.graphics.setScissor(self.obj.pos.x + ox, self.obj.pos.y + oy, self.w, self.h)
+    love.graphics.setScissor(self.pos.x, self.pos.y, self.w, self.h)
     local tx, ty = self:getActualTranslate()
     love.graphics.translate(-tx, -ty)
     self.obj:draw()
@@ -94,30 +85,29 @@ function ScrollWindow:draw()
 end
 
 function ScrollWindow:mousepressed(x, y, but, ...)
-    local ox, oy = self.offset.x, self.offset.y
-    if not Util.pointInRect(x, y, self.obj.pos.x + ox, self.obj.pos.y + oy, self.w, self.h) then return end
+    if not Util.pointInRect(x, y, self.pos.x, self.pos.y, self.w, self.h) then return end
     if but == 1 then
-        if self:hasHorizontalBar() and y >= self.obj.pos.y + oy + self.h - bar_size then
+        if self:hasHorizontalBar() and y >= self.pos.y + self.h - bar_size then
             self.grab = 1
             local xb, _, w = self:horizontalBarBounds()
             if x < xb then
                 self.grab_d = 0
-                self.scroll_x = x - self.obj.pos.x + ox
+                self.scroll_x = x - self.pos.x
             elseif x > xb + w then
                 self.grab_d = w
-                self.scroll_x = x - self.obj.pos.x + ox - w
+                self.scroll_x = x - self.pos.x - w
             else
                 self.grab_d = x - xb
             end
-        elseif self:hasVerticalBar() and x >= self.obj.pos.x + ox + self.w - bar_size then
+        elseif self:hasVerticalBar() and x >= self.pos.x + self.w - bar_size then
             self.grab = 2
             local _, yb, _, h = self:verticalBarBounds()
             if y < yb then
                 self.grab_d = 0
-                self.scroll_y = y - self.obj.pos.y + oy
+                self.scroll_y = y - self.pos.y
             elseif y > yb + h then
                 self.grab_d = h
-                self.scroll_y = y - self.obj.pos.y + oy - h
+                self.scroll_y = y - self.pos.y - h
             else
                 self.grab_d = y - yb
             end
@@ -127,7 +117,7 @@ function ScrollWindow:mousepressed(x, y, but, ...)
     end
 
     if not self.obj.mousepressed or
-       not Util.pointInRect(x, y, self.obj.pos.x + ox, self.obj.pos.y + oy, self.w - bar_size, self.h - bar_size)
+       not Util.pointInRect(x, y, self.pos.x, self.pos.y, self.w - bar_size, self.h - bar_size)
     then
         return
     end
@@ -136,9 +126,8 @@ function ScrollWindow:mousepressed(x, y, but, ...)
 end
 
 function ScrollWindow:mousereleased(x, y, but, ...)
-    local ox, oy = self.offset.x, self.offset.y
     if but == 1 then self.grab = nil end
-    if not self.obj.mousereleased or not Util.pointInRect(x, y, self.obj.pos.x + ox, self.obj.pos.y + oy, self.w - bar_size, self.h - bar_size) then return end
+    if not self.obj.mousereleased or not Util.pointInRect(x, y, self.pos.x, self.pos.y, self.w - bar_size, self.h - bar_size) then return end
     local tx, ty = self:getActualTranslate()
     self.obj:mousereleased(x + tx, y + ty, but, ...)
 end
@@ -154,15 +143,14 @@ local function clamp(x, min, max)
 end
 
 function ScrollWindow:mousemoved(x, y, dx, dy, ...)
-    local ox, oy = self.offset.x, self.offset.y
     if self.grab == 1 then -- horizontal
-        self.scroll_x = clamp(x - self.obj.pos.x + ox - self.grab_d, 0, self:maxScrollX())
+        self.scroll_x = clamp(x - self.pos.x - self.grab_d, 0, self:maxScrollX())
     elseif self.grab == 2 then -- vertical
-        self.scroll_y = clamp(y - self.obj.pos.y + oy - self.grab_d, 0, self:maxScrollY())
+        self.scroll_y = clamp(y - self.pos.y - self.grab_d, 0, self:maxScrollY())
     end
 
     if not self.obj.mousemoved or
-       not Util.pointInRect(x, y, self.obj.pos.x + ox, self.obj.pos.y + oy, self.w - bar_size, self.h - bar_size)
+       not Util.pointInRect(x, y, self.pos.x, self.pos.y, self.w - bar_size, self.h - bar_size)
     then
         return
     end

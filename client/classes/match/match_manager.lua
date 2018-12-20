@@ -221,8 +221,8 @@ function MatchManager:createActionList(player_actions, order, size)
         end
     end
     local offset, margin = 5, 10
-    self.action_list_window = ScrollWindow(ActionList(Vector(margin, WIN_H - 130), action_list, player_list, #action_list/size), WIN_W - 2*margin + 2*offset, 120)
-    self.action_list_window:setOffset(-offset, 0)
+    local x, y = margin, WIN_H - 130
+    self.action_list_window = ScrollWindow(ActionList(Vector(x, y), action_list, player_list, #action_list/size), x - offset, y - offset, WIN_W - 2*margin + 2*offset, 120)
 end
 
 --Iterate for all other players and create dice for their corresponding actions
