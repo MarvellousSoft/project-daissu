@@ -62,7 +62,7 @@ end
 
 local function idsToDice(player, ids)
     return Util.map(ids, function(id)
-        if id == -1 then return nil end
+        if id == -1 then return false end
         return Util.assertNonNil(player.data:getByIdFromMat(id))
     end)
 end

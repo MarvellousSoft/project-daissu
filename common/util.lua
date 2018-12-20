@@ -15,10 +15,10 @@ end
 function Util.any(vec, func)
     for _, value in ipairs(vec) do
         if func(value) then
-            return value
+            return value, true
         end
     end
-    return nil
+    return nil, false
 end
 
 function Util.assertNonNil(x)
