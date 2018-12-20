@@ -4,25 +4,40 @@ local Logic        = require "common.match.board_logic"
 local Server       = require "server"
 local log          = require "common.extra_libs.log"
 local ActionsModel = require "common.actions_model"
+local PlayerData   = require "common.match.player_data"
 
 local Match = Class {}
+
+local function newTurn(self)
+    self.logic:startNewTurn()
+    for _, p in ipairs(self.players) do
+        Util.exhaust(function() return p.data:grab(2) end)
+    end
+end
 
 function Match:init(cl_list)
     self.logic = Logic(5, 5, #cl_list)
     self.logic:start()
     self.logic:startNewTurn()
     Util.shuffle(cl_list)
-    self.cl_list = Util.map(cl_list, function(c) return c.client end)
     local archetypes = Util.map(cl_list, function(c) return c.info.archetype end)
-    -- Map: Client -> index
-    self.reverse_map = {}
-    for i, cl in ipairs(self.cl_list) do
-        self.reverse_map[cl] = i
-        cl:send('start game', {
+    -- Player list
+    self.players = {}
+    -- Map: Client -> Player
+    self.player_from_client = {}
+    for i, c in ipairs(cl_list) do
+        local seed = love.math.random(0, 2 ^ 32 - 1)
+        self.players[i] = {
+            client = c.client,
+            i = i,
+            data = PlayerData(archetypes[i], seed)
+        }
+        self.player_from_client[c.client] = self.players[i]
+        c.client:send('start game', {
             local_id = i,
             player_count = #cl_list,
             archetypes = archetypes,
-            seed = love.math.random(0, 2 ^ 32 - 1)
+            seed = seed
         })
     end
     self.actions = {}
@@ -45,20 +60,19 @@ function Match:getInputForAction(data)
 end
 
 function Match:actionsLocked(client, actions)
-    local i = self.reverse_map[client]
-    log.trace('Client', i, 'chose actions. state', self.logic.state, 'prev_actions', self.actions[i])
-    if not i or self.logic.state ~= 'choosing actions' or self.actions[i] then
+    local p = self.player_from_client[client]
+    if not p or self.logic.state ~= 'choosing actions' or self.actions[p.i] then
         log.warn('Client sent invalid action.')
         return Server.kick(client)
     end
     self.lock_count = self.lock_count + 1
-    self.actions[i] = actions
-    if self.lock_count == #self.cl_list then
+    self.actions[p.i] = actions
+    if self.lock_count == #self.players then
         local actions = self.actions
         self.lock_count = 0
         self.actions = {}
-        for i, cl in ipairs(self.cl_list) do
-            cl:send('turn ready', actions)
+        for i, p in ipairs(self.players) do
+            p.client:send('turn ready', actions)
         end
         self.turn_co = Util.wrap(function() self.logic:playTurnFromActions(actions) end)
         self:getInputForAction(self.turn_co())
@@ -66,13 +80,13 @@ function Match:actionsLocked(client, actions)
 end
 
 function Match:actionInput(client, data)
-    local i = self.reverse_map[client]
-    if not i or self.logic.state ~= 'playing turn' or self.waiting_for_input ~= i then
+    local p = self.player_from_client[client]
+    if not p or self.logic.state ~= 'playing turn' or self.waiting_for_input ~= p.i then
         return Server.kick(client)
     end
-    for i, cl in ipairs(self.cl_list) do
-        if cl ~= client then
-            cl:send('action input', data)
+    for i, p2 in ipairs(self.players) do
+        if p ~= p2 then
+            p2.client:send('action input', data)
         end
     end
     self.waiting_for_input = nil

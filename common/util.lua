@@ -30,21 +30,29 @@ function util.pointInRect(_x, _y, x, y, w, h)
     return not (_x < x or _x > x + w or _y < y or _y > y + h)
 end
 
+local function handleCoroutineYield(ok, ...)
+    if not ok then
+        log.fatal(...)
+        error(debug.traceback(co))
+    end
+    return ...
+end
+
 -- Works like coroutine.wrap but handles errors better (full stack trace)
 function util.wrap(f)
     local co = coroutine.create(f)
-    local aux2
-    local function aux(ok, ...)
-        if not ok then
-            log.fatal(...)
-            error(debug.traceback(co))
-        end
-        return ...
+    return function(...)
+        return handleCoroutineYield(coroutine.resume(co, ...))
     end
-    aux2 = function(...)
-        return aux(coroutine.resume(co, ...))
-    end
-    return aux2
+end
+
+-- Wrap f in a coroutine and call it continuosly
+-- until it is dead (no arguments)
+function util.exhaust(f)
+    local co = coroutine.create(f)
+    repeat
+        handleCoroutineYield(coroutine.resume(co))
+    until coroutine.status(co) == 'dead'
 end
 
 -- shuffles array with option RNG

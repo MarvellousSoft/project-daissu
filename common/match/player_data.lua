@@ -21,7 +21,7 @@ end
 
 function PlayerData:shuffleGraveIntoBag()
     assert(self.bag[1] == nil)
-    self.bag = grave
+    self.bag = self.grave
     self.grave = {}
     self:shuffleBag()
 end
