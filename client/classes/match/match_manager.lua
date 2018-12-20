@@ -93,6 +93,31 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, game_info)
         end
     end
 
+    --Creating object for opponents turn slots (to put inside scroll window)
+    local obj = {
+        match = self,
+        w = ts_w,
+        h = y - original_y,
+        x = opponents_x,
+        y = original_y,
+        bg_color = Color.new(0,0,0,180),
+        draw = function(self)
+            Color.set(self.bg_color)
+            love.graphics.rectangle("fill", self.x, self.y, self.w + 10, self.h)
+            for i,ts in ipairs(self.match.turn_slots) do
+                if i ~= self.match.local_id then
+                    ts:draw()
+                end
+            end
+            for i, pi in ipairs(self.match.players_info) do
+                if i ~= self.match.local_id then
+                    pi:draw()
+                end
+            end
+        end
+    }
+    self.opponents_turn_slots = ScrollWindow(obj, opponents_x, original_y, WIN_W - opponents_x, WIN_H - 200)
+
     self.active_slot = false --Which slot is being played at the moment
     self.next_active_slot = false --Which slot will be played next
 
@@ -118,20 +143,15 @@ function MatchManager:draw()
     --Draw grid
     self.map_view:draw(self)
 
-    --Draw players info
-    for i, player_info in ipairs(self.players_info) do
-        player_info:draw()
-    end
+    --Draw Player info
+    self.players_info[self.local_id]:draw()
 
     --Draw Player area
     self.player_area:draw(start_p)
 
     --Draw opponents turn slots
-    for i, turn_slots in ipairs(self.turn_slots) do
-        if i ~= self.local_id then
-            turn_slots:draw()
-        end
-    end
+    self.opponents_turn_slots:draw()
+
     --Draw lock button
     self.lock_button:draw()
 
@@ -335,6 +355,7 @@ end
 function MatchManager:mousemoved(...)
     self.player_area:mousemoved(...)
     self.lock_button:mousemoved(...)
+    self.opponents_turn_slots:mousemoved(...)
     if self.action_list_window then
         self.action_list_window:mousemoved(...)
     end
@@ -342,6 +363,7 @@ end
 
 function MatchManager:mousepressed(x, y, but, ...)
     self.player_area:mousepressed(x, y, but, ...)
+    self.opponents_turn_slots:mousepressed(x, y, but, ...)
     if self.action_list_window then
         self.action_list_window:mousepressed(x, y, but, ...)
     end
@@ -363,6 +385,7 @@ function MatchManager:mousereleased(x, y, but, ...)
     if but == 1 then
         self.lock_button:mousereleased(x, y, but)
     end
+    self.opponents_turn_slots:mousereleased(x, y, but, ...)
     self.player_area:mousereleased(x, y, but, ...)
     if self.action_list_window then
         self.action_list_window:mousereleased(x, y, but, ...)
