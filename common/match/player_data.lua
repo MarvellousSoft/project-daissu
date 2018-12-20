@@ -1,6 +1,7 @@
 local Class      = require "common.extra_libs.hump.class"
 local Archetypes = require "common.archetypes"
 local Util       = require "common.util"
+local log        = require "common.extra_libs.log"
 
 local PlayerData = Class {}
 
@@ -37,7 +38,7 @@ function PlayerData:grab(count)
         local die = table.remove(self.bag)
         table.insert(self.mat, die)
         coroutine.yield(die)
-        die:roll()
+        die:roll(self.rng)
     end
 end
 
@@ -56,13 +57,21 @@ function PlayerData:reroll(die)
 end
 
 function PlayerData:sendDieToGrave(die)
+    local found = false
     for i, die_ in ipairs(self.mat) do
         if die_ == die then
             table.remove(self.mat, i)
+            found = true
             break
         end
     end
+    assert(found)
     table.insert(self.grave, die)
+end
+
+-- Returns the dice with id id from your mat, or nil
+function PlayerData:getByIdFromMat(id)
+    return Util.any(self.mat, function(d) return d.id == id end)
 end
 
 return PlayerData

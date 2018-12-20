@@ -6,12 +6,13 @@ local funcs = {}
 
 local Die = Class {}
 
-function Die:init(sides, type)
+function Die:init(sides, type, id)
     self.num_sides = #sides --Number of sides this die has
     self.sides = sides --Array of strings contaning what every side has
     self.current_side = 1
     self.slot = nil
     self.type = type
+    self.id = id
 end
 
 --CLASS FUNCTIONS--

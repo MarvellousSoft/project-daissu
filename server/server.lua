@@ -27,6 +27,7 @@ end
 
 function Server.kick(client)
     log.warn('Kicking client', client)
+    print(debug.traceback())
     -- document error numbers
     client:disconnect(1)
 end

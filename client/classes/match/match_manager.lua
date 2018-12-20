@@ -18,6 +18,7 @@ local ScrollWindow  = require "classes.ui.scroll_window"
 local PlayerInfo    = require "classes.match.player_info"
 local BoardLogic    = require "common.match.board_logic"
 local PlayerView    = require "classes.map.player_view"
+local log           = require "common.extra_libs.log"
 
 local Client = require "classes.net.client"
 
@@ -221,7 +222,7 @@ function MatchManager:playTurn(local_id, callback)
     self.state = 'actions locked'
     local actions = {}
     for i, die_slot in ipairs(self.turn_slots[local_id]:getModel().slots) do
-        actions[i] = die_slot.die and die_slot.die:getCurrent() or 'none'
+        actions[i] = die_slot.die and die_slot.die.id or -1
     end
     self.player_area:actionsLocked()
     Client.send('actions locked', actions)
