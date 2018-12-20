@@ -16,6 +16,8 @@ function ScrollWindow:init(obj, x, y, w, h)
     self.scroll_x = 0
     -- how much the bar was vertically scrolled
     self.scroll_y = 0
+    -- how much to scroll the bar when using mousewheel
+    self.intensity = 20
     -- which scrollbar is grabbed
     self.grab = nil
     self.grab_d = 0 -- used to adjust mouse position to the grabbed bar
@@ -139,6 +141,20 @@ local function clamp(x, min, max)
         return max
     else
         return x
+    end
+end
+
+function ScrollWindow:wheelmoved(x, y)
+    x, y = y*self.intensity, y*self.intensity
+    local mx, my = love.mouse.getPosition()
+    if self:hasVerticalBar() and
+       Util.pointInRect(mx, my, self.pos.x, self.pos.y, self.w, self.h)
+    then
+        self.scroll_y = clamp(self.scroll_y - y, 0, self:maxScrollY())
+    elseif self:hasHorizontalBar() and
+       Util.pointInRect(mx, my, self.pos.x, self.pos.y, self.w, self.h)
+    then
+        self.scroll_x = clamp(self.scroll_x - x, 0, self:maxScrollX())
     end
 end
 

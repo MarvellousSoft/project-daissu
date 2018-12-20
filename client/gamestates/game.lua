@@ -61,6 +61,10 @@ function state:keypressed(key, scancode, isrepeat)
     end
 end
 
+function state:wheelmoved(...)
+    match:wheelmoved(...)
+end
+
 function state:mousemoved(...)
     match:mousemoved(...)
 end

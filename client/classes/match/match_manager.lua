@@ -361,6 +361,13 @@ function MatchManager:mousemoved(...)
     end
 end
 
+function MatchManager:wheelmoved(...)
+    self.opponents_turn_slots:wheelmoved(...)
+    if self.action_list_window then
+        self.action_list_window:wheelmoved(...)
+    end
+end
+
 function MatchManager:mousepressed(x, y, but, ...)
     self.player_area:mousepressed(x, y, but, ...)
     self.opponents_turn_slots:mousepressed(x, y, but, ...)
