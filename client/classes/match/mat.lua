@@ -23,12 +23,12 @@ function Mat:init(player_area, dice_n, pos, w, h, player_num)
     self.player_area = player_area
 
     local margin_x = 20
-    local margin_y = 3
+    local margin_y = 15
 
     --Mat header info--
     local header_h = 90
     --Bag
-    self.bag_w, self.bag_h = 80, 80
+    self.bag_w, self.bag_h = 60, 60
     self.bag_image = UI.bag
     self.bag_img_sx = self.bag_w/self.bag_image:getWidth()
     self.bag_img_sy = self.bag_h/self.bag_image:getHeight()
@@ -46,7 +46,7 @@ function Mat:init(player_area, dice_n, pos, w, h, player_num)
     self.rerolls_text_pos = Vector(self.rerolls_pos.x + self.rerolls_w/2 - tw/2,
                                    self.rerolls_pos.y + self.rerolls_h/2 - th/2)
     --Gravepool
-    self.grave_w, self.grave_h = 80, 80
+    self.grave_w, self.grave_h = 70, 60
     self.grave_image = UI.gravepool
     self.grave_img_sx = self.grave_w/self.grave_image:getWidth()
     self.grave_img_sy = self.grave_h/self.grave_image:getHeight()

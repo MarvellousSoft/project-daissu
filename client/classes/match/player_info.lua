@@ -32,7 +32,7 @@ local PlayerInfo = Class{
 
         --Portrait
         self.pt_w, self.pt_h = 110, 110
-        self.pt_margin = 5
+        self.pt_margin = 5 --Distance between player info edge and portrait
         self.pt_image = UI.player_info_portrait
         self.pt_ix = self.pt_w/self.pt_image:getWidth()  --Horizontal scale for image
         self.pt_iy = self.pt_h/self.pt_image:getHeight() --Vertical scale for image
@@ -43,9 +43,30 @@ local PlayerInfo = Class{
         self.pi_ix = self.pi_w/self.pi_image:getWidth()  --Horizontal scale for image
         self.pi_iy = self.pi_h/self.pi_image:getHeight() --Vertical scale for image
 
+        --Icons
+        self.icons_left_margin = 10 --Distance between portrait and first icon
+        self.icons_margin = 40 --Distance between each icon
+        self.icons_right_margin = 35 --Distance between last icon and player order
+        --Inver margins if its flipped
+        if self.flip then
+            self.icons_left_margin, self.icons_right_margin = self.icons_right_margin, self.icons_left_margin
+        end
+        self.icons_w, self.icons_h = 50, 50
+        --Player Bag
+        self.pb_image = UI.bag_icon
+        self.pb_ix = self.icons_w/self.pb_image:getWidth()  --Horizontal scale for image
+        self.pb_iy = self.icons_h/self.pb_image:getHeight() --Vertical scale for image
+        --Player Mat
+        self.pm_image = UI.mat_icon
+        self.pm_ix = self.icons_w/self.pm_image:getWidth()  --Horizontal scale for image
+        self.pm_iy = self.icons_h/self.pm_image:getHeight() --Vertical scale for image
+        --Player Grave
+        self.pg_image = UI.grave_icon
+        self.pg_ix = self.icons_w/self.pg_image:getWidth()  --Horizontal scale for image
+        self.pg_iy = self.icons_h/self.pg_image:getHeight() --Vertical scale for image
+
         --Player order
-        self.po_margin = 10
-        self.po_w, self.po_h = 80, 80
+        self.po_w, self.po_h = 50, 70
         self.po_image = UI.player_order
         self.po_ix = self.po_w/self.po_image:getWidth()  --Horizontal scale for image
         self.po_iy = self.po_h/self.po_image:getHeight() --Vertical scale for image
@@ -57,6 +78,17 @@ local PlayerInfo = Class{
 
 function PlayerInfo:draw()
     local g = love.graphics
+    local match = Util.findId("match")
+    local scale, x, order
+    if self.flip then
+        scale = -1
+        x = self.pos.x + self.w
+        order = {'pg', 'pm', 'pb'}
+    else
+        scale = 1
+        x = self.pos.x
+        order = {'pb', 'pm', 'pg'}
+    end
 
     --Draw bg
     Color.set("black")
@@ -66,48 +98,38 @@ function PlayerInfo:draw()
     g.draw(self.bg_image, self.pos.x, self.pos.y, nil, self.bg_ix, self.bg_iy)
 
     --Draw portrait bg
-    local scale
-    if self.flip then
-        offset = self.w - self.pt_margin
-        scale = -1
-    else
-        offset = self.pt_margin
-        scale = 1
-    end
+    x = x + scale*(self.pt_margin)
     Color.setWithAlpha(Color.black(),180)
     local shadow = 8
-    g.draw(self.pt_image, self.pos.x + offset + shadow*scale, self.pos.y + self.h/2 - self.pt_h/2 + shadow, nil, self.pt_ix * scale, self.pt_iy)
+    g.draw(self.pt_image, x + shadow*scale, self.pos.y + self.h/2 - self.pt_h/2 + shadow, nil, self.pt_ix * scale, self.pt_iy)
     Color.set(self.color)
-    g.draw(self.pt_image, self.pos.x + offset, self.pos.y + self.h/2 - self.pt_h/2, nil, self.pt_ix * scale, self.pt_iy)
+    g.draw(self.pt_image, x, self.pos.y + self.h/2 - self.pt_h/2, nil, self.pt_ix * scale, self.pt_iy)
 
     --Draw portrait
-    if self.flip then
-        offset = self.w - self.pt_margin - self.pt_w/2 + self.pi_w/2 + self.pi_offset
-        scale = -1
-    else
-        offset = self.pt_margin + self.pi_offset + self.pt_w/2 - self.pi_w/2
-        scale = 1
-    end
+    local px = x + scale*(self.pt_w/2 - self.pi_w/2) + self.pi_offset
     Color.set("white")
-    g.draw(self.pi_image, self.pos.x + offset, self.pos.y + self.h/2 - self.pi_h/2, nil, self.pi_ix * scale, self.pi_iy)
+    g.draw(self.pi_image, px, self.pos.y + self.h/2 - self.pi_h/2, nil, self.pi_ix * scale, self.pi_iy)
+
+    --Draw icons
+    x = x + scale*(self.pt_w + self.icons_left_margin + self.icons_w/2) - self.icons_w/2
+    local y = self.pos.y + self.h/2 - self.icons_h/2
+    for _, icon in ipairs(order) do
+        Color.set("white")
+        g.draw(self[icon..'_image'], x, y, nil, self[icon..'_ix'], self[icon..'_iy'])
+        x = x + scale*(self.icons_w + self.icons_margin)
+    end
 
     --Draw player order
-    if self.flip then
-        offset = self.po_margin
-    else
-        offset = self.w - self.po_margin - self.po_w
-    end
     Color.set(self.color)
-    local x, y = self.pos.x + offset, self.pos.y + self.h/2 - self.po_h/2
-    g.draw(self.po_image, x, y, nil, self.po_ix, self.po_iy)
-    local match = Util.findId("match")
+    x = x + scale*(-self.icons_margin + self.icons_right_margin - self.icons_w/2) + self.icons_w/2
+    g.draw(self.po_image, x, self.pos.y + self.h/2 - self.po_h/2, nil, self.po_ix*scale, self.po_iy)
     if match then
         local order = match:getPlayerOrder(self.player_id)
         local tw = self.po_font:getWidth(order)
         local th = self.po_font:getHeight(order)
-        Color.set("black")
+        Color.set("white")
         Font.set(self.po_font)
-        g.print(order, x + self.po_w/2 - tw/2, y + self.po_h/2 - th/2)
+        g.print(order, x + scale*self.po_w/2 - tw/2, self.pos.y + self.h/2 - th/2)
     end
 end
 
