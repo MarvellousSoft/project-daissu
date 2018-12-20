@@ -316,6 +316,14 @@ function MatchManager:getPlayerOrder(id)
     return error("Failed to find player order for player "..id)
 end
 
+function MatchManager:isChoosingActions()
+    return self.state == 'choosing actions'
+end
+
+function MatchManager:isPlayingTurn()
+    return self.state == 'playing turn'
+end
+
 --Mouse functions--
 
 function MatchManager:mousemoved(...)

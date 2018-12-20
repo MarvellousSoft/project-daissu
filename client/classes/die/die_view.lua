@@ -5,7 +5,10 @@ local VIEW      = require "classes.primitives.view"
 local Color     = require "classes.color.color"
 local Actions   = require "classes.actions"
 local DieHelper = require "classes.die.helper"
+local HoverText = require "classes.hover_text"
 local Font      = require "font"
+local Util      = require "steaming_util"
+local Log       = require "common.extra_libs.log"
 
 local funcs = {}
 
@@ -43,8 +46,11 @@ function DieView:init(die, x, y, color)
     end
 
     self.previous_pos = Vector(x,y)
-    self.picked = false --If player is dragging this object
     self.is_moving = false --If this die is moving somewhere
+
+    self.hover_max_cooldown = 2 --Time needed to hover until text appears
+    self.hover_cooldown = 0
+    self.hover_text = nil
 
     self.rolling = false --If die is rolling
     self.rolling_face = 1 --What face to show while rolling
@@ -57,7 +63,20 @@ function DieView:init(die, x, y, color)
 end
 
 function DieView:update(dt)
+end
 
+function DieView:updateHover(mx, my, dt)
+    if self:collidesPoint(mx, my) and not self:isMoving() then
+       if self.hover_cooldown < self.hover_max_cooldown then
+            self.hover_cooldown = math.min(self.hover_cooldown + dt, self.hover_max_cooldown)
+            if self.hover_cooldown == self.hover_max_cooldown then
+                self:createHoverText()
+            end
+        end
+    else
+        self.hover_cooldown = 0
+        self:destroyHoverText()
+    end
 end
 
 --CLASS FUNCTIONS--
@@ -251,6 +270,31 @@ function DieView:handleRightClick(player_area)
     end
 end
 
+--Hover text functions
+
+function DieView:createHoverText()
+    local match = Util.findId("match")
+    if not match then Log.warning("Couldn't find match to create hover text"); return end
+    local text
+    local h
+    if match:isChoosingActions() then
+        text = "Ctrl+Click: Reroll\nShift+Click: Examine"
+        h = 40
+    else
+        text = "Shift+Click: Examine"
+        h = 25
+    end
+    local w, x, y = 170, self.pos.x - 20, self.pos.y - h - 5
+    self.hover_text = HoverText(x, y, w, h, text, 14)
+    self.hover_text:register("L2upper", "hover_text")
+end
+
+function DieView:destroyHoverText()
+    if not self.hover_text then return end
+    self.hover_text:kill()
+    self.hover_text = nil
+end
+
 --Collision functions
 
 --Checks if given point(x,y) collides with this view
@@ -267,6 +311,12 @@ function DieView:collidesRect(x, y, w, h)
     local y_l, y_r = math.max(y, self.pos.y), math.min(y + h, self.pos.y + self.h)
     if y_l >= y_r then return 0 end
     return (x_r - x_l) * (y_r - y_l)
+end
+
+--Get die view info
+
+function DieView:isMoving()
+    return self.is_moving
 end
 
 --Returns the die actual height (includes die underside)

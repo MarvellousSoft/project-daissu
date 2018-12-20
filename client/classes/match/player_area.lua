@@ -79,9 +79,17 @@ function PlayerArea:refillRerolls()
 end
 
 function PlayerArea:update(dt)
+    local die_is_picked = false
+    local mx, my = love.mouse.getPosition()
     for i, die in ipairs(self.dice_views) do
         die:update(dt)
+        if not self.picked_die then
+            die:updateHover(mx, my, dt)
+        else
+            die:destroyHoverText()
+        end
     end
+
     for view in pairs(self.extra_views) do
         view:update(dt)
     end
