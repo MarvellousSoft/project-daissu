@@ -1,5 +1,5 @@
 local Class      = require "common.extra_libs.hump.class"
-local Archetypes = require "classes.archetypes"
+local Archetypes = require "common.archetypes"
 local Util       = require "common.util"
 
 local PlayerData = Class {}
@@ -27,6 +27,8 @@ function PlayerData:shuffleGraveIntoBag()
     self:shuffleBag()
 end
 
+-- Grabs count dice from the players bag
+-- Yields each grabbed die, BEFORE rolling them.
 function PlayerData:grab(count)
     for i = 1, count do
         if #self.mat == self.mat_max then return end

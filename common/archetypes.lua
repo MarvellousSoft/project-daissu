@@ -1,5 +1,4 @@
-local Die = require "classes.die.die"
-local Color = require "classes.color.color"
+local Die = require "common.die.die"
 
 local Archetypes = {}
 
