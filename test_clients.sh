@@ -8,6 +8,6 @@ ROOM=`uuidgen`
 ((COUNT--))
 
 for i in `seq 1 $COUNT`; do
-    love client/ --host=localhost --char=melee --auto-connect --room=$ROOM --auto-ready=0.5 "${@:2}" &>/dev/null &
+    love client/ --host=localhost --char=melee --auto-connect --room=$ROOM --auto-ready=0.5 "${@:2}" &>client$i.log &
 done
-love client/ --host=localhost --char=ranged --auto-connect --room=$ROOM --auto-ready=0.5 "${@:2}" &
+love client/ --host=localhost --char=ranged --auto-connect --room=$ROOM --auto-ready=0.5 "${@:2}" | tee client$COUNT.log
