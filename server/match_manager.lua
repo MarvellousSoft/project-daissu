@@ -16,19 +16,16 @@ function MatchManager.init()
         return match_map[client] ~= nil
     end
 
-    local actions_locked_schema = {
-        i = 'number',
-        actions = {'array', 'string'}
-    }
+    local actions_locked_schema = { 'array', 'string' }
     Server.on('actions locked', function(data, client)
         if not Server.checkSchema(client, actions_locked_schema, data) or not assertMatch(client) then return end
-        match_map[client]:actionLocked(data.i, data.actions)
+        match_map[client]:actionLocked(client, data)
     end)
 
     local action_input_schema = { 'number', 'number' }
     Server.on('action input', function(data, client)
         if not Server.checkSchema(client, action_input_schema, data) or not assertMatch(client) then return end
-        match_map[client]:actionInput(data, client)
+        match_map[client]:actionInput(client, data)
     end)
 end
 

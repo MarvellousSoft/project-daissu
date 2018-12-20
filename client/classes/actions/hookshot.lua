@@ -2,7 +2,7 @@ local Color = require "classes.color.color"
 local Vector = require "common.extra_libs.hump.vector"
 local Vec = require "common.extra_libs.hump.vector-light"
 local Timer = require "common.extra_libs.hump.timer"
-local GridHelper = require "classes.map.grid_helper"
+local GridHelper = require "common.map.grid_helper"
 local ActionInputHandler = require "classes.actions.action_input_handler"
 local FadingText = require "classes.fading_text"
 

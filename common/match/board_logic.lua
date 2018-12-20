@@ -16,9 +16,8 @@ local starting_positions = {
     {{1,1},{2,3},{3,5},{4,2},{5,4}}, -- 5 players
 }
 
-function BoardLogic:init(rows, columns, number_of_players, seed)
+function BoardLogic:init(rows, columns, number_of_players)
     self.state = 'not started'
-    self.rng = love.math.newRandomGenerator(seed)
     self.n_players = number_of_players
     assert(self.n_players > 1)
     assert(self.n_players <= 5)

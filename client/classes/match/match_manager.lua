@@ -28,7 +28,7 @@ local MatchManager = Class {
 function MatchManager:init(rows, columns, pos, cell_size, w, h, number_of_players, local_id, archetypes)
     ELEMENT.init(self)
     self:register("L0", nil, "match")
-    self.logic = BoardLogic(rows, columns, number_of_players, 10)
+    self.logic = BoardLogic(rows, columns, number_of_players)
     self.state = self.logic.state
     self.pos = pos
     self.w, self.h = w, h
@@ -198,7 +198,7 @@ function MatchManager:playTurn(local_id, callback)
         actions[i] = die_slot.die and die_slot.die:getCurrent() or 'none'
     end
     self.player_area:actionsLocked()
-    Client.send('actions locked', {i = local_id, actions = actions})
+    Client.send('actions locked', actions)
     Client.listenOnce('turn ready', function(all_actions)
         self:playTurnFromActions(all_actions, callback)
     end)
