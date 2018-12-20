@@ -138,6 +138,7 @@ function PlayerArea:destroyPlayedDice()
     for i, slot in ipairs(self.turn_slots.slots) do
         if slot:getDie() then
             local die = slot:getDie()
+            slot.view:setAction(die:getCurrent(), die:getType())
             self.player_data:sendDieToGrave(die)
             all_dice[die] = nil -- removing
             self.extra_views[die.view] = true
@@ -207,6 +208,7 @@ function PlayerArea:actionsLocked()
         self.picked_die = nil
         die:handleUnpick(self)
     end
+    self:destroyPlayedDice()
 end
 
 function PlayerArea:mousereleased(x, y, but)

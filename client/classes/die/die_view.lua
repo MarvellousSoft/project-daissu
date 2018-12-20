@@ -22,13 +22,6 @@ local DieView = Class{
     __includes = {DRAWABLE, VIEW}
 }
 
-local default_color_for_types = {
-    attack   = Color.red(),
-    movement = Color.green(),
-    utility  = Color.yellow(),
-    fake     = Color.new(150, 150, 150)
-}
-
 function DieView:init(die, x, y, color)
     DRAWABLE.init(self, x, y, nil, nil, nil, nil)
     VIEW.init(self, die)
@@ -37,7 +30,7 @@ function DieView:init(die, x, y, color)
     self.sx, self.sy = 1, 1
 
     --Color for die border
-    self:setColor(color or default_color_for_types[die.type])
+    self:setColor(color or DieHelper.getTypeColor(die.type))
 
     --Loads up icon for every side
     self.side_images = {}

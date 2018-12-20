@@ -183,7 +183,6 @@ local function playTurnRec(self, co, callback, ...)
     -- turn is over
     if data == nil then
         self.state = self.logic.state
-        self.player_area:destroyPlayedDice()
         self:removeOpponentDice()
         self.active_slot = false
         self.next_active_slot = false

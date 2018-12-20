@@ -4,6 +4,7 @@ local Class     = require "common.extra_libs.hump.class"
 local Color     = require "classes.color.color"
 local DieHelper = require "classes.die.helper"
 local Vector    = require "common.extra_libs.hump.vector"
+local Actions   = require "classes.actions"
 local UI        = require("assets").images.UI
 
 local funcs = {}
@@ -27,6 +28,11 @@ function DieSlotView:init(die_slot, pos)
     self.line_width = 5
 
     self.has_die_over = false
+
+    --Action associated with this slot
+    self.action_image = nil
+    self.action_color = nil
+    self.action_alpha = 0
 
     --Images
     self.free_image = UI.die_slot_free
@@ -64,10 +70,39 @@ function DieSlotView:draw()
     local sw = self.w/image:getWidth()
     local sh = self.h/image:getHeight()
     g.draw(image, self.pos.x, self.pos.y, nil, sw, sh)
+
+    --Draw correspondent action, if any
+    if self.action_image then
+        local margin = 3
+        local sw = (self.w-2*margin)/self.action_image:getWidth()
+        local sh = (self.h-2*margin)/self.action_image:getHeight()
+        local off = 3
+        Color.setWithAlpha(Color.black(),self.action_alpha)
+        g.draw(self.action_image, self.pos.x + margin + off, self.pos.y + margin + off, nil, sw, sh)
+        Color.setWithAlpha(self.action_color, self.action_alpha)
+        g.draw(self.action_image, self.pos.x + margin, self.pos.y + margin, nil, sw, sh)
+    end
 end
 
 function DieSlotView:setAlpha(value)
     self.alpha = value
+end
+
+function DieSlotView:setAction(action, type)
+    if action then
+        self.action_image = Actions.actionImage(action)
+        self.action_color = DieHelper.getTypeColor(type)
+        self:removeTimer('change_action_visibility', MAIN_TIMER)
+        self:addTimer('change_action_visibility', MAIN_TIMER, "tween", 1, self,
+                      {action_alpha = 255}, 'out-quad')
+    else
+        self:removeTimer('change_action_visibility', MAIN_TIMER)
+        self:addTimer('change_action_visibility', MAIN_TIMER, "tween", 1, self,
+                      {action_alpha = 0}, 'out-quad',
+                      function()
+                          self.action_image = nil
+                      end)
+    end
 end
 
 function DieSlotView:setVisible(d, offset)
