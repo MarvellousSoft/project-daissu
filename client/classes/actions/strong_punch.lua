@@ -6,10 +6,6 @@ local ActionInputHandler = require "classes.actions.action_input_handler"
 
 local StrongPunch = {}
 
-function StrongPunch.applyAction(map, player, i, j)
-    map:get(i, j):applyDamage(2)
-end
-
 function StrongPunch.showAction(controller, callback, i, j)
     local map_view = controller.map.view
     FadingText(map_view.pos + Vector(j - 1, i - 1) * map_view.cell_size, "-2", 1)

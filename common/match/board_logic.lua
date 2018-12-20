@@ -1,10 +1,8 @@
-local Class   = require "common.extra_libs.hump.class"
-local Map     = require "common.map.map"
-local Player  = require "common.map.player"
-local Util    = require "common.util"
--- XXX common should not import anything from client
--- Here we don't use anything harmful, but still
-local Actions = require "client.classes.actions"
+local Class        = require "common.extra_libs.hump.class"
+local Map          = require "common.map.map"
+local Player       = require "common.map.player"
+local Util         = require "common.util"
+local ActionsModel = require "common.actions_model"
 
 local BoardLogic = Class {}
 
@@ -55,8 +53,8 @@ function BoardLogic:playTurnFromActions(player_actions)
         for i = 1, self.n_players do
             local p_i = order[i]
             if player_actions[p_i][j] ~= 'none' then
-                local helper = Actions.getAction(player_actions[p_i][j])
-                helper.applyAction(
+                ActionsModel.applyAction(
+                    player_actions[p_i][j],
                     self.map,
                     self.players[p_i],
                     coroutine.yield {

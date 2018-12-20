@@ -6,21 +6,9 @@ local GridHelper = require "common.map.grid_helper"
 local ActionInputHandler = require "classes.actions.action_input_handler"
 local FadingText = require "classes.fading_text"
 
-local Hookshot = {}
+local whatIsPulledWhere = select(2, require "common.actions.hookshot_model")
 
-local function whatIsPulledWhere(map, player, di, dj)
-    local pi, pj = player.tile:getPosition()
-    local tile, ti, tj = GridHelper.firstBlockedPos(map, pi, pj, di, dj)
-    if tile ~= nil and tile:blocked() and tile.obj.tile_type ~= 'Player' then
-        ti, tj = ti - di, tj - dj
-        tile = tile:getCloseTile(map, -di, -dj)
-    end
-    if tile and tile:blocked() then
-        return tile.obj, pi + di, pj + dj
-    else
-        return player, ti, tj
-    end
-end
+local Hookshot = {}
 
 function Hookshot.showAction(controller, callback, di, dj)
     local obj, ni, nj = whatIsPulledWhere(controller.map, controller.player.model, di, dj)
@@ -32,14 +20,6 @@ function Hookshot.showAction(controller, callback, di, dj)
         obj.view:resetAnimation()
         if callback then callback() end
     end)
-end
-
-function Hookshot.applyAction(map, player, di, dj)
-    local obj, ni, nj = whatIsPulledWhere(map, player, di, dj)
-    GridHelper.moveObject(map, obj.tile.i, obj.tile.j, ni, nj)
-    if obj ~= player then
-        obj.tile:applyDamage(1)
-    end
 end
 
 function Hookshot.getInputHandler(controller)

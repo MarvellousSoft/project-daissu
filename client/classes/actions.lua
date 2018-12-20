@@ -1,5 +1,4 @@
 local i18n  = require "i18n"
-local Timer = require "common.extra_libs.hump.timer"
 --UTILITY FUNCTIONS FOR ACTION
 
 local icons = {
@@ -30,7 +29,7 @@ end
 
 local helpers = {
     walk = (require "classes.actions.walk")(1),
-    shoot = require "classes.actions.shoot_forward",
+    shoot = require "classes.actions.shoot",
     roundhouse = require "classes.actions.roundhouse",
     ['explosion shot'] = require "classes.actions.explosion_shot",
     ['strong punch'] = require "classes.actions.strong_punch",

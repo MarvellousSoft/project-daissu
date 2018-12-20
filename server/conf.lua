@@ -1,6 +1,5 @@
 function love.conf(t)
     -- We don't need GUI
-    -- Just using love to have luajit and luaenet configured properly
     t.window = false
 
     t.modules.audio = false              -- Enable the audio module (boolean)

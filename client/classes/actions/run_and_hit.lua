@@ -6,16 +6,6 @@ local ActionInputHandler = require "classes.actions.action_input_handler"
 
 local RunAndHit = {}
 
-function RunAndHit.applyAction(map, player, di, dj)
-    local pi, pj = player.tile:getPosition()
-    local tile = map:get(pi + di, pj + dj)
-    if tile and not tile:blocked() then
-        GridHelper.moveObject(map, pi, pj, pi + di, pj + dj)
-        tile = map:get(pi + 2 * di, pj + 2 * dj)
-        if tile then tile:applyDamage(3) end
-    end
-end
-
 function RunAndHit.showAction(controller, callback, di, dj)
     local pi, pj = controller:getPosition()
     local map_view = controller.map.view

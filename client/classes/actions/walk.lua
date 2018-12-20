@@ -21,11 +21,6 @@ local function WalkCreator(distance)
         end
     end
 
-    function Walk.applyAction(map, player, i, j)
-        local pi, pj = player.tile:getPosition()
-        GridHelper.moveObject(map, pi, pj, i, j)
-    end
-
     function Walk.getInputHandler(controller)
         local pi, pj = controller:getPosition()
         return ActionInputHandler {

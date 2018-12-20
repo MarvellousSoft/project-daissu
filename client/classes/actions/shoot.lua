@@ -6,9 +6,9 @@ local GridHelper = require "common.map.grid_helper"
 local FadingText = require "classes.fading_text"
 local ActionInputHandler = require "classes.actions.action_input_handler"
 
-local ShootForward = {}
+local Shoot = {}
 
-function ShootForward.showAction(controller, callback, di, dj)
+function Shoot.showAction(controller, callback, di, dj)
     local pi, pj = controller:getPosition()
     local map_view = controller.map.view
     GridHelper.applyCallbackOnDirection(pi, pj, di, dj, controller.map, function(tile, i, j)
@@ -23,15 +23,7 @@ function ShootForward.showAction(controller, callback, di, dj)
     end)
 end
 
-function ShootForward.applyAction(map, player, di, dj)
-    local pi, pj = player.tile:getPosition()
-    GridHelper.applyCallbackOnDirection(pi, pj, di, dj, map, function(tile)
-        if tile ~= nil then tile:applyDamage(1) end
-        return tile ~= nil and not tile:blocked()
-    end)
-end
-
-function ShootForward.getInputHandler(controller)
+function Shoot.getInputHandler(controller)
     local pi, pj = controller:getPosition()
     return ActionInputHandler {
         accept = function(self, i, j)
@@ -48,4 +40,4 @@ function ShootForward.getInputHandler(controller)
     }
 end
 
-return ShootForward
+return Shoot
