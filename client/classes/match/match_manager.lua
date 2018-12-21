@@ -19,6 +19,8 @@ local PlayerInfo    = require "classes.match.player_info"
 local BoardLogic    = require "common.match.board_logic"
 local PlayerView    = require "classes.map.player_view"
 local log           = require "common.extra_libs.log"
+local PlayerData    = require "common.match.player_data"
+local EnemyData     = require "common.match.enemy_data"
 
 local Client = require "classes.net.client"
 
@@ -69,7 +71,8 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, game_info)
     local pa_pos = Vector(margin, map_pos.y)
     local pa_w, pa_h = pi_w, map_h
 
-    self.player_area = PlayerArea(pa_pos, pa_w, pa_h, self, self.colors[local_id], archetypes[local_id], seed)
+    local player_data = PlayerData(archetypes[local_id], seed)
+    self.player_area = PlayerArea(pa_pos, pa_w, pa_h, self, self.colors[local_id], archetypes[local_id], player_data)
 
     self.action_list_window = nil
 
@@ -79,20 +82,24 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, game_info)
     local dy = pi_h + ts_h + gap_1 + gap_2
     local original_y = margin
     local y = original_y
+    self.data = {} -- PlayerData or EnemyData
     for i = 1, player_count do
         local c = self.colors[i]
         PlayerView(self.logic.players[i], c)
         self.controllers[i] = Controller(self.logic.map, self.logic.players[i].view, i == local_id and 'local' or 'remote')
         if i == local_id then
-            self.players_info[i] = PlayerInfo(margin, original_y, ts_w, pi_h, i, archetypes[i])
+            self.data[i] = player_data
+            self.players_info[i] = PlayerInfo(margin, original_y, ts_w, pi_h, i, archetypes[i], self)
             self.turn_slots[i] = self.player_area.turn_slots.view
         else
-            self.players_info[i] = PlayerInfo(opponents_x, y, ts_w, pi_h, i, archetypes[i])
+            self.data[i] = EnemyData(archetypes[i])
+            self.players_info[i] = PlayerInfo(opponents_x, y, ts_w, pi_h, i, archetypes[i], self)
             self.turn_slots[i] = TurnSlotsView(TurnSlots(6, i), Vector(opponents_x, y + pi_h + gap_1), ts_w, ts_h, c)
             y = y + dy
             self.turn_slots[i]:setAlpha(0)
         end
     end
+
 
     --Creating object for opponents turn slots (to put inside scroll window)
     local obj = {
@@ -141,6 +148,10 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, game_info)
 
 end
 
+function MatchManager:getData(player_id)
+    return self.data[player_id]
+end
+
 function MatchManager:draw()
     --Draw grid
     self.map_view:draw(self)
@@ -175,6 +186,11 @@ function MatchManager:startNewTurn()
     self.lock_button:unlock()
     self.player_area:grab(2)
     self.player_area:refillRerolls()
+    for i = 1, self.logic.n_players do
+        if i ~= self.local_id then
+            self.data[i]:grab(2)
+        end
+    end
 end
 
 
@@ -270,6 +286,7 @@ function MatchManager:activateOpponentSlots(player_actions)
             if self.controllers[i].source == 'remote' then
                 for j, action in ipairs(actions) do
                     if action ~= "none" then
+                        self.data[i]:sendDieToGrave()
                         local slot = self.turn_slots[i]:getModel():getSlot(j)
                         slot.view:setAction(action, self.colors[i])
                         wait(.1)

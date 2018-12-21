@@ -32,7 +32,7 @@ end
 function PlayerData:grab(count)
     local grabbed = {}
     for i = 1, count do
-        if #self.mat == self.mat_max then return end
+        if #self.mat == self.mat_max then return grabbed end
         if self.bag[1] == nil then
             self:shuffleGraveIntoBag()
         end
@@ -75,5 +75,9 @@ end
 function PlayerData:getByIdFromMat(id)
     return Util.any(self.mat, function(d) return d.id == id end)
 end
+
+function PlayerData:getBagSize() return #self.bag end
+function PlayerData:getMatSize() return #self.mat end
+function PlayerData:getGraveSize() return #self.grave end
 
 return PlayerData

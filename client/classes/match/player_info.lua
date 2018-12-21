@@ -10,7 +10,7 @@ local Archetype = require("assets").images.characters
 
 local PlayerInfo = Class{
     __includes = {ELEMENT, POS},
-    init = function(self, x, y, w, h, player_id, archetype)
+    init = function(self, x, y, w, h, player_id, archetype, match)
         ELEMENT.init(self)
 
         POS.init(self, x, y)
@@ -18,9 +18,6 @@ local PlayerInfo = Class{
 
         self.archetype = archetype
         self.player_id = player_id
-
-        local match = Util.findId("match")
-        assert(match, "Couldn't access match")
 
         self.color = match:getPlayerColor(player_id)
         self.flip = match:getPlayerSource(player_id) == 'remote' --If its an opponent's info
@@ -54,20 +51,26 @@ local PlayerInfo = Class{
         end
         self.icons_w, self.icons_h = 50, 50
         --Player Bag
-        self.pb_image = UI.bag_icon
-        self.pb_ix = self.icons_w/self.pb_image:getWidth()  --Horizontal scale for image
-        self.pb_iy = self.icons_h/self.pb_image:getHeight() --Vertical scale for image
-        self.pb_value = 6
+        self.bag = {
+            image = UI.bag_icon,
+            ix = self.icons_w / UI.bag_icon:getWidth(),  --Horizontal scale for image
+            iy = self.icons_h / UI.bag_icon:getHeight(), --Vertical scale for image
+            getValue = function() return match:getData(player_id):getBagSize() end
+        }
         --Player Mat
-        self.pm_image = UI.mat_icon
-        self.pm_ix = self.icons_w/self.pm_image:getWidth()  --Horizontal scale for image
-        self.pm_iy = self.icons_h/self.pm_image:getHeight() --Vertical scale for image
-        self.pm_value = 6
+        self.mat = {
+            image = UI.mat_icon,
+            ix = self.icons_w / UI.mat_icon:getWidth(),  --Horizontal scale for image
+            iy = self.icons_h / UI.mat_icon:getHeight(), --Vertical scale for image
+            getValue = function() return match:getData(player_id):getMatSize() end
+        }
         --Player Grave
-        self.pg_image = UI.grave_icon
-        self.pg_ix = self.icons_w/self.pg_image:getWidth()  --Horizontal scale for image
-        self.pg_iy = self.icons_h/self.pg_image:getHeight() --Vertical scale for image
-        self.pg_value = 6
+        self.grave = {
+            image = UI.grave_icon,
+            ix = self.icons_w / UI.grave_icon:getWidth(),  --Horizontal scale for image
+            iy = self.icons_h / UI.grave_icon:getHeight(), --Vertical scale for image
+            getValue = function() return match:getData(player_id):getGraveSize() end
+        }
 
         --Player order
         self.po_w, self.po_h = 50, 70
@@ -87,11 +90,11 @@ function PlayerInfo:draw()
     if self.flip then
         scale = -1
         x = self.pos.x + self.w
-        order = {'pg', 'pm', 'pb'}
+        order = {self.grave, self.mat, self.bag}
     else
         scale = 1
         x = self.pos.x
-        order = {'pb', 'pm', 'pg'}
+        order = {self.bag, self.mat, self.grave}
     end
 
     --Draw bg
@@ -120,9 +123,9 @@ function PlayerInfo:draw()
     local y = self.pos.y + self.h/2 - self.icons_h/2 - self.icons_font:getHeight()/2
     for _, icon in ipairs(order) do
         Color.set("white")
-        g.draw(self[icon..'_image'], x, y, nil, self[icon..'_ix'], self[icon..'_iy'])
+        g.draw(icon.image, x, y, nil, icon.ix, icon.iy)
         Color.set("black")
-        local value = self[icon..'_value']
+        local value = icon.getValue()
         local tx = self.icons_font:getWidth(value)
         g.print(value, x + self.icons_w/2 - tx/2, y + self.icons_h + 5)
         x = x + scale*(self.icons_w + self.icons_margin)

@@ -8,13 +8,12 @@ local Archetypes    = require "common.archetypes"
 local DieView       = require "classes.die.die_view"
 local Color         = require "classes.color.color"
 local Fonts         = require "font"
-local PlayerData    = require "common.match.player_data"
 local Util          = require "common.util"
 local Client        = require "classes.net.client"
 
 local PlayerArea = Class {}
 
-function PlayerArea:init(pos, w, h, match, color, archetype, seed)
+function PlayerArea:init(pos, w, h, match, color, archetype, player_data)
     local map = match.map_view
     local columns = map:getModel().columns
     local rows = map:getModel().rows
@@ -30,7 +29,7 @@ function PlayerArea:init(pos, w, h, match, color, archetype, seed)
 
     self.match = match
 
-    self.player_data = PlayerData(archetype, seed)
+    self.player_data = player_data
 
     self.player_color = color
 
