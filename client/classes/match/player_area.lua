@@ -32,6 +32,8 @@ function PlayerArea:init(pos, w, h, match, color, archetype, seed)
 
     self.player_data = PlayerData(archetype, seed)
 
+    self.player_color = color
+
     self.dice_views = {}
     self.extra_views = {}
 
@@ -138,7 +140,7 @@ function PlayerArea:destroyPlayedDice()
     for i, slot in ipairs(self.turn_slots.slots) do
         if slot:getDie() then
             local die = slot:getDie()
-            slot.view:setAction(die:getCurrent(), die:getType())
+            slot.view:setAction(die:getCurrent(), self.player_color)
             self.player_data:sendDieToGrave(die)
             all_dice[die] = nil -- removing
             self.extra_views[die.view] = true
@@ -153,6 +155,12 @@ function PlayerArea:destroyPlayedDice()
     self.dice_views = {}
     for die in pairs(all_dice) do
         table.insert(self.dice_views, die.view)
+    end
+end
+
+function PlayerArea:deactivatePlayerSlots()
+    for i, slot in ipairs(self.turn_slots.slots) do
+        slot.view:setAction()
     end
 end
 

@@ -131,6 +131,7 @@ function MatchManager:init(rows, columns, pos, cell_size, w, h, game_info)
     self.lock_button = Button(bx, by, bw, bh, "lock", function()
         self:playTurn(self.local_id, function()
             MAIN_TIMER:after(1.5, function()
+                self.player_area:deactivatePlayerSlots()
                 self:startNewTurn()
             end)
         end)
@@ -270,7 +271,7 @@ function MatchManager:activateOpponentSlots(player_actions)
                 for j, action in ipairs(actions) do
                     if action ~= "none" then
                         local slot = self.turn_slots[i]:getModel():getSlot(j)
-                        slot.view:setAction(action, "fake")
+                        slot.view:setAction(action, self.colors[i])
                         wait(.1)
                     end
                 end

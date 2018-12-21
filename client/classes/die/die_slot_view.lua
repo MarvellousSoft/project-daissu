@@ -76,7 +76,7 @@ function DieSlotView:draw()
         local margin = 3
         local sw = (self.w-2*margin)/self.action_image:getWidth()
         local sh = (self.h-2*margin)/self.action_image:getHeight()
-        local off = 3
+        local off = 2
         Color.setWithAlpha(Color.black(),self.action_alpha)
         g.draw(self.action_image, self.pos.x + margin + off, self.pos.y + margin + off, nil, sw, sh)
         Color.setWithAlpha(self.action_color, self.action_alpha)
@@ -88,10 +88,10 @@ function DieSlotView:setAlpha(value)
     self.alpha = value
 end
 
-function DieSlotView:setAction(action, type)
+function DieSlotView:setAction(action, color)
     if action then
         self.action_image = Actions.actionImage(action)
-        self.action_color = DieHelper.getTypeColor(type)
+        self.action_color = color
         self:removeTimer('change_action_visibility', MAIN_TIMER)
         self:addTimer('change_action_visibility', MAIN_TIMER, "tween", 1, self,
                       {action_alpha = 255}, 'out-quad')
