@@ -1,19 +1,20 @@
 local i18n  = require "i18n"
+local icons = require("assets").images.icons
 --UTILITY FUNCTIONS FOR ACTION
 
 local icons = {
-    clock  = love.graphics.newImage("assets/images/icons/clock.png"),
-    counter = love.graphics.newImage("assets/images/icons/counter.png"),
-    walk = love.graphics.newImage("assets/images/icons/sprint.png"),
-    ['long walk'] = love.graphics.newImage("assets/images/icons/run.png"),
-    shoot = love.graphics.newImage("assets/images/icons/shoot.png"),
-    roundhouse = love.graphics.newImage("assets/images/icons/high-kick.png"),
-    ['explosion shot'] = love.graphics.newImage("assets/images/icons/spiky-explosion.png"),
-    ['strong punch'] = love.graphics.newImage("assets/images/icons/punch-blast.png"),
-    ['run and hit'] = love.graphics.newImage("assets/images/icons/running-ninja.png"),
-    hookshot = love.graphics.newImage("assets/images/icons/meat-hook.png"),
-    shove = love.graphics.newImage("assets/images/icons/push.png"),
-    no_icon = love.graphics.newImage("assets/images/icons/no-icon.png"),
+    clock              = icons.clock,
+    counter            = icons.counter,
+    walk               = icons.sprint,
+    ['long walk']      = icons.run,
+    shoot              = icons.shoot,
+    roundhouse         = icons['high-kick'],
+    ['explosion shot'] = icons['spiky-explosion'],
+    ['strong punch']   = icons['punch-blast'],
+    ['run and hit']    = icons['running-ninja'],
+    hookshot           = icons['meat-hook'],
+    shove              = icons.push,
+    no_icon            = icons['no-icon'],
 }
 
 local Actions = {}
@@ -28,15 +29,15 @@ function Actions.actionImage(action)
 end
 
 local helpers = {
-    walk = (require "classes.actions.walk")(1),
-    shoot = require "classes.actions.shoot",
-    roundhouse = require "classes.actions.roundhouse",
+    walk               = (require "classes.actions.walk")(1),
+    shoot              = require "classes.actions.shoot",
+    roundhouse         = require "classes.actions.roundhouse",
     ['explosion shot'] = require "classes.actions.explosion_shot",
-    ['strong punch'] = require "classes.actions.strong_punch",
-    ['run and hit'] = require "classes.actions.run_and_hit",
-    shove = require "classes.actions.shove",
-    ['long walk'] = (require "classes.actions.walk")(2),
-    hookshot = require "classes.actions.hookshot",
+    ['strong punch']   = require "classes.actions.strong_punch",
+    ['run and hit']    = require "classes.actions.run_and_hit",
+    shove              = require "classes.actions.shove",
+    ['long walk']      = (require "classes.actions.walk")(2),
+    hookshot           = require "classes.actions.hookshot",
 }
 
 function Actions.init()
