@@ -24,11 +24,21 @@ function res.init()
 
     --Overwrite love function getMousePosition to get the correct mouse position
     res.getMouseRealPosition = love.mouse.getPosition
+    res.getMouseRealX = love.mouse.getX
+    res.getMouseRealY = love.mouse.getY
     love.mouse.getPosition = function()
         local x, y = res.getMouseRealPosition()
         x = (x - tx) / scale
         y = (y - ty) / scale
         return x, y
+    end
+    love.mouse.getX = function()
+        local x = res.getMouseRealX()
+        return (x - tx) / scale
+    end
+    love.mouse.getY = function()
+        local y = res.getMouseRealY()
+        return (y - ty) / scale
     end
 
     --Overwrite love mouse and touch function to account for translations
