@@ -135,7 +135,7 @@ function DieView:leave()
 end
 
 -- You should run this before calling roll() on the dice
-function DieView:rollAnimation()
+function DieView:rollAnimation(random_start_face)
     if self.rolling then return end
     self.rolling = true
     local imgs = {}
@@ -143,10 +143,10 @@ function DieView:rollAnimation()
 
     -- Only different images
     local diff_imgs = {}
-    local face_i = 1
+    local face_i = love.math.random(#imgs)
     for img, i in pairs(imgs) do
         table.insert(diff_imgs, i)
-        if self.side_images[i] == self.side_images[self.model:getCurrentNum()] then
+        if not random_start_face and self.side_images[i] == self.side_images[self.model:getCurrentNum()] then
             face_i = #diff_imgs
         end
     end

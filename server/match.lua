@@ -11,7 +11,7 @@ local Match = Class {}
 local function newTurn(self)
     self.logic:startNewTurn()
     for _, p in ipairs(self.players) do
-        Util.exhaust(function() return p.data:grab(2) end)
+        p.data:grab(2)
         p.data:refillRerolls()
     end
 end
@@ -46,6 +46,7 @@ function Match:init(cl_list)
 end
 
 function Match:getInputForAction(data)
+    -- turn ended
     if data == nil then
         self.turn_co = nil
         self.waiting_for_input = nil

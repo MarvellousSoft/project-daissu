@@ -30,6 +30,7 @@ end
 -- Grabs count dice from the players bag
 -- Yields each grabbed die, BEFORE rolling them.
 function PlayerData:grab(count)
+    local grabbed = {}
     for i = 1, count do
         if #self.mat == self.mat_max then return end
         if self.bag[1] == nil then
@@ -37,9 +38,10 @@ function PlayerData:grab(count)
         end
         local die = table.remove(self.bag)
         table.insert(self.mat, die)
-        coroutine.yield(die)
+        table.insert(grabbed, die)
         die:roll(self.rng)
     end
+    return grabbed
 end
 
 function PlayerData:refillRerolls()

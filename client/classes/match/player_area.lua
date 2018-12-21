@@ -62,16 +62,14 @@ function PlayerArea:draw()
 end
 
 function PlayerArea:grab(count)
-    local co = Util.wrap(function() self.player_data:grab(count) end)
-    while true do
-        local die = co()
-        if not die then break end
+    local grabbed = self.player_data:grab(count)
+    for _, die in ipairs(grabbed) do
         local slot = self:getAvailableMatSlot()
         assert(slot)
         local die_view = DieView(die, 0, 0)
         die_view.pos = self.mat:getBagPosition()
         die_view.sx, die_view.sy = 0.1, 0.1
-        die_view:rollAnimation()
+        die_view:rollAnimation(true)
         table.insert(self.dice_views, die_view)
         slot:putDie(die, false)
     end
